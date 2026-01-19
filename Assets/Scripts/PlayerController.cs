@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     public bool throwInProgress = false;
     private float spinStrength = 0f;
     public float spinStrengthModifier;
+    [SerializeField] private GameObject bowlingBallInHand;
 
     void Start()
     {
@@ -37,6 +38,10 @@ public class PlayerController : MonoBehaviour
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         UIManagerScript = GameObject.Find("UI Manager").GetComponent<UIManager>();
         verticalProgressBarScript = verticalProgressBar.GetComponent<VerticalProgressBar>();
+
+        Collider playerColl = GetComponent<Collider>();
+        Collider ballColl = bowlingBallInHand.GetComponent<Collider>();
+        Physics.IgnoreCollision(playerColl,ballColl);
 
         //grab all animators from children objects
         Animator[] animators = gameObject.GetComponentsInChildren<Animator>();
@@ -76,6 +81,7 @@ public class PlayerController : MonoBehaviour
                 spacePressed=true;
                 throwInProgress=true;
                 playerAnim.SetBool("isWalkForward",true);
+                UIManagerScript.verticalProgressBar.SetActive(true);
             }
             //if entered moveforwardsequence, start bowling veloctiy bar UI + minigame
             else if(Input.GetKeyUp(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && spacePressed && !throwAnimActive)
@@ -102,7 +108,7 @@ public class PlayerController : MonoBehaviour
             }
             
             //move the player forward if walking forward or during throw animatin
-            if (spacePressed || throwAnimActive)
+            if (spacePressed || (spacePressed && throwAnimActive))
             {
                 MoveForwardSequence(2f);
             }
@@ -228,9 +234,8 @@ public class PlayerController : MonoBehaviour
             spacePressed = false;
             throwAnimActive = true;
 
-            //Debug.Log("start throw animation now!");
+            Debug.Log("reached alley start point, start throw animation now!");
             playerAnim.SetBool("isThrow",true);
-            print("hiiiiii");
         }
     }
 
@@ -260,5 +265,19 @@ public class PlayerController : MonoBehaviour
         //playerAnim.SetInteger("Animation_int",0);
 
         playerAnim.speed=1f;
+    }
+
+    public void ResetPlayerControllVars()
+    {
+        //enable help text if needed
+        SetHelpText();
+        
+        playerAnim.SetBool("isThrow",false);
+
+        //rest bool so velocity bar can move and controlled next round
+        spaceReleased = false;
+
+        //allow player horizontal movement again
+        throwInProgress = false;
     }
 }

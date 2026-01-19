@@ -155,36 +155,13 @@ public class SpawnManager : MonoBehaviour
         resetInProgress = false;
         pinsHaveMovedThisRound=false;
 
-        //enable help text if needed
-        playerControllerScript.SetHelpText();
+        //reset player controller script variables
+        playerControllerScript.ResetPlayerControllVars();
 
         //reset UI velocity bar variables
-        UIManagerScript.tBar = 0;
-        UIManagerScript.velocityBar.SetActive(false);
-        UIManagerScript.velocityBarOutline.SetActive(false);
-        UIManagerScript.ballSpeedText.enabled = false;
-        UIManagerScript.maxY = UIManagerScript.maxYFixed;
-        UIManagerScript.minY = UIManagerScript.minYFixed;
-        UIManagerScript.stopMovingVelocityBar = false;
-        UIManagerScript.bowlingSpeedIcon.SetActive(false);
         UIManagerScript.ResetUI();
-        
-        playerControllerScript.playerAnim.SetBool("isThrow",false);
+    }    
 
-        //reset UI spin gauge variable
-        UIManagerScript.spinUI[0].transform.position = UIManagerScript.spinIndicatorBasePosition;
-        foreach (GameObject obj in UIManagerScript.spinUI)
-        {
-            obj.SetActive(false);
-        }
-        UIManagerScript.torqueSpeedText.enabled = false;
-
-        //rest bool so velocity bar can move and controlled next round
-        playerControllerScript.spaceReleased = false;
-
-        //allow player horizontal movement again
-        playerControllerScript.throwInProgress = false;
-    }
 
     //soft reset: bowling pins that were knocked down are deleted, remaining pins remain in regular spots
     IEnumerator SoftReset()
@@ -255,36 +232,11 @@ public class SpawnManager : MonoBehaviour
         resetInProgress = false;
         pinsHaveMovedThisRound=false;
 
-        //enable help text if needed
-        playerControllerScript.SetHelpText();
-
         //reset UI velocity bar stuff
-        UIManagerScript.tBar = 0;
-        UIManagerScript.velocityBar.SetActive(false);
-        UIManagerScript.velocityBarOutline.SetActive(false);
-        UIManagerScript.ballSpeedText.enabled = false;
-        UIManagerScript.maxY = UIManagerScript.maxYFixed;
-        UIManagerScript.minY = UIManagerScript.minYFixed;
-        UIManagerScript.stopMovingVelocityBar = false;
-        UIManagerScript.bowlingSpeedIcon.SetActive(false);
-        playerControllerScript.playerAnim.SetBool("isThrow",false);
-
         UIManagerScript.ResetUI();
 
-        //reset UI spin gauge variable
-        UIManagerScript.spinUI[0].transform.position = UIManagerScript.spinIndicatorBasePosition;
-        foreach (GameObject obj in UIManagerScript.spinUI)
-        {
-            obj.SetActive(false);
-        }
-        UIManagerScript.torqueSpeedText.enabled = false;
-
-        //rest bool so velocity bar can move and controlled next round
-        playerControllerScript.spaceReleased = false;
-
-        //allow player horizontal movement again
-        playerControllerScript.throwInProgress = false;
-        //}
+        //reset player controller script variables
+        playerControllerScript.ResetPlayerControllVars();
     }
 
     //tracks all existing pin objects, then returns a dict of their gameObjects as keys and initial positions as values

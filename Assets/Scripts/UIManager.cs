@@ -7,20 +7,16 @@ using MagicPigGames;
 
 public class UIManager : MonoBehaviour
 {
-    public GameObject velocityBar;
-    public GameObject velocityBarOutline;
-    public RectTransform velocityBarRectTransform;
     public TextMeshProUGUI scoreAnnouncementText;
     private SpawnManager spawnManagerScript;
     private PlayerController playerControllerScript;
-    [SerializeField] private GameObject verticalProgressBar;
+    [SerializeField] public GameObject verticalProgressBar;
     private VerticalProgressBar verticalProgressBarScript;
     private AudioSource audioSource;
     public AudioClip[] announcePinsHitSFX;
     public TextMeshProUGUI ballSpeedText;
     public TextMeshProUGUI helpText;
     public TextMeshProUGUI torqueSpeedText;
-    public GameObject bowlingSpeedIcon;
     public GameObject[] spinUI;
     private float t=0;
     public float tBar=0;
@@ -54,32 +50,24 @@ public class UIManager : MonoBehaviour
         verticalProgressBarScript = verticalProgressBar.GetComponent<VerticalProgressBar>();
         audioSource = GetComponent<AudioSource>();
 
-        velocityBar = GameObject.FindGameObjectWithTag("Velocity Bar");
-        Image velocityBarImage = velocityBar.GetComponent<Image>();
-        velocityBarImage.color = Color.green;
-        
-        velocityBarRectTransform = velocityBar.GetComponent<RectTransform>();
-        velocityBar.SetActive(false);
-
-        velocityBarOutline = GameObject.FindGameObjectWithTag("Velocity Bar Outline");
-        velocityBarOutline.SetActive(false);
-
         moddedBarSpeeds = new float[] {barSpeed,barSpeed,barSpeed,barSpeed};
 
         //set barSpeeds
         for (int i=0;i<moddedBarSpeeds.Length;i++)
         {
             moddedBarSpeeds[i]*=barSpeedMultipliers[i];
-            print(moddedBarSpeeds[i]);
         }
         
         ballSpeedText.enabled = false;
         torqueSpeedText.enabled=false;
-        bowlingSpeedIcon.SetActive(false);
 
         helpText.outlineColor = Color.black;
         helpText.outlineWidth = 0.15f;
         helpText.enabled = false;
+
+        //set progress bar initial progress to 0 and make inactive
+        verticalProgressBarScript.SetProgress(0f);
+        verticalProgressBar.SetActive(false);
 
         spinIndicatorBasePosition = spinUI[0].transform.position;
 
@@ -105,37 +93,8 @@ public class UIManager : MonoBehaviour
         FadeOutAndStop();
     }
 
-    public (float,float,float) VelocityBarChange(RectTransform rect, float tBar, float minY, float maxY)
-    {
-        velocityBar.SetActive(true);
-        velocityBarOutline.SetActive(true);
-        bowlingSpeedIcon.SetActive(true);
-
-        //change rectangle height
-        rect.sizeDelta = new (100, Mathf.Lerp(minY,maxY,tBar));
-
-        //increase the t value over time, so when this function is called again in Update() Mathf.Lerp returns higher pos values, eventually reaching end pos
-        tBar+=1.1f*Time.deltaTime;
-
-        //if this is true, then bar has went up and down once already, so thus stop moving the velocity bar.
-        if (tBar>=1 && minY > maxY)
-        {
-            stopMovingVelocityBar = true;
-        }
-        //if t=1 then bar has reached max or min size, thus switch the min and max so it starts increasing or decreasing size appropriately
-        else if (tBar>=1)
-        {
-            (minY,maxY) = (maxY,minY);
-            tBar=0f;
-        }
-
-        return (tBar,minY,maxY);
-    }
-
     public (float,float,float,float) AssetVelocityBarChange(float t, float minY, float maxY, float barSpeed)
     {
-        
-        print(barSpeed);
         //set the progress bar value and increase t value
         verticalProgressBarScript.SetProgress(Mathf.Lerp(minY,maxY,t));
         t+=barSpeed*Time.deltaTime; 
@@ -150,7 +109,6 @@ public class UIManager : MonoBehaviour
         else if (t>=1 && barSpeed>0)
         {   
             barSpeed *= -1f;
-            print(barSpeed);
         }
 
         barSpeed = ChangeBarSpeed(barSpeed);
@@ -308,6 +266,21 @@ public class UIManager : MonoBehaviour
 
     public void ResetUI()
     {
+        //reset velocity bar variables
+        tBar = 0;
+        ballSpeedText.enabled = false;
+        maxY = maxYFixed;
+        minY = minYFixed;
+        stopMovingVelocityBar = false;
         barSpeed = barSpeedFixed;
+        verticalProgressBar.SetActive(false);
+
+        //reset UI spin gauge variable
+        spinUI[0].transform.position = spinIndicatorBasePosition;
+        foreach (GameObject obj in spinUI)
+        {
+            obj.SetActive(false);
+        }
+        torqueSpeedText.enabled = false;
     }
 }
