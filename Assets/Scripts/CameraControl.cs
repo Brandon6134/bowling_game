@@ -1,4 +1,5 @@
 
+using System.Collections;
 using UnityEngine;
 
 public class CameraControl : MonoBehaviour
@@ -17,11 +18,14 @@ public class CameraControl : MonoBehaviour
     public bool camFinishedTransition = true;
     private bool camFinishedBallToPlayer = true;
     private bool newFrameInitialized = true;
+    private bool onLastCamPos = false;
 
     //doTransition defines if an cam transition is to be played. false if no, true if yes.
     private bool doTransition = false;
     private SpawnManager spawnManagerScript;
     private PlayerController playerControllerScript;
+    public AnimationCurve curve;
+    public float duration = 1f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -114,12 +118,19 @@ public class CameraControl : MonoBehaviour
                     //if bowling ball is past the camBoundary, switch to static lastCamPos snapshot for final view
                     else if (bowlingBall)
                     {
+                        //if already set to lastCamPos, exit so that it's only set once and allows for camera shaking when hitting pins
+                        if (onLastCamPos)
+                            return;
                         transform.position = lastCamPos;
+                        onLastCamPos=true;
                     }
                     //if bowling ball doesn't exist, camera follows player.
                     else
                     {
                         transform.position = player.transform.position + playerOffset;
+
+                        //reset on lastCamPos bool
+                        onLastCamPos = false;
                     }
                 }
             }
@@ -164,5 +175,20 @@ public class CameraControl : MonoBehaviour
         {
             return false;
         }
+    }
+
+    public IEnumerator ShakeCamera()
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime+= Time.deltaTime;
+            float strength = curve.Evaluate(elapsedTime / duration);
+            transform.position = lastCamPos + Random.insideUnitSphere * strength;
+            yield return null;
+        }
+
+        transform.position = lastCamPos;
     }
 }

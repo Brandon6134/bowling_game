@@ -9,11 +9,13 @@ public class BowlingBallControl : MonoBehaviour
     public bool isBallFrozen=false;
     public bool isBallPastPins=false;
     private PlayerController playerControllerScript;
+    private CameraControl cameraControlScript;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        cameraControlScript = GameObject.Find("Main Camera").GetComponent<CameraControl>();
 
         ballRb = GetComponent<Rigidbody>();
         //require 2 audio sources for handling each audiosource/clip
@@ -34,16 +36,17 @@ public class BowlingBallControl : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        //if bowling ball is touching the ground, play the rolling sfx
-        if (!ballRolling.isPlaying && collision.gameObject.CompareTag("Ground"))
+        //if bowling ball is touching the ground, sfx isnt already playing, and isn't past the pin area, play the rolling sfx
+        if (collision.gameObject.CompareTag("Ground") && !ballRolling.isPlaying && !isBallPastPins)
         {
             ballRolling.Play();
         }
-        //if bowling ball hits a pin, play oneshot of pinHit
-        else if (collision.gameObject.CompareTag("Bowling Pin"))
+        //if bowling ball hits a pin and isn't past the pin area, play oneshot of pinHit and shake camera for impact
+        else if (collision.gameObject.CompareTag("Bowling Pin") && !isBallPastPins)
         {
             int index = Random.Range(0,5);
             audioSource.PlayOneShot(pinHit[index]);
+            StartCoroutine(cameraControlScript.ShakeCamera());
         }
     }
 

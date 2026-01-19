@@ -102,7 +102,11 @@ public class PlayerController : MonoBehaviour
                 spacePressed = false;
                 spaceReleased = true;
 
-                //Debug.Log("start throw animation now!");
+                //change animation speed based off throw speed
+                float animSpeed = usedPercent+0.5f;
+                playerAnim.speed= animSpeed;
+
+                //begin throw ball animation
                 playerAnim.SetBool("isThrow",true);
                 throwAnimActive = true;
             }
@@ -116,7 +120,7 @@ public class PlayerController : MonoBehaviour
             //if the animation shows a step forward, move the player even more
             if (isStepForwardAnim)
             {
-                MoveForwardSequence(3f);
+                MoveForwardSequence(6f);
             }
         }
         
@@ -183,12 +187,10 @@ public class PlayerController : MonoBehaviour
         //allow player to rotate with Q and E buttons
         if (Input.GetKey(KeyCode.Q))
         {
-            //transform.Rotate(0,-rotateSpeed,0);
             playerRb.AddTorque(0,-rotateSpeed,0,ForceMode.Impulse);
         }
         if (Input.GetKey(KeyCode.E))
         {
-            //transform.Rotate(0,rotateSpeed,0);
             playerRb.AddTorque(0,rotateSpeed,0,ForceMode.Impulse);
         }
     }
@@ -209,12 +211,15 @@ public class PlayerController : MonoBehaviour
         Vector3 force = transform.right * bowlingBallSpeed * percentModifier;
         bowlingRb.AddForce(force,ForceMode.Impulse);
         
+        //add torque to ball, with multiplier based on spinStrength
         Vector3 torqueForce = Vector3.up * spinStrength;
         bowlingRb.AddTorque(torqueForce,ForceMode.Impulse);
 
+        //set speed text active
         UIManagerScript.ballSpeedText.enabled = true;
         UIManagerScript.torqueSpeedText.enabled = true;
 
+        //set ball speed text
         speedRounded = Mathf.Round(force[0])/10;
         UIManagerScript.ballSpeedText.text = speedRounded + " km/h";
         
@@ -260,9 +265,6 @@ public class PlayerController : MonoBehaviour
         playerAnim.SetBool("isWalkForward",false);
 
         CreateAndMoveBall(usedPercent,spinStrength);
-
-        //disable the throw animation from occuring
-        //playerAnim.SetInteger("Animation_int",0);
 
         playerAnim.speed=1f;
     }
