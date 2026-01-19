@@ -1,4 +1,5 @@
 using System.Collections;
+using MagicPigGames;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -14,14 +15,17 @@ public class PlayerController : MonoBehaviour
     public float bowlingBallSpeed;
     private CameraControl cameraControlScript;
     private Vector3 camOffset;
-    private Animator playerAnim;
+    public Animator playerAnim;
     private SpawnManager spawnManagerScript;
+    [SerializeField] private GameObject verticalProgressBar;
+    private VerticalProgressBar verticalProgressBarScript;
     private UIManager UIManagerScript;
     public bool spacePressed = false;
     public bool spaceReleased = false;
     private Rigidbody playerRb;
     public float speedRounded = 100f;
     public bool throwAnimActive = false;
+    public bool isStepForwardAnim = false;
     private float usedPercent = 0f;
     public bool throwInProgress = false;
     private float spinStrength = 0f;
@@ -32,6 +36,7 @@ public class PlayerController : MonoBehaviour
         cameraControlScript = GameObject.Find("Main Camera").GetComponent<CameraControl>();
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         UIManagerScript = GameObject.Find("UI Manager").GetComponent<UIManager>();
+        verticalProgressBarScript = verticalProgressBar.GetComponent<VerticalProgressBar>();
 
         //grab all animators from children objects
         Animator[] animators = gameObject.GetComponentsInChildren<Animator>();
@@ -70,14 +75,13 @@ public class PlayerController : MonoBehaviour
             {
                 spacePressed=true;
                 throwInProgress=true;
-                playerAnim.SetBool("Static_b",true);
-                playerAnim.SetFloat("Speed_f",0.5f);
+                playerAnim.SetBool("isWalkForward",true);
             }
             //if entered moveforwardsequence, start bowling veloctiy bar UI + minigame
             else if(Input.GetKeyUp(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && spacePressed && !throwAnimActive)
             {
-                //calculate percentage of bar full (0 to 1)
-                float barPercent = UIManagerScript.velocityBarRectTransform.sizeDelta[1] / UIManagerScript.maxYFixed;
+                //script.progress returns 0.1 if 90% of bar is filled, so invert progress value to get 0.9
+                float barPercent = Mathf.Abs(verticalProgressBarScript.Progress - 1f);
 
                 //make the actual percent modifier range from 0.5 to 1 for speed balance
                 usedPercent = 0.5f + barPercent/2;
@@ -93,14 +97,20 @@ public class PlayerController : MonoBehaviour
                 spaceReleased = true;
 
                 //Debug.Log("start throw animation now!");
-                playerAnim.SetFloat("Speed_f",0f);
-                playerAnim.SetInteger("Animation_int",5);
+                playerAnim.SetBool("isThrow",true);
                 throwAnimActive = true;
             }
             
-            if (spacePressed)
+            //move the player forward if walking forward or during throw animatin
+            if (spacePressed || throwAnimActive)
             {
-                MoveForwardSequence();
+                MoveForwardSequence(2f);
+            }
+
+            //if the animation shows a step forward, move the player even more
+            if (isStepForwardAnim)
+            {
+                MoveForwardSequence(3f);
             }
         }
         
@@ -125,36 +135,23 @@ public class PlayerController : MonoBehaviour
         //transform.Translate(Vector3.back * speed * horizontalInput *  Time.deltaTime,Space.World);
         playerRb.MovePosition(transform.position + Vector3.back * speed * horizontalInput *  Time.deltaTime);
 
-        //set moving animation for player
-        if (horizontalInput != 0f)
+        //set animation parameter walkSpeed to current input direction
+        playerAnim.SetFloat("walkSpeed",horizontalInput);
+
+        //if player isn't moving horizontally, set idle boolean to true for animation
+        if (horizontalInput == 0f)
         {
-            playerAnim.SetBool("Static_b",true);
-            playerAnim.SetFloat("Speed_f",0.5f);
+            playerAnim.SetBool("isIdle",true);
         }
-        else
+        else 
         {
-            playerAnim.SetBool("Static_b",false);
-            playerAnim.SetFloat("Speed_f",0f);
+            playerAnim.SetBool("isIdle",false);
         }
     }
 
     void rotationalMovement()
     {
-        //don't allow player to rotate past the rotation limits (approx 60 degrees)
-
-        /*
-        if (transform.rotation.y < -rotateYRange)
-        {
-            transform.rotation = new Quaternion(transform.rotation.x,-rotateYRange,transform.rotation.z,transform.rotation.w);
-        }
-
-        if (transform.rotation.y > rotateYRange)
-        {
-            transform.rotation = new Quaternion(transform.rotation.x,rotateYRange,transform.rotation.z,transform.rotation.w);
-        }
-        */
-
-        //eulerAngles is a value from 0-360
+        //get current player rotation in eulerAngles (is a value from 0-360)
         float yAngle = playerRb.rotation.eulerAngles.y;
 
         //convert yAngle from 0-360 to -180 to 180 (so can account for -45 and +45 degree rotation ranges)
@@ -190,10 +187,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void MoveForwardSequence()
+    private void MoveForwardSequence(float speed)
     {
-        transform.Translate(Vector3.right * 2f *  Time.deltaTime,Space.World);
-        playerAnim.speed=0.4f;
+        transform.Translate(Vector3.right * speed *  Time.deltaTime,Space.World);
+        //playerAnim.speed=0.4f;
         UIManagerScript.helpText.enabled=false;
     }
 
@@ -220,10 +217,11 @@ public class PlayerController : MonoBehaviour
         UIManagerScript.torqueSpeedText.text = torqueSpeedRounded + " RPM";
     }
 
-    //if player reaches the start of alley, force ball throw with mininum ball speed mulitplier of 0.5
+    
     void OnTriggerEnter(Collider other)
     {  
-        if (other.CompareTag("Alley Starting Point"))
+        //if player reaches the start of alley and the throw animation isn't active, force ball throw with mininum ball speed mulitplier of 0.5
+        if (other.CompareTag("Alley Starting Point") && !throwAnimActive)
         {
             //if didnt release spacebar at end, set usedPercent to mininum of 0.5, and other booleans
             usedPercent=0.5f;
@@ -231,8 +229,8 @@ public class PlayerController : MonoBehaviour
             throwAnimActive = true;
 
             //Debug.Log("start throw animation now!");
-            playerAnim.SetFloat("Speed_f",0f);
-            playerAnim.SetInteger("Animation_int",5);
+            playerAnim.SetBool("isThrow",true);
+            print("hiiiiii");
         }
     }
 
@@ -244,14 +242,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void StepForwardAnim()
+    {
+        isStepForwardAnim = true;
+    }
+
     //once throw animation is complete, trigger this func and set throwAnimActive to false
     public void EndOfThrowAnim()
     {
         throwAnimActive=false;
+        isStepForwardAnim=false;
+        playerAnim.SetBool("isWalkForward",false);
+
         CreateAndMoveBall(usedPercent,spinStrength);
 
         //disable the throw animation from occuring
-        playerAnim.SetInteger("Animation_int",0);
+        //playerAnim.SetInteger("Animation_int",0);
+
         playerAnim.speed=1f;
     }
 }

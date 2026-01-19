@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using UnityEditor;
+using MagicPigGames;
 
 public class UIManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI scoreAnnouncementText;
     private SpawnManager spawnManagerScript;
     private PlayerController playerControllerScript;
+    [SerializeField] private GameObject verticalProgressBar;
+    private VerticalProgressBar verticalProgressBarScript;
     private AudioSource audioSource;
     public AudioClip[] announcePinsHitSFX;
     public TextMeshProUGUI ballSpeedText;
@@ -29,18 +32,26 @@ public class UIManager : MonoBehaviour
     public float minYFixed = 0f;
     public float maxYFixed = 700f;
     public float minY = 0f;
-    public float maxY = 700f;
+    public float maxY = 1f;
     public bool stopMovingVelocityBar = false;
+    public float barSpeed = 0.5f;
+    public float barSpeedFixed = 0.5f;
+    float[] moddedBarSpeeds;
+    public float[] barSpeedMultipliers = {1.2f,1.5f,2f,2.5f};
+    public float barMultipler = 0f;
     private float minSpinX = 100f+960f;
     private float maxSpinX = 930f+960f;
     public float speedOfSpinIndicator;
     public Vector3 spinIndicatorBasePosition;
+    public float elapsedTime=0f;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        verticalProgressBarScript = verticalProgressBar.GetComponent<VerticalProgressBar>();
         audioSource = GetComponent<AudioSource>();
 
         velocityBar = GameObject.FindGameObjectWithTag("Velocity Bar");
@@ -52,6 +63,15 @@ public class UIManager : MonoBehaviour
 
         velocityBarOutline = GameObject.FindGameObjectWithTag("Velocity Bar Outline");
         velocityBarOutline.SetActive(false);
+
+        moddedBarSpeeds = new float[] {barSpeed,barSpeed,barSpeed,barSpeed};
+
+        //set barSpeeds
+        for (int i=0;i<moddedBarSpeeds.Length;i++)
+        {
+            moddedBarSpeeds[i]*=barSpeedMultipliers[i];
+            print(moddedBarSpeeds[i]);
+        }
         
         ballSpeedText.enabled = false;
         torqueSpeedText.enabled=false;
@@ -77,7 +97,8 @@ public class UIManager : MonoBehaviour
         //if space is pressed down, velocity bar should be moving still, and game isnt paused
         if (playerControllerScript.spacePressed && !stopMovingVelocityBar && Time.deltaTime!=0)
         {
-            (tBar, minY, maxY) = VelocityBarChange(velocityBarRectTransform, tBar, minY, maxY);
+            //(tBar, minY, maxY) = VelocityBarChange(velocityBarRectTransform, tBar, minY, maxY);
+            (tBar, minY, maxY,barSpeed) = AssetVelocityBarChange(tBar, minY, maxY, barSpeed);
             SpinGaugeChange(spinUI,minSpinX,maxSpinX);
         }
         
@@ -109,6 +130,32 @@ public class UIManager : MonoBehaviour
         }
 
         return (tBar,minY,maxY);
+    }
+
+    public (float,float,float,float) AssetVelocityBarChange(float t, float minY, float maxY, float barSpeed)
+    {
+        
+        print(barSpeed);
+        //set the progress bar value and increase t value
+        verticalProgressBarScript.SetProgress(Mathf.Lerp(minY,maxY,t));
+        t+=barSpeed*Time.deltaTime; 
+
+        //if this is true, then bar has went up and down once already, so thus stop moving the velocity bar. reset t and barSpeed values;
+        if (t<=0)
+        {
+            stopMovingVelocityBar = true;
+            t=0;
+        }
+        //if t reaches 1 or more, set the bar speed to -1 so it begins decreasing
+        else if (t>=1 && barSpeed>0)
+        {   
+            barSpeed *= -1f;
+            print(barSpeed);
+        }
+
+        barSpeed = ChangeBarSpeed(barSpeed);
+
+        return (t,minY,maxY,barSpeed);
     }
 
     public float SpinGaugeChange(GameObject[] objarray, float min, float max)
@@ -227,5 +274,40 @@ public class UIManager : MonoBehaviour
         (maxA,minA) = (minA,maxA);
         t=0;
 
+    }
+
+    public float ChangeBarSpeed(float barSpeed)
+    {
+        //set 5 diff bar speeds for no flame + 4 types of flames vfx
+        //0 -> no flame
+        //0.3 -> red flame
+        //0.6 -> blue flame
+        //0.9 -> green flame
+        //0.95 -> purple flame
+        float[] benchmarks = {0.3f,0.6f,0.9f,0.95f};
+        float progress = Mathf.Abs(verticalProgressBarScript.Progress - 1f);
+        float posNegMod = 1f;
+
+        if(barSpeed<0)
+        {
+            posNegMod = -1f;
+        }
+
+        //loop through all benchmarks (start from greatest to least)
+        for (int i=benchmarks.Length-1;i>=0;i--)
+        {
+            
+            if (progress>=benchmarks[i])
+            {
+                barSpeed = moddedBarSpeeds[i] * posNegMod;
+                break;
+            }
+        }
+        return barSpeed;
+    }
+
+    public void ResetUI()
+    {
+        barSpeed = barSpeedFixed;
     }
 }
