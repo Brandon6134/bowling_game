@@ -54,6 +54,7 @@ public class SpawnManager : MonoBehaviour
     private bool resetInProgress = false;
     private bool allPinsSleepingLastFrame = false;
     public GameObject GameOverParent;
+    public Rigidbody playerRb;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -68,6 +69,9 @@ public class SpawnManager : MonoBehaviour
         //save initial player position for reset
         player = GameObject.Find("Player");
         playerPosition = player.transform.position;
+        print("Start of game player position: " + playerPosition);
+
+        playerRb = player.GetComponent<Rigidbody>();
 
         //save all initial bowling pin positions for reset
         allPins = TrackPins();
@@ -78,7 +82,7 @@ public class SpawnManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         if (isGameActive)
         {
@@ -142,10 +146,6 @@ public class SpawnManager : MonoBehaviour
         //set back the round to one so soft reset is called next round
         globalRound=1;
 
-
-        player.transform.position = playerPosition;
-        player.transform.rotation = new Quaternion(0,0,0,0);
-
         //after the 10th frame, game is finished
         if (frameIndex == 10)
         {
@@ -160,6 +160,18 @@ public class SpawnManager : MonoBehaviour
 
         //reset UI velocity bar variables
         UIManagerScript.ResetUI();
+
+        //reset player object and rigidbody rotations
+        player.transform.position = playerPosition;
+        playerRb.position = playerPosition;
+        playerRb.rotation = Quaternion.identity;
+        player.transform.rotation = new Quaternion(0,0,0,0);
+
+        //Physics.SyncTransforms();
+
+        //print("post-reset player pos: " + player.transform.position);
+        //print("rigid body location: "+playerRb.position);
+        //print("startPosition: " + playerPosition);
     }    
 
 
@@ -223,9 +235,6 @@ public class SpawnManager : MonoBehaviour
             text = ThreeRoundLastFrame_ScoreCalculator(currentPinsDown);
         }
 
-        player.transform.position = playerPosition;
-        player.transform.rotation = new Quaternion(0,0,0,0);
-
         UpdateScore(text);
         (isSpareForAnnounce, isStrike) = UIManagerScript.AnnounceScore(currentPinsDown,isSpareForAnnounce,isStrike);
         callAnnounceScores=true;
@@ -237,6 +246,18 @@ public class SpawnManager : MonoBehaviour
 
         //reset player controller script variables
         playerControllerScript.ResetPlayerControllVars();
+
+        //reset player object and rigidbody rotations
+        player.transform.position = playerPosition;
+        playerRb.position = playerPosition;
+        playerRb.rotation = Quaternion.identity;
+        player.transform.rotation = new Quaternion(0,0,0,0);
+
+        //Physics.SyncTransforms();
+
+        //print("post-reset player pos: " + player.transform.position);
+        //print("rigid body location: "+playerRb.position);
+        //print("startPosition: " + playerPosition);
     }
 
     //tracks all existing pin objects, then returns a dict of their gameObjects as keys and initial positions as values

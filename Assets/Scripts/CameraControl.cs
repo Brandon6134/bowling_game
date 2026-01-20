@@ -128,7 +128,6 @@ public class CameraControl : MonoBehaviour
                     else
                     {
                         transform.position = player.transform.position + playerOffset;
-
                         //reset on lastCamPos bool
                         onLastCamPos = false;
                     }
@@ -152,7 +151,6 @@ public class CameraControl : MonoBehaviour
             SwitchCamera(lastCamPos,camScorePos);
         }
         
-
     }
 
     //SwitchCamera smoothly transitions the cam position from the starting position to the ending position.
@@ -185,7 +183,7 @@ public class CameraControl : MonoBehaviour
         {
             elapsedTime+= Time.deltaTime;
             float strength = curve.Evaluate(elapsedTime / duration);
-            transform.position = lastCamPos + Random.insideUnitSphere * strength;
+            transform.position = lastCamPos + Random.insideUnitSphere * strength * playerControllerScript.usedPercent;
             yield return null;
         }
 

@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     public float speedRounded = 100f;
     public bool throwAnimActive = false;
     public bool isStepForwardAnim = false;
-    private float usedPercent = 0f;
+    public float usedPercent = 0f;
     public bool throwInProgress = false;
     private float spinStrength = 0f;
     public float spinStrengthModifier;
@@ -111,8 +111,9 @@ public class PlayerController : MonoBehaviour
                 throwAnimActive = true;
             }
             
-            //move the player forward if walking forward or during throw animatin
-            if (spacePressed || (spacePressed && throwAnimActive))
+            //move the player forward if walking forward or during throw animation
+            // || (spacePressed && throwAnimActive && playerAnim.GetBool("isThrow"))
+            if ((spacePressed && playerAnim.GetBool("isWalkForward")) )
             {
                 MoveForwardSequence(2f);
             }
@@ -197,8 +198,12 @@ public class PlayerController : MonoBehaviour
 
     private void MoveForwardSequence(float speed)
     {
-        transform.Translate(Vector3.right * speed *  Time.deltaTime,Space.World);
+        //transform.Translate(Vector3.right * speed *  Time.deltaTime,Space.World);
+        playerRb.MovePosition(playerRb.position + Vector3.right * speed *  Time.deltaTime);
+        //playerRb.MovePosition(transform.position + Vector3.back * speed * horizontalInput *  Time.deltaTime);
+        
         //playerAnim.speed=0.4f;
+        //print("moving forward with speed of "+speed);
         UIManagerScript.helpText.enabled=false;
     }
 
@@ -233,12 +238,15 @@ public class PlayerController : MonoBehaviour
     {  
         //if player reaches the start of alley and the throw animation isn't active, force ball throw with mininum ball speed mulitplier of 0.5
         if (other.CompareTag("Alley Starting Point") && !throwAnimActive)
-        {
-            //if didnt release spacebar at end, set usedPercent to mininum of 0.5, and other booleans
-            usedPercent=0.5f;
-            spacePressed = false;
-            throwAnimActive = true;
-
+        {   
+            if (!throwAnimActive)
+            {
+                //if didnt release spacebar at end, set usedPercent to mininum of 0.5, and other booleans
+                usedPercent=0.5f;
+                spacePressed = false;
+                throwAnimActive = true;
+            }
+            
             Debug.Log("reached alley start point, start throw animation now!");
             playerAnim.SetBool("isThrow",true);
         }

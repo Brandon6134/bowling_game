@@ -273,6 +273,7 @@ public class UIManager : MonoBehaviour
         minY = minYFixed;
         stopMovingVelocityBar = false;
         barSpeed = barSpeedFixed;
+        verticalProgressBarScript.SetProgress(0f);
         verticalProgressBar.SetActive(false);
 
         //reset UI spin gauge variable
