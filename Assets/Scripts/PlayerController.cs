@@ -121,7 +121,7 @@ public class PlayerController : MonoBehaviour
             //if the animation shows a step forward, move the player even more
             if (isStepForwardAnim)
             {
-                MoveForwardSequence(6f);
+                MoveForwardSequence(4f);
             }
         }
         
@@ -176,13 +176,13 @@ public class PlayerController : MonoBehaviour
         if (Mathf.Approximately(clampedY,rotateYRange))
         {
             playerRb.angularVelocity = Vector3.zero;
-            playerRb.MoveRotation(Quaternion.Euler(0,45,0));
+            playerRb.MoveRotation(Quaternion.Euler(0,44.5f,0));
         }
 
         else if (Mathf.Approximately(clampedY,-rotateYRange))
         {
             playerRb.angularVelocity = Vector3.zero;
-            playerRb.MoveRotation(Quaternion.Euler(0,-45,0));
+            playerRb.MoveRotation(Quaternion.Euler(0,-44.5f,0));
         }
     
         //allow player to rotate with Q and E buttons
@@ -200,6 +200,7 @@ public class PlayerController : MonoBehaviour
     {
         //transform.Translate(Vector3.right * speed *  Time.deltaTime,Space.World);
         playerRb.MovePosition(playerRb.position + Vector3.right * speed *  Time.deltaTime);
+        //print(transform.rotation);
         //playerRb.MovePosition(transform.position + Vector3.back * speed * horizontalInput *  Time.deltaTime);
         
         //playerAnim.speed=0.4f;
@@ -245,6 +246,7 @@ public class PlayerController : MonoBehaviour
                 usedPercent=0.5f;
                 spacePressed = false;
                 throwAnimActive = true;
+                //playerRb.constraints = RigidbodyConstraints.FreezePositionY;
             }
             
             Debug.Log("reached alley start point, start throw animation now!");
@@ -275,6 +277,8 @@ public class PlayerController : MonoBehaviour
         CreateAndMoveBall(usedPercent,spinStrength);
 
         playerAnim.speed=1f;
+
+        
     }
 
     public void ResetPlayerControllVars()

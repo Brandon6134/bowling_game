@@ -161,7 +161,7 @@ public class SpawnManager : MonoBehaviour
         //reset UI velocity bar variables
         UIManagerScript.ResetUI();
 
-        //reset player object and rigidbody rotations
+        //reset player object and rigidbody rotations (reset both to make sure they're both synced and reset)
         player.transform.position = playerPosition;
         playerRb.position = playerPosition;
         playerRb.rotation = Quaternion.identity;
@@ -247,7 +247,7 @@ public class SpawnManager : MonoBehaviour
         //reset player controller script variables
         playerControllerScript.ResetPlayerControllVars();
 
-        //reset player object and rigidbody rotations
+        //reset player object and rigidbody rotations (reset both to make sure they're both synced and reset)
         player.transform.position = playerPosition;
         playerRb.position = playerPosition;
         playerRb.rotation = Quaternion.identity;
