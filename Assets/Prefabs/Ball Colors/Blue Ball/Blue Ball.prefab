@@ -15,7 +15,7 @@ PrefabInstance:
     - target: {fileID: 1201026647324853245, guid: 726d4cf5cb8439a48aa24d53bdd1ca0f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 3a834ad389115f24c8251494d356cbd9, type: 2}
+      objectReference: {fileID: 2100000, guid: a0af6ad8fb7d76b4f984da9e1d166361, type: 2}
     - target: {fileID: 2932020770919988030, guid: 726d4cf5cb8439a48aa24d53bdd1ca0f, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -74,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8560073200238048030, guid: 726d4cf5cb8439a48aa24d53bdd1ca0f, type: 3}
       propertyPath: m_Name
-      value: Green Ball
+      value: Blue Ball
       objectReference: {fileID: 0}
     - target: {fileID: 8560073200238048030, guid: 726d4cf5cb8439a48aa24d53bdd1ca0f, type: 3}
       propertyPath: m_TagString

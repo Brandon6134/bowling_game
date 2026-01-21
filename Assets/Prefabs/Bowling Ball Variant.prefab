@@ -69,6 +69,10 @@ PrefabInstance:
       value: Bowling Ball Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8560073200238048030, guid: 726d4cf5cb8439a48aa24d53bdd1ca0f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8560073200238048030, guid: 726d4cf5cb8439a48aa24d53bdd1ca0f, type: 3}
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}

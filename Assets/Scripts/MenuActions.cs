@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
@@ -15,11 +16,45 @@ public class MenuActions : MonoBehaviour
     private float t = 0f;
     private float minY = 0f;
     private float maxY = 700f;
+    public Outline colorSelectedOutline;
+    public Material defaultBallMaterial;
+    public ScrollRect[] scrollRectCustomizeRows;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //mainMenuPanel.SetActive(true);
+        
         howToPlayPanel.SetActive(false);
+        Scene currentScene = SceneManager.GetActiveScene();
+
+        //if on main menu UI
+        if (currentScene.buildIndex == 1)
+        {
+            mainMenuPanel.SetActive(true);
+            customizePanel.SetActive(false);
+
+            //if no current ball color selected, make default material blue
+            if (StaticData.staticBallColorMat == null)
+                StaticData.staticBallColorMat = defaultBallMaterial;
+
+            //if no current ball color selected, grab the name of that object's parent name (eg 'blue ball')
+            if (StaticData.staticColorSelectedName == null)
+                StaticData.staticColorSelectedName = colorSelectedOutline.transform.parent.name;
+            
+            //find ball colour name in content row 1 or 2
+            Transform obj = transform.Find("Change Ball Colour Panel/Scroll Area/Parent Content/Content Row 1/"+StaticData.staticColorSelectedName);
+            if (obj==null)
+                obj = transform.Find("Change Ball Colour Panel/Scroll Area/Parent Content/Content Row 2/"+StaticData.staticColorSelectedName);
+            
+            //find button outline
+            colorSelectedOutline = obj.Find("Button").GetComponent<Outline>();
+            
+            //outline the current ball color
+            ToggleOutline(colorSelectedOutline);
+
+            StartCoroutine(SetScrollRectLeft());
+        }
+
+        
     }
 
     // Update is called once per frame
@@ -43,9 +78,9 @@ public class MenuActions : MonoBehaviour
         howToPlayPanel.SetActive(true);
     }
 
-    public void ReturnButton()
+    public void ReturnButton(GameObject currentPanel)
     {
-        howToPlayPanel.SetActive(false);
+        currentPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
     }
 
@@ -75,8 +110,28 @@ public class MenuActions : MonoBehaviour
     
     public void ToggleOutline(Outline outline)
     {
+        //erase last button's outline
+        colorSelectedOutline.effectDistance = new Vector2(0,0);
+
+        //create current button's outline
         outline.effectColor = Color.yellow;
         outline.effectDistance = new Vector2(10,10);
+
+        //set the newly selected button as the current outline
+        colorSelectedOutline = outline;
+
+        //StaticData.staticColorButtonOutline = colorSelectedOutline;
+        //print(outline.transform.parent.name);
+        StaticData.staticColorSelectedName = outline.transform.parent.name;
+        
+    }
+
+    public void SelectBallColor(GameObject ball)
+    {
+        MeshRenderer ballMesh = ball.GetComponent<MeshRenderer>();
+        Material ballColorMat = ballMesh.materials[0];
+        StaticData.staticBallColorMat = ballColorMat;
+        print(ballColorMat);
     }
 
     //simplified velocity bar func from UIManager, but it just goes up and down forever with no player input
@@ -96,6 +151,12 @@ public class MenuActions : MonoBehaviour
         }
 
         return (tBar,minY,maxY);
+    }
+
+    private IEnumerator SetScrollRectLeft()
+    {
+        yield return null;
+        //scrollRectCustomize.horizontalNormalizedPosition = 0f;
     }
 
     

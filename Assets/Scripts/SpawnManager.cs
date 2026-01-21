@@ -69,7 +69,6 @@ public class SpawnManager : MonoBehaviour
         //save initial player position for reset
         player = GameObject.Find("Player");
         playerPosition = player.transform.position;
-        print("Start of game player position: " + playerPosition);
 
         playerRb = player.GetComponent<Rigidbody>();
 

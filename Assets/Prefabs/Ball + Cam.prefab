@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5238869007976958739}
   - component: {fileID: 2246158606982467607}
   - component: {fileID: 6890953470060331231}
+  - component: {fileID: 4229296565061916526}
   m_Layer: 5
   m_Name: Ball + Cam
   m_TagString: Untagged
@@ -73,6 +74,21 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &4229296565061916526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 929666008497628268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: 1}
+  m_UseGraphicAlpha: 0
 --- !u!1 &1328771856641336391
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,6 +226,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: MenuActions, Assembly-CSharp
+        m_MethodName: SelectBallColor
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MenuActions, Assembly-CSharp
         m_MethodName: ToggleOutline

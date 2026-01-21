@@ -15,6 +15,7 @@ TagManager:
   - Velocity Bar Outline
   - Help Text
   - Start Throw
+  - Initial Button
   layers:
   - Default
   - TransparentFX

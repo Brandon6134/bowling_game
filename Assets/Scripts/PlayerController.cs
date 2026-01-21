@@ -54,6 +54,8 @@ public class PlayerController : MonoBehaviour
 
         //make bowling ball spawn at an offset so that camera transition between player and ball is smooth
         camOffset = cameraControlScript.playerOffset - cameraControlScript.ballOffset;
+
+        ChangeBallColor(bowlingBallInHand);
     }
 
     // Update is called once per frame
@@ -212,6 +214,7 @@ public class PlayerController : MonoBehaviour
     {
         GameObject bowlingClone = Instantiate(bowlingBall,gameObject.transform.position + camOffset,bowlingBall.transform.rotation);
         Rigidbody bowlingRb = bowlingClone.GetComponent<Rigidbody>();
+        ChangeBallColor(bowlingClone);
 
         //add force to ball, with a mulitplier from the percentage of bar filled
         Vector3 force = transform.right * bowlingBallSpeed * percentModifier;
@@ -293,5 +296,13 @@ public class PlayerController : MonoBehaviour
 
         //allow player horizontal movement again
         throwInProgress = false;
+    }
+
+    public void ChangeBallColor(GameObject ball)
+    {
+        MeshRenderer ballMeshRenderer = ball.GetComponent<MeshRenderer>();
+        var ballMats = ballMeshRenderer.materials;
+        ballMats[0] = StaticData.staticBallColorMat;
+        ballMeshRenderer.materials = ballMats;
     }
 }
