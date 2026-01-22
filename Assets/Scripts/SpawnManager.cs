@@ -55,6 +55,8 @@ public class SpawnManager : MonoBehaviour
     private bool allPinsSleepingLastFrame = false;
     public GameObject GameOverParent;
     public Rigidbody playerRb;
+    public float gravity;
+    public float pinMovedThreshold = 0.2f;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -64,7 +66,7 @@ public class SpawnManager : MonoBehaviour
         UIManagerScript = GameObject.Find("UI Manager").GetComponent<UIManager>();
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
 
-        Physics.gravity = new Vector3(0,-25f,0);
+        Physics.gravity = new Vector3(0,-gravity,0);
 
         //save initial player position for reset
         player = GameObject.Find("Player");
@@ -108,7 +110,7 @@ public class SpawnManager : MonoBehaviour
             Vector3 currentPos = pin.transform.position;
 
             //if pins aren't in their original positions
-            if (Vector3.Distance(currentPos, startPos) > 0.1f)
+            if (Vector3.Distance(currentPos, startPos) > pinMovedThreshold)
             {
                 currentPinsDown++;
                 gameTotalPinsDown++;
@@ -191,12 +193,17 @@ public class SpawnManager : MonoBehaviour
             Vector3 currentPos = pin.transform.position;
 
             //if pins aren't in their original positions
-            if (Vector3.Distance(currentPos, startPos) > 0.1f)
+            if (Vector3.Distance(currentPos, startPos) > pinMovedThreshold)
             {
                 currentPins.Remove(pin); // remove the entry from the dictionary
                 currentPinsDown++;
                 gameTotalPinsDown++;
                 Destroy(pin);         // destroy the GameObject
+            }
+            else
+            {
+                //if not counted as pin down, reset their rotation in case they were slightly tapped earlier
+                pin.transform.rotation = Quaternion.identity;
             }
         }
 
@@ -537,7 +544,8 @@ public class SpawnManager : MonoBehaviour
             {
                 pinsHaveMovedThisRound = true;
             }
-            if (pinRb.IsSleeping() && pinsHaveMovedThisRound)
+            //if (pinRb.IsSleeping() && pinsHaveMovedThisRound)
+            if (pinRb.angularVelocity.magnitude <= 0.1f && pinRb.linearVelocity.magnitude <=0.1f && pinsHaveMovedThisRound)
             {
                 sleepCount++;
             }

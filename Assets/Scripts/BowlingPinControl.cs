@@ -3,16 +3,31 @@ using UnityEngine;
 public class BowlingPinControl : MonoBehaviour
 {
     private Rigidbody pinRb;
+    public float highAngularDrang = 1f;
+    public float lowAngularDrag = 0.05f;
+    public float breakAngle = 8f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         pinRb = GetComponent<Rigidbody>();
+        //pinRb.centerOfMass = new Vector3(0,-0.5f,0);
     }
 
     // Update is called once per frame
     void Update()
     {
         Sleep();
+
+        float tilt = Vector3.Angle(transform.up, Vector3.up);
+
+        if (tilt < breakAngle)
+        {
+            pinRb.angularDamping = highAngularDrang;
+        }
+        else
+        {
+            pinRb.angularDamping = lowAngularDrag;
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -29,7 +44,10 @@ public class BowlingPinControl : MonoBehaviour
     {
         if (pinRb.linearVelocity.magnitude < 0.5f || pinRb.angularVelocity.magnitude < 0.5f)
         {
-            pinRb.Sleep();
+            //pinRb.Sleep();
+            pinRb.linearVelocity = Vector3.zero;
+            pinRb.angularVelocity = Vector3.zero;
+            //print("Sleeping!");
         }
         else
         {
