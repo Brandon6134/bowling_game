@@ -1,7 +1,4 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -28,7 +25,7 @@ public class MenuActions : MonoBehaviour
         Scene currentScene = SceneManager.GetActiveScene();
 
         //if on main menu UI
-        if (currentScene.buildIndex == 1)
+        if (currentScene.buildIndex == 0)
         {
             mainMenuPanel.SetActive(true);
             customizePanel.SetActive(false);

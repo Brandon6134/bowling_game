@@ -1700,9 +1700,12 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: 5924120ac04352f4bb324605bb795906, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 7da849622e597c14ea1fc873ea194e02, type: 2}
-    m_RemovedComponents:
-    - {fileID: 5866666021909216657, guid: 5924120ac04352f4bb324605bb795906, type: 3}
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 5924120ac04352f4bb324605bb795906, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8269195505564239483, guid: 5924120ac04352f4bb324605bb795906, type: 3}
@@ -11753,7 +11756,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0

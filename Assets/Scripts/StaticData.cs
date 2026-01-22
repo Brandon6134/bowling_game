@@ -3,7 +3,15 @@ using UnityEngine.UI;
 
 public class StaticData : MonoBehaviour
 {
+    //stores the selected ball's color material
     public static Material staticBallColorMat;
-    public static Outline staticColorButtonOutline;
+
+    //store the selected ball's color name e.g. "Yellow Ball" so can search for it whenever
     public static string staticColorSelectedName;
+
+    //get gameObject of player, then get the animator avatar by accessing the animator component.
+    //then set that avatar to the parent player animator to allow animations
+    //grab the gameobject.name e.g. "Lucy" to keep the name selected
+    public static GameObject characterSelected; 
+    
 }
