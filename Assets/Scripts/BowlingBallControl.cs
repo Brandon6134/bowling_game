@@ -21,10 +21,6 @@ public class BowlingBallControl : MonoBehaviour
         //require 2 audio sources for handling each audiosource/clip
         audioSource = GetComponents<AudioSource>()[0]; //use this audiosource to play the oneshot AudioClip of pinHit
         ballRolling = GetComponents<AudioSource>()[1]; //use this audiosource to continously play the ballRolling audio
-
-        ballRb = GetComponent<Rigidbody>();
-
-        
     }
 
     void FixedUpdate()

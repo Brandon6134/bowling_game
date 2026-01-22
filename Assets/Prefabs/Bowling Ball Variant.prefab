@@ -16,6 +16,10 @@ PrefabInstance:
       propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6886841225399269863, guid: 726d4cf5cb8439a48aa24d53bdd1ca0f, type: 3}
+      propertyPath: m_Constraints
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3165772579025678399, guid: 726d4cf5cb8439a48aa24d53bdd1ca0f, type: 3}
       propertyPath: m_LocalScale.x
       value: 3

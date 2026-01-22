@@ -66,7 +66,7 @@ public class SpawnManager : MonoBehaviour
         UIManagerScript = GameObject.Find("UI Manager").GetComponent<UIManager>();
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
 
-        Physics.gravity = new Vector3(0,-gravity,0);
+        //Physics.gravity = new Vector3(0,-gravity,0);
 
         //save initial player position for reset
         player = GameObject.Find("Player");
@@ -88,6 +88,7 @@ public class SpawnManager : MonoBehaviour
         if (isGameActive)
         {
             AutomaticReset(globalRound);
+            Physics.gravity = new Vector3(0,-gravity,0);
         }
         
     }

@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     public float speedRounded = 100f;
     public bool throwAnimActive = false;
     public bool isStepForwardAnim = false;
+    public float barPercent = 0f;
     public float usedPercent = 0f;
     public bool throwInProgress = false;
     private float spinStrength = 0f;
@@ -89,7 +90,7 @@ public class PlayerController : MonoBehaviour
             else if(Input.GetKeyUp(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && spacePressed && !throwAnimActive)
             {
                 //script.progress returns 0.1 if 90% of bar is filled, so invert progress value to get 0.9
-                float barPercent = Mathf.Abs(verticalProgressBarScript.Progress - 1f);
+                barPercent = Mathf.Abs(verticalProgressBarScript.Progress - 1f);
 
                 //make the actual percent modifier range from 0.5 to 1 for speed balance
                 usedPercent = 0.5f + barPercent/2;

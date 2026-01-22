@@ -1,33 +1,30 @@
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class BowlingPinControl : MonoBehaviour
 {
     private Rigidbody pinRb;
+    private Collider pinColl;
     public float highAngularDrang = 1f;
     public float lowAngularDrag = 0.05f;
     public float breakAngle = 8f;
+    public bool hasMoved = false;
+    private PlayerController playerControllerScript;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
         pinRb = GetComponent<Rigidbody>();
-        //pinRb.centerOfMass = new Vector3(0,-0.5f,0);
+        pinColl = GetComponent<Collider>();
     }
 
     // Update is called once per frame
     void Update()
     {
         Sleep();
-
-        float tilt = Vector3.Angle(transform.up, Vector3.up);
-
-        if (tilt < breakAngle)
-        {
-            pinRb.angularDamping = highAngularDrang;
-        }
-        else
-        {
-            pinRb.angularDamping = lowAngularDrag;
-        }
+        ConditionalAngularDamping();
+        if (playerControllerScript.spaceReleased)
+            FrictionScaler();
     }
 
     void OnTriggerEnter(Collider other)
@@ -53,5 +50,37 @@ public class BowlingPinControl : MonoBehaviour
         {
             pinRb.WakeUp();
         }
+    }
+
+    void ConditionalAngularDamping()
+    {
+        float tilt = Vector3.Angle(transform.up, Vector3.up);
+
+        if (tilt < breakAngle && !hasMoved)
+        {
+            pinRb.angularDamping = highAngularDrang;
+        }
+        else
+        {
+            pinRb.angularDamping = lowAngularDrag;
+            hasMoved = true;
+            //print("hasMoved: " + hasMoved + gameObject.name);
+            
+        }
+    }
+
+    void FrictionScaler()
+    {
+        //assume speedRounded can be 10 - 50 km/h
+        //lower speed -> higher friction
+        //higher speed -> lower friction
+        //(speedRounded - 10) / (50 - 10) = range from 0 to 1 based on range 10 - 50
+        float max = 50f;
+        float min = 10f;
+        float percent = (playerControllerScript.speedRounded - min) / (max-min);
+        percent = Mathf.Abs(percent-1f);
+        pinColl.material.dynamicFriction = percent;
+        pinColl.sharedMaterial.staticFriction = percent;
+        print("Friction: " + percent);
     }
 }
