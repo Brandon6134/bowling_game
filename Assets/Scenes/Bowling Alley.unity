@@ -11711,7 +11711,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 171971374539544101, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_Mass
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 171971374539544101, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_ImplicitCom
@@ -11730,12 +11730,32 @@ PrefabInstance:
       value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: 384992134681463900, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: breakAngle
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 384992134681463900, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowDamping
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 384992134681463900, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highDamping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 384992134681463900, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowAngularDrag
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 384992134681463900, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highAngularDrag
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 384992134681463900, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: verticalProgressBar
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 518472120282640609, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_Mass
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 518472120282640609, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_ImplicitCom
@@ -11754,12 +11774,32 @@ PrefabInstance:
       value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: 634794121714640847, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: breakAngle
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 634794121714640847, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowDamping
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 634794121714640847, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highDamping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 634794121714640847, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowAngularDrag
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 634794121714640847, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highAngularDrag
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 634794121714640847, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: verticalProgressBar
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 746046061456980585, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_Mass
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 746046061456980585, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_ImplicitCom
@@ -11779,7 +11819,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1313242177197564605, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_Mass
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 1313242177197564605, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_ImplicitCom
@@ -11798,12 +11838,72 @@ PrefabInstance:
       value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: 2213782069654550825, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: breakAngle
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2213782069654550825, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowDamping
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2213782069654550825, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highDamping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2213782069654550825, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowAngularDrag
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2213782069654550825, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highAngularDrag
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2213782069654550825, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: verticalProgressBar
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2305295087824369512, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: breakAngle
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2305295087824369512, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowDamping
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2305295087824369512, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highDamping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2305295087824369512, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowAngularDrag
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2305295087824369512, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highAngularDrag
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2305295087824369512, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: verticalProgressBar
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2559817115077121392, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: breakAngle
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2559817115077121392, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowDamping
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2559817115077121392, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highDamping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2559817115077121392, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowAngularDrag
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2559817115077121392, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highAngularDrag
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2559817115077121392, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: verticalProgressBar
@@ -11811,7 +11911,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2843601279554961555, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_Mass
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2843601279554961555, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_ImplicitCom
@@ -11831,7 +11931,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3579324387744742644, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_Mass
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 3579324387744742644, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_ImplicitCom
@@ -11851,7 +11951,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3856878059856957960, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_Mass
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 3856878059856957960, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_ImplicitCom
@@ -11870,12 +11970,32 @@ PrefabInstance:
       value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4723319405902327824, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: breakAngle
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4723319405902327824, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowDamping
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4723319405902327824, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highDamping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4723319405902327824, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowAngularDrag
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4723319405902327824, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highAngularDrag
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4723319405902327824, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: verticalProgressBar
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5603162890704535269, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_Mass
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5603162890704535269, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_ImplicitCom
@@ -11892,6 +12012,26 @@ PrefabInstance:
     - target: {fileID: 5603162890704535269, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_CenterOfMass.y
       value: -0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892791895755508518, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: breakAngle
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892791895755508518, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowDamping
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892791895755508518, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highDamping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892791895755508518, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowAngularDrag
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892791895755508518, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highAngularDrag
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5892791895755508518, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: verticalProgressBar
@@ -11938,6 +12078,26 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7699938952873693947, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: breakAngle
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7699938952873693947, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowDamping
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7699938952873693947, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highDamping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7699938952873693947, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowAngularDrag
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7699938952873693947, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highAngularDrag
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7699938952873693947, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: verticalProgressBar
       value: 
       objectReference: {fileID: 0}
@@ -11946,8 +12106,48 @@ PrefabInstance:
       value: Alley Objects
       objectReference: {fileID: 0}
     - target: {fileID: 8090648905861999048, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: breakAngle
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090648905861999048, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowDamping
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090648905861999048, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highDamping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090648905861999048, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowAngularDrag
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090648905861999048, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highAngularDrag
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090648905861999048, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: verticalProgressBar
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8731952943922698695, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: breakAngle
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8731952943922698695, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowDamping
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8731952943922698695, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highDamping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8731952943922698695, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: lowAngularDrag
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8731952943922698695, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
+      propertyPath: highAngularDrag
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8731952943922698695, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: verticalProgressBar
@@ -11959,7 +12159,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9052209495948676140, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_Mass
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 9052209495948676140, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_ImplicitCom
@@ -11979,7 +12179,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9107209066725405703, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_Mass
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 9107209066725405703, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: m_ImplicitCom

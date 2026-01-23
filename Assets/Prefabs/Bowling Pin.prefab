@@ -155,6 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6c564d1e99e8a743baff7391838a94f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BowlingPinControl
-  highAngularDrang: 6
-  lowAngularDrag: 0.05
-  breakAngle: 8
+  highDamping: 4
+  lowDamping: 0.5
+  breakAngle: 20
+  hasMoved: 0

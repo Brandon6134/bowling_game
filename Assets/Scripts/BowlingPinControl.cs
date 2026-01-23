@@ -5,9 +5,9 @@ public class BowlingPinControl : MonoBehaviour
 {
     private Rigidbody pinRb;
     private Collider pinColl;
-    public float highAngularDrang = 1f;
-    public float lowAngularDrag = 0.05f;
-    public float breakAngle = 8f;
+    public float highDamping;
+    public float lowDamping;
+    public float breakAngle;
     public bool hasMoved = false;
     private PlayerController playerControllerScript;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -22,7 +22,7 @@ public class BowlingPinControl : MonoBehaviour
     void Update()
     {
         Sleep();
-        ConditionalAngularDamping();
+        ConditionalDamping();
         if (playerControllerScript.spaceReleased)
             FrictionScaler();
     }
@@ -46,41 +46,48 @@ public class BowlingPinControl : MonoBehaviour
             pinRb.angularVelocity = Vector3.zero;
             //print("Sleeping!");
         }
-        else
-        {
-            pinRb.WakeUp();
-        }
+        // else
+        // {
+        //     pinRb.WakeUp();
+        // }
     }
 
-    void ConditionalAngularDamping()
+    //set high damping if tilt is less than breakAngle (~8 degrees), aka standing upright
+    //set low damping if tilt is more than breakAngle, aka has been hit
+    //this makes pins harder to initially move, but when they are hit they are sent flying
+    void ConditionalDamping()
     {
         float tilt = Vector3.Angle(transform.up, Vector3.up);
 
         if (tilt < breakAngle && !hasMoved)
         {
-            pinRb.angularDamping = highAngularDrang;
+            pinRb.angularDamping = highDamping;
+            pinRb.linearDamping = highDamping;
         }
         else
         {
-            pinRb.angularDamping = lowAngularDrag;
+            pinRb.angularDamping = lowDamping;
+            pinRb.linearDamping = lowDamping;
             hasMoved = true;
             //print("hasMoved: " + hasMoved + gameObject.name);
             
         }
+        //print(pinRb.linearDamping);
     }
 
     void FrictionScaler()
     {
         //assume speedRounded can be 10 - 50 km/h
-        //lower speed -> higher friction
-        //higher speed -> lower friction
+        //lower ball speed -> higher friction, higher ball speed -> lower friction
         //(speedRounded - 10) / (50 - 10) = range from 0 to 1 based on range 10 - 50
         float max = 50f;
         float min = 10f;
         float percent = (playerControllerScript.speedRounded - min) / (max-min);
-        percent = Mathf.Abs(percent-1f);
-        pinColl.material.dynamicFriction = percent;
-        pinColl.sharedMaterial.staticFriction = percent;
-        print("Friction: " + percent);
+
+        //get inverse of percent so 0.9 bar filled -> 0.1 friction
+        float friction = Mathf.Abs(percent-1f);
+        pinColl.material.dynamicFriction = friction;
+        pinColl.sharedMaterial.staticFriction = friction;
+        //print("Friction: " + percent);
     }
 }
