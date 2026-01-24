@@ -1,6 +1,8 @@
 using System.Collections;
 using MagicPigGames;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
@@ -43,6 +45,8 @@ public class PlayerController : MonoBehaviour
         Collider playerColl = GetComponent<Collider>();
         Collider ballColl = bowlingBallInHand.GetComponent<Collider>();
         Physics.IgnoreCollision(playerColl,ballColl);
+
+        ChangeCharacterModel();
 
         //grab all animators from children objects
         Animator[] animators = gameObject.GetComponentsInChildren<Animator>();
@@ -305,5 +309,14 @@ public class PlayerController : MonoBehaviour
         var ballMats = ballMeshRenderer.materials;
         ballMats[0] = StaticData.staticBallColorMat;
         ballMeshRenderer.materials = ballMats;
+    }
+
+    public void ChangeCharacterModel()
+    {
+        Transform characterObject = transform.Find(StaticData.characterSelectedName);
+        Avatar characterAvatar = characterObject.GetComponent<Animator>().avatar;
+        GetComponent<Animator>().avatar = characterAvatar;
+
+        characterObject.gameObject.SetActive(true);
     }
 }

@@ -157,5 +157,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BowlingPinControl
   highDamping: 4
   lowDamping: 0.5
-  breakAngle: 20
+  breakAngle: 8
   hasMoved: 0

@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,7 +10,10 @@ public class MenuActions : MonoBehaviour
     public GameObject mainMenuPanel;
     public GameObject howToPlayPanel;
     public GameObject customizePanel;
+    public GameObject characterSelectPanel;
     public GameObject pauseButton;
+    public TextMeshProUGUI characterNameText;
+    public TextMeshProUGUI characterBackstoryText;
     public GameObject velocityBar;
     public RectTransform velocityBarRectTransform;
     private float t = 0f;
@@ -17,6 +22,7 @@ public class MenuActions : MonoBehaviour
     public Outline colorSelectedOutline;
     public Material defaultBallMaterial;
     public ScrollRect[] scrollRectCustomizeRows;
+    public Transform charGameObject;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -30,29 +36,10 @@ public class MenuActions : MonoBehaviour
             mainMenuPanel.SetActive(true);
             customizePanel.SetActive(false);
 
-            //if no current ball color selected, make default material blue
-            if (StaticData.staticBallColorMat == null)
-                StaticData.staticBallColorMat = defaultBallMaterial;
-
-            //if no current ball color selected, grab the name of that object's parent name (eg 'blue ball')
-            if (StaticData.staticColorSelectedName == null)
-                StaticData.staticColorSelectedName = colorSelectedOutline.transform.parent.name;
-            
-            //find ball colour name in content row 1 or 2
-            Transform obj = transform.Find("Change Ball Colour Panel/Scroll Area/Parent Content/Content Row 1/"+StaticData.staticColorSelectedName);
-            if (obj==null)
-                obj = transform.Find("Change Ball Colour Panel/Scroll Area/Parent Content/Content Row 2/"+StaticData.staticColorSelectedName);
-            
-            //find button outline
-            colorSelectedOutline = obj.Find("Button").GetComponent<Outline>();
-            
-            //outline the current ball color
-            ToggleOutline(colorSelectedOutline);
-
-            StartCoroutine(SetScrollRectLeft());
+            //track what ball color is selected and outline it (or apply default color if none selected)
+            TrackBallColor();
+            TrackCharacterSelected();
         }
-
-        
     }
 
     // Update is called once per frame
@@ -100,6 +87,12 @@ public class MenuActions : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    public void CharacterSelectButton()
+    {
+        mainMenuPanel.SetActive(false);
+        characterSelectPanel.SetActive(true);
+    }
+
     public void CustomizeButton()
     {
         mainMenuPanel.SetActive(false);
@@ -129,7 +122,84 @@ public class MenuActions : MonoBehaviour
         MeshRenderer ballMesh = ball.GetComponent<MeshRenderer>();
         Material ballColorMat = ballMesh.materials[0];
         StaticData.staticBallColorMat = ballColorMat;
-        print(ballColorMat);
+        //print(ballColorMat);
+    }
+
+    public void TrackBallColor()
+    {
+            //if no current ball color selected, make default material blue
+            if (StaticData.staticBallColorMat == null)
+                StaticData.staticBallColorMat = defaultBallMaterial;
+
+            //if no current ball color selected, grab the name of that object's parent name (eg 'blue ball')
+            if (StaticData.staticColorSelectedName == null)
+                StaticData.staticColorSelectedName = colorSelectedOutline.transform.parent.name;
+            
+            //find ball colour name in content row 1 or 2
+            Transform obj = transform.Find("Change Ball Colour Panel/Scroll Area/Parent Content/Content Row 1/"+StaticData.staticColorSelectedName);
+            if (obj==null)
+                obj = transform.Find("Change Ball Colour Panel/Scroll Area/Parent Content/Content Row 2/"+StaticData.staticColorSelectedName);
+            
+            //find button outline
+            colorSelectedOutline = obj.Find("Button").GetComponent<Outline>();
+            
+            //outline the current ball color
+            ToggleOutline(colorSelectedOutline);
+    }
+
+    // public void HoverCharacter(GameObject character)
+    // {
+    //     //set last character object inactive
+    //     Transform obj = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
+    //     obj.gameObject.SetActive(false);
+
+    //     //set temp new character name variable and set active
+    //     tempCharName = characterNameText.text = character.name;
+    //     obj = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
+    //     obj.gameObject.SetActive(true);
+    // }
+
+    // public void ClickCharacter(GameObject character)
+    // {
+    //     //set last character object inactive
+    //     Transform obj = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
+    //     obj.gameObject.SetActive(false);
+
+    //     //set new character name variable and set active
+    //     StaticData.characterSelectedName = tempCharName = characterNameText.text = character.name;
+    //     obj = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
+    //     obj.gameObject.SetActive(true);
+
+    //     Animator charAnim = character.GetComponent<Animator>();
+    //     charAnim.SetInteger("anim_index",0);
+    // }
+    
+    public void SelectCharacter(GameObject character)
+    {
+        //set last character object inactive
+        charGameObject = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
+        charGameObject.gameObject.SetActive(false);
+
+        //set new character name variable and set active
+        StaticData.characterSelectedName = characterNameText.text = character.name;
+        charGameObject = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
+        charGameObject.gameObject.SetActive(true);
+    }
+
+    public void TrackCharacterSelected()
+    {
+        if (StaticData.characterSelectedName == null)
+            StaticData.characterSelectedName = "James";
+
+        GameObject tempGameObject = new GameObject();
+        tempGameObject.name = StaticData.characterSelectedName;
+        SelectCharacter(tempGameObject);
+    }
+
+    public void ConfirmCharacter()
+    {
+        Animator charAnim = charGameObject.gameObject.GetComponent<Animator>();
+        charAnim.SetInteger("anim_index",0);
     }
 
     //simplified velocity bar func from UIManager, but it just goes up and down forever with no player input
@@ -151,11 +221,6 @@ public class MenuActions : MonoBehaviour
         return (tBar,minY,maxY);
     }
 
-    private IEnumerator SetScrollRectLeft()
-    {
-        yield return null;
-        //scrollRectCustomize.horizontalNormalizedPosition = 0f;
-    }
 
     
 }

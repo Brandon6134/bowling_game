@@ -1695,7 +1695,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5924120ac04352f4bb324605bb795906, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 5924120ac04352f4bb324605bb795906, type: 3}
       propertyPath: m_Controller
@@ -3823,7 +3823,10 @@ MonoBehaviour:
   mainMenuPanel: {fileID: 4118671423071468157}
   howToPlayPanel: {fileID: 793820175}
   customizePanel: {fileID: 0}
+  characterSelectPanel: {fileID: 0}
   pauseButton: {fileID: 201284931}
+  characterNameText: {fileID: 0}
+  characterBackstoryText: {fileID: 0}
   velocityBar: {fileID: 1504021191}
   velocityBarRectTransform: {fileID: 1504021192}
   colorSelectedOutline: {fileID: 0}
@@ -9846,7 +9849,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7229050953605335326}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 5924120ac04352f4bb324605bb795906, type: 3}
+  m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 7da849622e597c14ea1fc873ea194e02, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -11731,7 +11734,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 384992134681463900, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: breakAngle
-      value: 20
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 384992134681463900, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: lowDamping
@@ -11775,7 +11778,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 634794121714640847, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: breakAngle
-      value: 20
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 634794121714640847, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: lowDamping
@@ -11839,7 +11842,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2213782069654550825, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: breakAngle
-      value: 20
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2213782069654550825, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: lowDamping
@@ -11863,7 +11866,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2305295087824369512, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: breakAngle
-      value: 20
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2305295087824369512, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: lowDamping
@@ -11887,7 +11890,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2559817115077121392, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: breakAngle
-      value: 20
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2559817115077121392, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: lowDamping
@@ -11971,7 +11974,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4723319405902327824, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: breakAngle
-      value: 20
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4723319405902327824, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: lowDamping
@@ -12015,7 +12018,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5892791895755508518, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: breakAngle
-      value: 20
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5892791895755508518, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: lowDamping
@@ -12079,7 +12082,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7699938952873693947, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: breakAngle
-      value: 20
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7699938952873693947, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: lowDamping
@@ -12107,7 +12110,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8090648905861999048, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: breakAngle
-      value: 20
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8090648905861999048, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: lowDamping
@@ -12131,7 +12134,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8731952943922698695, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: breakAngle
-      value: 20
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8731952943922698695, guid: 63ea503e7efbc4f4687133646a539ed3, type: 3}
       propertyPath: lowDamping

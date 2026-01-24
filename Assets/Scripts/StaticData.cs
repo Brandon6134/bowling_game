@@ -12,6 +12,6 @@ public class StaticData : MonoBehaviour
     //get gameObject of player, then get the animator avatar by accessing the animator component.
     //then set that avatar to the parent player animator to allow animations
     //grab the gameobject.name e.g. "Lucy" to keep the name selected
-    public static GameObject characterSelected; 
+    public static string characterSelectedName;
     
 }
