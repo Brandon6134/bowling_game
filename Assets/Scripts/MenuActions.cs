@@ -23,6 +23,7 @@ public class MenuActions : MonoBehaviour
     public Material defaultBallMaterial;
     public ScrollRect[] scrollRectCustomizeRows;
     public Transform charGameObject;
+    public Vector3 originalPosition;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -110,9 +111,6 @@ public class MenuActions : MonoBehaviour
 
         //set the newly selected button as the current outline
         colorSelectedOutline = outline;
-
-        //StaticData.staticColorButtonOutline = colorSelectedOutline;
-        //print(outline.transform.parent.name);
         StaticData.staticColorSelectedName = outline.transform.parent.name;
         
     }
@@ -122,7 +120,6 @@ public class MenuActions : MonoBehaviour
         MeshRenderer ballMesh = ball.GetComponent<MeshRenderer>();
         Material ballColorMat = ballMesh.materials[0];
         StaticData.staticBallColorMat = ballColorMat;
-        //print(ballColorMat);
     }
 
     public void TrackBallColor()
@@ -178,6 +175,8 @@ public class MenuActions : MonoBehaviour
     {
         //set last character object inactive
         charGameObject = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
+        if (character.name == charGameObject.gameObject.name)
+            return;
         charGameObject.gameObject.SetActive(false);
 
         //set new character name variable and set active
@@ -186,6 +185,7 @@ public class MenuActions : MonoBehaviour
         charGameObject.gameObject.SetActive(true);
     }
 
+    //handle fresh main menu load
     public void TrackCharacterSelected()
     {
         if (StaticData.characterSelectedName == null)
@@ -196,8 +196,10 @@ public class MenuActions : MonoBehaviour
         SelectCharacter(tempGameObject);
     }
 
+    //when confirm button is clicked, start character preview animation
     public void ConfirmCharacter()
     {
+        originalPosition = charGameObject.position;
         Animator charAnim = charGameObject.gameObject.GetComponent<Animator>();
         charAnim.SetInteger("anim_index",0);
     }

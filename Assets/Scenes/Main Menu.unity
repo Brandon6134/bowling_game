@@ -668,11 +668,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5924120ac04352f4bb324605bb795906, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.898
+      value: -6.969
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5924120ac04352f4bb324605bb795906, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.633
+      value: 1.64
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5924120ac04352f4bb324605bb795906, type: 3}
       propertyPath: m_LocalPosition.z
@@ -848,7 +848,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5924120ac04352f4bb324605bb795906, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1161837160611805812, guid: 5924120ac04352f4bb324605bb795906, type: 3}
       propertyPath: m_Layer
@@ -1710,6 +1710,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   charGameObject: {fileID: 0}
+  originalPosition: {x: 0, y: 0, z: 0}
 --- !u!4 &675310925 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6339608115436220803, guid: f38a3febc0b1964409e471c9b2532cf2, type: 3}
@@ -7616,7 +7617,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8292703320187909222, guid: 7fd409c58bc070c4eb90ee9f082afc91, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8753047921779580042, guid: 7fd409c58bc070c4eb90ee9f082afc91, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size

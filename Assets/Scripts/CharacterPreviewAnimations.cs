@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class CharacterPreviewAnimations : MonoBehaviour
@@ -15,8 +16,14 @@ public class CharacterPreviewAnimations : MonoBehaviour
         
     }
 
+    //this func is called from a event key at the end of a preview animation duration
     public void FinishedSelectAnimation()
     {
+        //once preview animation is done, close char panel and go back to main menu
         menuActionsScript.ReturnButton(menuActionsScript.characterSelectPanel);
+
+        //reset character model's position and rotation
+        menuActionsScript.charGameObject.position = menuActionsScript.originalPosition;
+        menuActionsScript.charGameObject.rotation = Quaternion.identity;
     }
 }
