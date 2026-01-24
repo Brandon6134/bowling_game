@@ -46,7 +46,8 @@ public class PlayerController : MonoBehaviour
         Collider ballColl = bowlingBallInHand.GetComponent<Collider>();
         Physics.IgnoreCollision(playerColl,ballColl);
 
-        ChangeCharacterModel();
+        if (StaticData.characterSelectedName != null)
+            ChangeCharacterModel();
 
         //grab all animators from children objects
         Animator[] animators = gameObject.GetComponentsInChildren<Animator>();

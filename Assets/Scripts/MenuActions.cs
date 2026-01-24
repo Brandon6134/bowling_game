@@ -173,27 +173,33 @@ public class MenuActions : MonoBehaviour
     
     public void SelectCharacter(GameObject character)
     {
-        //set last character object inactive
         charGameObject = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
+
+        //if player selected same character again, exit function
         if (character.name == charGameObject.gameObject.name)
             return;
+        
+        //set last character object inactive
         charGameObject.gameObject.SetActive(false);
 
         //set new character name variable and set active
         StaticData.characterSelectedName = characterNameText.text = character.name;
         charGameObject = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
         charGameObject.gameObject.SetActive(true);
+        
     }
 
     //handle fresh main menu load
     public void TrackCharacterSelected()
-    {
+    {   
+        //set default if no char selected
         if (StaticData.characterSelectedName == null)
             StaticData.characterSelectedName = "James";
 
-        GameObject tempGameObject = new GameObject();
-        tempGameObject.name = StaticData.characterSelectedName;
-        SelectCharacter(tempGameObject);
+        //set character name text and set prewview object active
+        characterNameText.text = StaticData.characterSelectedName;
+        charGameObject = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
+        charGameObject.gameObject.SetActive(true);
     }
 
     //when confirm button is clicked, start character preview animation
