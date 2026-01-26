@@ -1,4 +1,6 @@
+using MagicPigGames;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class BowlingBallControl : MonoBehaviour
 {
@@ -10,6 +12,11 @@ public class BowlingBallControl : MonoBehaviour
     public bool isBallPastPins=false;
     private PlayerController playerControllerScript;
     private CameraControl cameraControlScript;
+    [SerializeField] public GameObject verticalProgressBar;
+    private VerticalProgressBar verticalProgressBarScript;
+    public GameObject fireVFX;
+    //private DecalProjector decalP;
+    public Material material;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,17 +24,37 @@ public class BowlingBallControl : MonoBehaviour
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
         cameraControlScript = GameObject.Find("Main Camera").GetComponent<CameraControl>();
 
+        //if is prefab that cant assign verticalprogressbar, ignore
+        if (verticalProgressBar != null)
+            verticalProgressBarScript = verticalProgressBar.GetComponent<VerticalProgressBar>();
+
         ballRb = GetComponent<Rigidbody>();
         //require 2 audio sources for handling each audiosource/clip
         audioSource = GetComponents<AudioSource>()[0]; //use this audiosource to play the oneshot AudioClip of pinHit
         ballRolling = GetComponents<AudioSource>()[1]; //use this audiosource to continously play the ballRolling audio
+        
+        // if (verticalProgressBar == null)
+        // {   
+        //     decalP = gameObject.AddComponent<DecalProjector>();
+        //     decalP.transform.position = new Vector3(-20f,0.5f,0.35f);
+        //     decalP.transform.rotation = new Quaternion (90f,0f,0f,0f);
+        //     decalP.material = material;
+        // }
     }
+        
 
     void FixedUpdate()
     {
         float hookStrength = -0.8f;
         float spinY = ballRb.angularVelocity.y;
         ballRb.AddForce(spinY*Vector3.forward*hookStrength,ForceMode.Impulse);
+
+        //if is ball in hand, rise and lower scale of fire vfx
+        if (verticalProgressBar != null)
+            ControlFireVFX();
+        //else is the thrown ball, set the fire scale to be same as ball in h and
+        else
+            fireVFX.transform.localScale = StaticData.fireScale;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -43,6 +70,7 @@ public class BowlingBallControl : MonoBehaviour
             int index = Random.Range(0,5);
             audioSource.PlayOneShot(pinHit[index]);
             StartCoroutine(cameraControlScript.ShakeCamera());
+            //StartCoroutine(cameraControlScript.ShakeCamera());
         }
     }
 
@@ -67,4 +95,18 @@ public class BowlingBallControl : MonoBehaviour
             ballRb.angularDamping = 10;
         }
     }
+
+    public void ControlFireVFX()
+    {
+        float progress = Mathf.Abs(verticalProgressBarScript.Progress-1f)/2;
+        fireVFX.transform.localScale = StaticData.fireScale = new Vector3(progress,progress,progress);
+    }
+
+    // void OnCollisionStay(Collision collision)
+    // {
+    //     if (!collision.gameObject.CompareTag("Ground")) return;
+
+    //     ContactPoint contact = collision.contacts[0];
+    //     decalP.size = contact.point - new Vector3(-20f,0.5f,0.35f);
+    // }
 }

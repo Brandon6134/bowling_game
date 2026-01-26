@@ -359,6 +359,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f7c8e6026d209f4458715d563ab5f86a, type: 3}
   isBallFrozen: 0
   isBallPastPins: 0
+  verticalProgressBar: {fileID: 0}
+  fireVFX: {fileID: 1147781642459648447}
 --- !u!1001 &6517965976704541973
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -373,19 +375,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6168184190451578026, guid: 952b3b2d104ddfd47ba6d824d0c79475, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6168184190451578031, guid: 952b3b2d104ddfd47ba6d824d0c79475, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6168184190451578031, guid: 952b3b2d104ddfd47ba6d824d0c79475, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.25
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6168184190451578031, guid: 952b3b2d104ddfd47ba6d824d0c79475, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6168184190451578031, guid: 952b3b2d104ddfd47ba6d824d0c79475, type: 3}
       propertyPath: m_LocalPosition.x
@@ -435,5 +437,10 @@ PrefabInstance:
 --- !u!4 &1147781642459648442 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6168184190451578031, guid: 952b3b2d104ddfd47ba6d824d0c79475, type: 3}
+  m_PrefabInstance: {fileID: 6517965976704541973}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1147781642459648447 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6168184190451578026, guid: 952b3b2d104ddfd47ba6d824d0c79475, type: 3}
   m_PrefabInstance: {fileID: 6517965976704541973}
   m_PrefabAsset: {fileID: 0}

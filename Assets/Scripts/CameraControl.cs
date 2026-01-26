@@ -25,7 +25,7 @@ public class CameraControl : MonoBehaviour
     private SpawnManager spawnManagerScript;
     private PlayerController playerControllerScript;
     public AnimationCurve curve;
-    public float duration = 1f;
+    public float duration = 10f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -121,6 +121,7 @@ public class CameraControl : MonoBehaviour
                         //if already set to lastCamPos, exit so that it's only set once and allows for camera shaking when hitting pins
                         if (onLastCamPos)
                             return;
+                            
                         transform.position = lastCamPos;
                         onLastCamPos=true;
                     }
@@ -174,6 +175,11 @@ public class CameraControl : MonoBehaviour
             return false;
         }
     }
+
+    // public IEnumerator ShakeCamera()
+    // {
+    //     yield return StartCoroutine(ShakeObject(gameObject,duration,curve,lastCamPos,playerControllerScript.usedPercent));
+    // }
 
     public IEnumerator ShakeCamera()
     {

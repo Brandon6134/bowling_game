@@ -13,5 +13,8 @@ public class StaticData : MonoBehaviour
     //then set that avatar to the parent player animator to allow animations
     //grab the gameobject.name e.g. "Lucy" to keep the name selected
     public static string characterSelectedName;
+
+    //used to remember scale of fire VFX from held ball to thrown ball
+    public static Vector3 fireScale;
     
 }

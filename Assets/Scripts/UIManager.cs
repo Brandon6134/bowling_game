@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections;
 using UnityEditor;
 using MagicPigGames;
+using System;
 
 public class UIManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class UIManager : MonoBehaviour
     private SpawnManager spawnManagerScript;
     private PlayerController playerControllerScript;
     [SerializeField] public GameObject verticalProgressBar;
+    private Vector3 progressBarPos;
     private VerticalProgressBar verticalProgressBarScript;
     private AudioSource audioSource;
     public AudioClip[] announcePinsHitSFX;
@@ -18,6 +20,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI helpText;
     public TextMeshProUGUI torqueSpeedText;
     public GameObject[] spinUI;
+    public AnimationCurve velocityBarShakeCurve;
     private float t=0;
     public float tBar=0;
     private int minA = 0;
@@ -33,13 +36,16 @@ public class UIManager : MonoBehaviour
     public float barSpeed = 0.5f;
     public float barSpeedFixed = 0.5f;
     float[] moddedBarSpeeds;
-    public float[] barSpeedMultipliers = {1.2f,1.5f,2f,2.5f};
+    //{1.2f,1.5f,2f,2.5f};
+    public float[] barSpeedMultipliers = {1.5f,2f,3f,4.5f};
     public float barMultipler = 0f;
     private float minSpinX = 100f+960f;
     private float maxSpinX = 930f+960f;
     public float speedOfSpinIndicator;
     public Vector3 spinIndicatorBasePosition;
-    public float elapsedTime=0f;
+    //public float elapsedTime=0f;
+    public float duration = 1f;
+    public float shakeModifier;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -66,6 +72,7 @@ public class UIManager : MonoBehaviour
         helpText.enabled = false;
 
         //set progress bar initial progress to 0 and make inactive
+        progressBarPos = verticalProgressBar.transform.position;
         verticalProgressBarScript.SetProgress(0f);
         verticalProgressBar.SetActive(false);
 
@@ -87,6 +94,7 @@ public class UIManager : MonoBehaviour
         {
             //(tBar, minY, maxY) = VelocityBarChange(velocityBarRectTransform, tBar, minY, maxY);
             (tBar, minY, maxY,barSpeed) = AssetVelocityBarChange(tBar, minY, maxY, barSpeed);
+            StartCoroutine(ShakeObject(verticalProgressBar,duration,velocityBarShakeCurve,progressBarPos,shakeModifier));
             SpinGaugeChange(spinUI,minSpinX,maxSpinX);
         }
         
@@ -242,7 +250,7 @@ public class UIManager : MonoBehaviour
         //0.6 -> blue flame
         //0.9 -> green flame
         //0.95 -> purple flame
-        float[] benchmarks = {0.3f,0.6f,0.9f,0.95f};
+        float[] benchmarks = {0.45f,0.6f,0.8f,0.9f};
         float progress = Mathf.Abs(verticalProgressBarScript.Progress - 1f);
         float posNegMod = 1f;
 
@@ -262,6 +270,29 @@ public class UIManager : MonoBehaviour
             }
         }
         return barSpeed;
+    }
+
+    // public IEnumerator ShakeObject(GameObject obj, Vector3 originalPos, float shakeMod)
+    // {
+
+    //     obj.transform.position = originalPos + Random.insideUnitSphere * shakeMod;
+    //     yield return null;
+
+    //     obj.transform.position = originalPos;
+    // }
+    public IEnumerator ShakeObject(GameObject obj, float duration,AnimationCurve curve, Vector3 originalPos, float shakeMod)
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime+= Time.deltaTime;
+            //float strength = curve.Evaluate(elapsedTime / duration);
+            obj.transform.position = originalPos + UnityEngine.Random.insideUnitSphere *  shakeMod * Math.Abs(verticalProgressBarScript.Progress-1f);
+            yield return null;
+        }
+
+        obj.transform.position = originalPos;
     }
 
     public void ResetUI()

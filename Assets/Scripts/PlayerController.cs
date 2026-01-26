@@ -57,7 +57,6 @@ public class PlayerController : MonoBehaviour
 
         playerRb = GetComponent<Rigidbody>();
 
-
         //make bowling ball spawn at an offset so that camera transition between player and ball is smooth
         camOffset = cameraControlScript.playerOffset - cameraControlScript.ballOffset;
 
@@ -206,10 +205,7 @@ public class PlayerController : MonoBehaviour
 
     private void MoveForwardSequence(float speed)
     {
-        //transform.Translate(Vector3.right * speed *  Time.deltaTime,Space.World);
         playerRb.MovePosition(playerRb.position + Vector3.right * speed *  Time.deltaTime);
-        //print(transform.rotation);
-        //playerRb.MovePosition(transform.position + Vector3.back * speed * horizontalInput *  Time.deltaTime);
         
         //playerAnim.speed=0.4f;
         //print("moving forward with speed of "+speed);
@@ -286,8 +282,6 @@ public class PlayerController : MonoBehaviour
         CreateAndMoveBall(usedPercent,spinStrength);
 
         playerAnim.speed=1f;
-
-        
     }
 
     public void ResetPlayerControllVars()
@@ -302,14 +296,17 @@ public class PlayerController : MonoBehaviour
 
         //allow player horizontal movement again
         throwInProgress = false;
+
+        //set this false as backup at end of round, sometimes bug occurs where it's not set false
+        throwAnimActive=false;
     }
 
     public void ChangeBallColor(GameObject ball)
     {
         MeshRenderer ballMeshRenderer = ball.GetComponent<MeshRenderer>();
-        var ballMats = ballMeshRenderer.materials;
+        var ballMats = ballMeshRenderer.sharedMaterials;
         ballMats[0] = StaticData.staticBallColorMat;
-        ballMeshRenderer.materials = ballMats;
+        ballMeshRenderer.sharedMaterials = ballMats;
     }
 
     public void ChangeCharacterModel()
