@@ -3,6 +3,7 @@ using System.Collections;
 using MagicPigGames;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
 
@@ -35,6 +36,9 @@ public class PlayerController : MonoBehaviour
     private float spinStrength = 0f;
     public float spinStrengthModifier;
     [SerializeField] private GameObject bowlingBallInHand;
+    public bool isEnterPortalSequence = false;
+    public GameObject BiomeManager;
+    private BiomeManager biomeManagerScript;
 
     void Start()
     {
@@ -42,6 +46,7 @@ public class PlayerController : MonoBehaviour
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         UIManagerScript = GameObject.Find("UI Manager").GetComponent<UIManager>();
         verticalProgressBarScript = verticalProgressBar.GetComponent<VerticalProgressBar>();
+        biomeManagerScript = BiomeManager.GetComponent<BiomeManager>();
 
         Collider playerColl = GetComponent<Collider>();
         Collider ballColl = bowlingBallInHand.GetComponent<Collider>();
@@ -78,7 +83,7 @@ public class PlayerController : MonoBehaviour
             {
                 horizontalMovement();
                 rotationalMovement();
-                //EnterPortalSequence();
+                EnterPortalSequence();
             }
 
             //camBackOnPlayer indicates if the camera is approximately behind the player, aka cam is at the end of the transition (not midway transition) and on player
@@ -244,29 +249,11 @@ public class PlayerController : MonoBehaviour
         float torqueSpeedRounded = Mathf.Abs(Mathf.Round(torqueForce[1]*75));
         UIManagerScript.torqueSpeedText.text = torqueSpeedRounded + " RPM";
     }
-
     
-    // void OnTriggerEnter(Collider other)
-    // {  
-    //     //if player reaches the start of alley and the throw animation isn't active, force ball throw with mininum ball speed mulitplier of 0.5
-    //     if (other.CompareTag("Alley Starting Point") && !throwAnimActive)
-    //     {   
-    //         if (!throwAnimActive)
-    //         {
-    //             //if didnt release spacebar at end, set usedPercent to mininum of 0.5, and other booleans
-    //             usedPercent=0.5f;
-    //             spacePressed = false;
-    //             throwAnimActive = true;
-    //             //playerRb.constraints = RigidbodyConstraints.FreezePositionY;
-    //         }
-            
-    //         Debug.Log("reached alley start point, start throw animation now!");
-    //         playerAnim.SetBool("isThrow",true);
-    //     }
-    // }
-
+    //handle auto throw ball when progress bar reaches zero
     void AutoThrowBall()
     {
+        //if throw animation isnt active, velocity bar reaches zero, and barspeed is negative (bar is coming back downwards)
         if (!throwAnimActive && Math.Abs(verticalProgressBarScript.Progress-1f)<=0.01f && UIManagerScript.barSpeed<0)
         {   
             //if didnt release spacebar at end, set usedPercent to mininum of 0.5, and other booleans
@@ -340,7 +327,22 @@ public class PlayerController : MonoBehaviour
 
     public void EnterPortalSequence()
     {
-        playerAnim.SetBool("isWalkForward",true);
-        MoveForwardSequence(2f);
+        if (Input.GetKey(KeyCode.W))
+        {
+            playerAnim.SetBool("isWalkForward",true);
+            isEnterPortalSequence = true;
+            MoveForwardSequence(2f);
+        }
+        
+    }
+
+    void OnTriggerEnter(Collider other)
+    {  
+        //if enters portal during portal sequence
+        if (other.CompareTag("Entered Portal") && isEnterPortalSequence)
+        {   
+            StartCoroutine(biomeManagerScript.ChangeBiome(1));
+            isEnterPortalSequence=false;
+        }
     }
 }

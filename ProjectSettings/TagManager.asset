@@ -11,12 +11,12 @@ TagManager:
   - Midway Alley Point
   - Velocity Bar
   - Past Pins Point
-  - Alley Starting Point
   - Velocity Bar Outline
   - Help Text
   - Start Throw
   - Initial Button
   - Obstacle
+  - Entered Portal
   layers:
   - Default
   - TransparentFX
