@@ -16,6 +16,7 @@ TagManager:
   - Help Text
   - Start Throw
   - Initial Button
+  - Obstacle
   layers:
   - Default
   - TransparentFX

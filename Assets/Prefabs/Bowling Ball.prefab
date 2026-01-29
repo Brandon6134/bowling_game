@@ -357,11 +357,13 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a20723a77f31fc2408bd1d8c08dd58ee, type: 3}
   - {fileID: 8300000, guid: 289e10d896bc39d42a1817f44a9d706e, type: 3}
   - {fileID: 8300000, guid: f7c8e6026d209f4458715d563ab5f86a, type: 3}
+  obstacleHit: {fileID: 8300000, guid: d0cfab70becd7564685f8aaaaed28aa0, type: 3}
   isBallFrozen: 0
   isBallPastPins: 0
   verticalProgressBar: {fileID: 0}
   fireVFX: {fileID: 1147781642459648447}
   material: {fileID: 2100000, guid: 500aa6bf38475a04bb3c455a5bef6982, type: 2}
+  hookStrength: 20
 --- !u!1001 &6517965976704541973
 PrefabInstance:
   m_ObjectHideFlags: 0

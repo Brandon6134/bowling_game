@@ -57,6 +57,8 @@ public class SpawnManager : MonoBehaviour
     public Rigidbody playerRb;
     public float gravity;
     public float pinMovedThreshold = 0.2f;
+    private bool isRoundScoreEqualZero = false;
+    private bool alreadySetScoreZero = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -533,7 +535,7 @@ public class SpawnManager : MonoBehaviour
         GameObject bowlingBall = GameObject.FindGameObjectWithTag("Bowling Ball");
         
         int sleepCount=0;
-        bool isRoundScoreEqualZero = false;
+        
         
         foreach (GameObject pin in pins)
         {
@@ -565,9 +567,18 @@ public class SpawnManager : MonoBehaviour
 
             //if ball has nearly stopped moving and is past the pins (has velocity, and not didnt just spawn in w/ zero velocity)
             if ((bowlingBallRb.linearVelocity.magnitude<0.1f || bowlingBallRb.angularVelocity.magnitude<0.1f) && bowlingBallControlScript.isBallPastPins)
-            {
                 isRoundScoreEqualZero = true;
+
+            //if bowling ball is moving backwards (aka hit obstacle or smthn), set isroundscoreequalzero bool to reset round
+            if (bowlingBallRb.linearVelocity.x < 0f && !alreadySetScoreZero)
+            {
+                //set bool to true so waitforseconds func is only called once
+                alreadySetScoreZero = true;
+
+                //wait 2 secs before setting isRoundScoreEqualZero to true
+                StartCoroutine(WaitSecondsForReset(2f));
             }
+                
         }
 
         //if all pins have stopped moving or zero scored was achieved that round (no pins hit)
@@ -589,6 +600,8 @@ public class SpawnManager : MonoBehaviour
             pinsHaveMovedThisRound=false;
             bowlingBallControlScript.isBallPastPins = false;
             transitionCam_BallToPlayer = true;
+            isRoundScoreEqualZero = false;
+            alreadySetScoreZero = false;
         }
     }
 
@@ -597,5 +610,12 @@ public class SpawnManager : MonoBehaviour
         isGameActive = false;
         GameOverParent.SetActive(true);
         pauseMenu.SetActive(false);
+    }
+
+    //waits seconds before setting the round score zero and thus resetting the round
+    IEnumerator WaitSecondsForReset(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        isRoundScoreEqualZero = true;
     }
 }
