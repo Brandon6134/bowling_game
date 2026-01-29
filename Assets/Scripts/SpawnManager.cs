@@ -62,6 +62,8 @@ public class SpawnManager : MonoBehaviour
     private bool alreadySetScoreZero = false;
     public GameObject alleyMods;
     public List<List<Transform>> modifierParents = new List<List<Transform>>();
+    public GameObject portal;
+    private Portal_Controller portal_ControllerScript;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -70,6 +72,7 @@ public class SpawnManager : MonoBehaviour
         cameraControlScript = GameObject.Find("Main Camera").GetComponent<CameraControl>();
         UIManagerScript = GameObject.Find("UI Manager").GetComponent<UIManager>();
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        portal_ControllerScript = portal.GetComponent<Portal_Controller>();
 
         //Physics.gravity = new Vector3(0,-gravity,0);
 
@@ -87,6 +90,7 @@ public class SpawnManager : MonoBehaviour
         frameIndex = 0;
 
         InitializeAlleyModifiers(ref modifierParents);
+        portal_ControllerScript.TogglePortal(true);
     }
 
     // Update is called once per frame
@@ -633,7 +637,7 @@ public class SpawnManager : MonoBehaviour
             foreach (Transform grandChild in child)
             {
                 tempList.Add(grandChild);
-                grandChild.gameObject.SetActive(true);
+                //grandChild.gameObject.SetActive(true);
             }
             modifierParents.Add(tempList);
         }

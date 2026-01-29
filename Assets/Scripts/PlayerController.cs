@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using MagicPigGames;
 using Unity.VisualScripting;
@@ -61,6 +62,7 @@ public class PlayerController : MonoBehaviour
         camOffset = cameraControlScript.playerOffset - cameraControlScript.ballOffset;
 
         ChangeBallColor(bowlingBallInHand);
+        
     }
 
     // Update is called once per frame
@@ -69,12 +71,14 @@ public class PlayerController : MonoBehaviour
         //if game is active, allow player control
         if (spawnManagerScript.isGameActive)
         {
+            
             //if camera isn't on the scoreboard, allow player movement (when player exits scoreboard, can immediately move so feels nice and not restrictve)
             //also if isnt in the moveforward sequence or throwing animation
             if (!cameraControlScript.camOnScores && !spacePressed && !throwInProgress)
             {
                 horizontalMovement();
                 rotationalMovement();
+                //EnterPortalSequence();
             }
 
             //camBackOnPlayer indicates if the camera is approximately behind the player, aka cam is at the end of the transition (not midway transition) and on player
@@ -130,6 +134,8 @@ public class PlayerController : MonoBehaviour
             {
                 MoveForwardSequence(4f);
             }
+
+            AutoThrowBall();
         }
         
     }
@@ -240,21 +246,35 @@ public class PlayerController : MonoBehaviour
     }
 
     
-    void OnTriggerEnter(Collider other)
-    {  
-        //if player reaches the start of alley and the throw animation isn't active, force ball throw with mininum ball speed mulitplier of 0.5
-        if (other.CompareTag("Alley Starting Point") && !throwAnimActive)
-        {   
-            if (!throwAnimActive)
-            {
-                //if didnt release spacebar at end, set usedPercent to mininum of 0.5, and other booleans
-                usedPercent=0.5f;
-                spacePressed = false;
-                throwAnimActive = true;
-                //playerRb.constraints = RigidbodyConstraints.FreezePositionY;
-            }
+    // void OnTriggerEnter(Collider other)
+    // {  
+    //     //if player reaches the start of alley and the throw animation isn't active, force ball throw with mininum ball speed mulitplier of 0.5
+    //     if (other.CompareTag("Alley Starting Point") && !throwAnimActive)
+    //     {   
+    //         if (!throwAnimActive)
+    //         {
+    //             //if didnt release spacebar at end, set usedPercent to mininum of 0.5, and other booleans
+    //             usedPercent=0.5f;
+    //             spacePressed = false;
+    //             throwAnimActive = true;
+    //             //playerRb.constraints = RigidbodyConstraints.FreezePositionY;
+    //         }
             
-            Debug.Log("reached alley start point, start throw animation now!");
+    //         Debug.Log("reached alley start point, start throw animation now!");
+    //         playerAnim.SetBool("isThrow",true);
+    //     }
+    // }
+
+    void AutoThrowBall()
+    {
+        if (!throwAnimActive && Math.Abs(verticalProgressBarScript.Progress-1f)<=0.01f && UIManagerScript.barSpeed<0)
+        {   
+            //if didnt release spacebar at end, set usedPercent to mininum of 0.5, and other booleans
+            usedPercent=0.5f;
+            spacePressed = false;
+            throwAnimActive = true;
+            
+            Debug.Log("velocity bar reached 0, auto-throwing ball!");
             playerAnim.SetBool("isThrow",true);
         }
     }
@@ -316,5 +336,11 @@ public class PlayerController : MonoBehaviour
         GetComponent<Animator>().avatar = characterAvatar;
 
         characterObject.gameObject.SetActive(true);
+    }
+
+    public void EnterPortalSequence()
+    {
+        playerAnim.SetBool("isWalkForward",true);
+        MoveForwardSequence(2f);
     }
 }
