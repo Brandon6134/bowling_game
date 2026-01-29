@@ -11,6 +11,7 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine.UI;
 using UnityEngine.InputSystem.Controls;
+using JetBrains.Annotations;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -59,6 +60,8 @@ public class SpawnManager : MonoBehaviour
     public float pinMovedThreshold = 0.2f;
     private bool isRoundScoreEqualZero = false;
     private bool alreadySetScoreZero = false;
+    public GameObject alleyMods;
+    public List<List<Transform>> modifierParents = new List<List<Transform>>();
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -82,6 +85,8 @@ public class SpawnManager : MonoBehaviour
         roundStartPins = TrackPins();
 
         frameIndex = 0;
+
+        InitializeAlleyModifiers(ref modifierParents);
     }
 
     // Update is called once per frame
@@ -617,5 +622,23 @@ public class SpawnManager : MonoBehaviour
     {
         yield return new WaitForSeconds(seconds);
         isRoundScoreEqualZero = true;
+    }
+
+    //initializes 2d list with all children group modifiers
+    public void InitializeAlleyModifiers(ref List<List<Transform>> modifierParents )
+    {
+        foreach (Transform child in alleyMods.transform)
+        {
+            List<Transform> tempList = new List<Transform>();
+            foreach (Transform grandChild in child)
+            {
+                tempList.Add(grandChild);
+                grandChild.gameObject.SetActive(true);
+            }
+            modifierParents.Add(tempList);
+        }
+
+        //int randomModTypeIndex = UnityEngine.Random.Range(0,modifierParents.Count);
+        
     }
 }
