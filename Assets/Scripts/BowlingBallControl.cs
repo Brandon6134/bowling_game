@@ -17,6 +17,7 @@ public class BowlingBallControl : MonoBehaviour
     public GameObject fireVFX;
     //private DecalProjector decalP;
     public Material material;
+    public float hookStrength = 20f;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -45,9 +46,7 @@ public class BowlingBallControl : MonoBehaviour
 
     void FixedUpdate()
     {
-        float hookStrength = -0.8f;
-        float spinY = ballRb.angularVelocity.y;
-        ballRb.AddForce(spinY*Vector3.forward*hookStrength,ForceMode.Impulse);
+        ApplySpinForce(hookStrength);
 
         //if is ball in hand, rise and lower scale of fire vfx
         if (verticalProgressBar != null)
@@ -98,8 +97,32 @@ public class BowlingBallControl : MonoBehaviour
 
     public void ControlFireVFX()
     {
-        float progress = Mathf.Abs(verticalProgressBarScript.Progress-1f)/2;
+        float progress = Mathf.Abs(verticalProgressBarScript.Progress-1f)/4;
         fireVFX.transform.localScale = StaticData.fireScale = new Vector3(progress,progress,progress);
+    }
+
+    // applies the spin force onto the ball
+    //hookStrength is how strong the hook effect is -> higher value means greater spin
+    public void ApplySpinForce(float hookStrength)
+    {
+        // float hookStrength = -0.8f;
+        // float spinY = ballRb.angularVelocity.y;
+        // ballRb.AddForce(spinY*Vector3.forward*hookStrength,ForceMode.Force);
+        
+        Vector3 laneNormal = Vector3.up;
+
+        // Get spin around the up axis
+        float sideSpin = Vector3.Dot(ballRb.angularVelocity, laneNormal);
+
+        // Sideways direction relative to ball motion
+        Vector3 sideDir = Vector3.Cross(laneNormal, ballRb.linearVelocity.normalized);
+
+        // Apply sideways force based on spin
+        Vector3 hookForce = sideDir * sideSpin * hookStrength;
+
+        // Clamp to avoid explosions
+        hookForce = Vector3.ClampMagnitude(hookForce, 20f);
+        ballRb.AddForce(hookForce, ForceMode.Force);
     }
 
     // void OnCollisionStay(Collision collision)

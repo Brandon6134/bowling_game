@@ -361,6 +361,7 @@ MonoBehaviour:
   isBallPastPins: 0
   verticalProgressBar: {fileID: 0}
   fireVFX: {fileID: 1147781642459648447}
+  material: {fileID: 2100000, guid: 500aa6bf38475a04bb3c455a5bef6982, type: 2}
 --- !u!1001 &6517965976704541973
 PrefabInstance:
   m_ObjectHideFlags: 0
