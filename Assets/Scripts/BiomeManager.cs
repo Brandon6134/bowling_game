@@ -10,11 +10,15 @@ public class BiomeManager : MonoBehaviour
     public GameObject player;
     private Rigidbody playerRb;
     public GameObject portalParent;
+    private Portal_Controller portal_ControllerScript;
     private List<Transform> biomeList = new List<Transform>();
     public int currentBiomeIndex = 0; //global index that tracks the current active biome index
+    public ParticleSystem portalSpawnVFX;
+    public bool isEnterPortalSequence = false;
     void Start()
     {
         playerRb = player.GetComponent<Rigidbody>();
+        portal_ControllerScript = portalParent.transform.GetChild(0).gameObject.GetComponent<Portal_Controller>();
         InitializeBiomeList(ref parentBiome);
     }
 
@@ -28,7 +32,7 @@ public class BiomeManager : MonoBehaviour
 
     public IEnumerator ChangeBiome(int newBiomeIndex)
     {
-        //wait 1 frame before setting previous biome inactive
+        //wait 1 frame before setting previous biome inactive (can't set inactive same frame as collision)
         yield return null;
 
         //set last biome inactive
@@ -44,8 +48,30 @@ public class BiomeManager : MonoBehaviour
 
     public void MovePortalAndPlayer()
     {
-        playerRb.MovePosition(playerRb.position + new Vector3(-15f,0f,0f));
+        playerRb.position += new Vector3(-15f,0f,0f);
         portalParent.transform.position += new Vector3(-15f,0f,0f);
-        
+        Physics.SyncTransforms();
+    }
+
+    public IEnumerator PortalSpawn()
+    {
+        isEnterPortalSequence = true;
+        yield return new WaitForSeconds(1f); //wait 1 second after round reset (plus wait for cam to come back to player), then play beam vfx
+
+        //portalParent.transform.GetChild(2).gameObject.SetActive(true);
+        portalSpawnVFX.Play();
+
+        //wait 0.5 seconds after beam vfx to spawn portal
+        yield return new WaitForSeconds(0.5f);
+        portalParent.SetActive(true);
+        portal_ControllerScript.TogglePortal(true);
+    }
+
+    //sets portal sequence bool to false, and sets portal parent to inactive
+    public void PortalDisable()
+    {
+        isEnterPortalSequence = false;
+        portalParent.SetActive(false);
+        print("disabling portal!");
     }
 }

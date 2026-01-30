@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     private float spinStrength = 0f;
     public float spinStrengthModifier;
     [SerializeField] private GameObject bowlingBallInHand;
-    public bool isEnterPortalSequence = false;
+    
     public GameObject BiomeManager;
     private BiomeManager biomeManagerScript;
 
@@ -330,8 +330,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             playerAnim.SetBool("isWalkForward",true);
-            isEnterPortalSequence = true;
-            MoveForwardSequence(2f);
+            MoveForwardSequence(4f);
+            playerRb.freezeRotation = true;
         }
         
     }
@@ -339,10 +339,9 @@ public class PlayerController : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {  
         //if enters portal during portal sequence
-        if (other.CompareTag("Entered Portal") && isEnterPortalSequence)
+        if (other.CompareTag("Entered Portal") && biomeManagerScript.isEnterPortalSequence)
         {   
             StartCoroutine(biomeManagerScript.ChangeBiome(1));
-            isEnterPortalSequence=false;
         }
     }
 }

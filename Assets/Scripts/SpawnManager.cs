@@ -62,8 +62,9 @@ public class SpawnManager : MonoBehaviour
     private bool alreadySetScoreZero = false;
     public GameObject alleyMods;
     public List<List<Transform>> modifierParents = new List<List<Transform>>();
-    public GameObject portal;
-    private Portal_Controller portal_ControllerScript;
+    public GameObject BiomeManager;
+    private BiomeManager biomeManagerScript;
+
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -72,7 +73,7 @@ public class SpawnManager : MonoBehaviour
         cameraControlScript = GameObject.Find("Main Camera").GetComponent<CameraControl>();
         UIManagerScript = GameObject.Find("UI Manager").GetComponent<UIManager>();
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
-        portal_ControllerScript = portal.GetComponent<Portal_Controller>();
+        biomeManagerScript = BiomeManager.GetComponent<BiomeManager>();
 
         //Physics.gravity = new Vector3(0,-gravity,0);
 
@@ -90,7 +91,6 @@ public class SpawnManager : MonoBehaviour
         frameIndex = 0;
 
         InitializeAlleyModifiers(ref modifierParents);
-        portal_ControllerScript.TogglePortal(true);
     }
 
     // Update is called once per frame
@@ -144,6 +144,9 @@ public class SpawnManager : MonoBehaviour
         GameObject bowlingBall = GameObject.FindGameObjectWithTag("Bowling Ball");
         Destroy(bowlingBall);
 
+        //set back the round to one so soft reset is called next round
+        globalRound=1;
+
         //if isn't last frame and 3rd round
         if (lastFrameRoundIndex!=2)
         {
@@ -156,8 +159,7 @@ public class SpawnManager : MonoBehaviour
         UpdateScore(text);
         UIManagerScript.AnnounceScore(currentPinsDown,isSpareForAnnounce,isStrike);
 
-        //set back the round to one so soft reset is called next round
-        globalRound=1;
+        
 
         //after the 10th frame, game is finished
         if (frameIndex == 10)
@@ -270,12 +272,6 @@ public class SpawnManager : MonoBehaviour
         playerRb.position = playerPosition;
         playerRb.rotation = Quaternion.identity;
         player.transform.rotation = new Quaternion(0,0,0,0);
-
-        //Physics.SyncTransforms();
-
-        //print("post-reset player pos: " + player.transform.position);
-        //print("rigid body location: "+playerRb.position);
-        //print("startPosition: " + playerPosition);
     }
 
     //tracks all existing pin objects, then returns a dict of their gameObjects as keys and initial positions as values
@@ -421,6 +417,16 @@ public class SpawnManager : MonoBehaviour
                 frameIndex++;
             }
         }
+
+        //if was portal sequence last frame, disable now
+        if(biomeManagerScript.isEnterPortalSequence)
+            biomeManagerScript.PortalDisable();
+        
+        //if x frameIndex and is first round, start portal spawn
+        if(frameIndex==1 && globalRound==1)
+            StartCoroutine(biomeManagerScript.PortalSpawn());
+        
+        
     }
 
     private void StrikeCalculator(int round)
@@ -612,6 +618,8 @@ public class SpawnManager : MonoBehaviour
             isRoundScoreEqualZero = false;
             alreadySetScoreZero = false;
         }
+
+        
     }
 
     public void GameOver()
