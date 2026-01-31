@@ -39,6 +39,8 @@ public class PlayerController : MonoBehaviour
     
     public GameObject BiomeManager;
     private BiomeManager biomeManagerScript;
+    private AudioSource audioSource;
+    public AudioClip fireballSFX;
 
     void Start()
     {
@@ -62,6 +64,7 @@ public class PlayerController : MonoBehaviour
         playerAnim = animators[0];
 
         playerRb = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
 
         //make bowling ball spawn at an offset so that camera transition between player and ball is smooth
         camOffset = cameraControlScript.playerOffset - cameraControlScript.ballOffset;
@@ -277,6 +280,7 @@ public class PlayerController : MonoBehaviour
     public void StepForwardAnim()
     {
         isStepForwardAnim = true;
+        audioSource.PlayOneShot(fireballSFX,0.5f);
     }
 
     //once throw animation is complete, trigger this func and set throwAnimActive to false

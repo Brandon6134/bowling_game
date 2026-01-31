@@ -5,6 +5,7 @@ using UnityEngine.Rendering.Universal;
 public class BowlingBallControl : MonoBehaviour
 {
     private AudioSource audioSource;
+    private AudioSource audioSourceFire;
     public AudioClip[] pinHit; //is audioclip for oneshot
     private AudioSource ballRolling; //is audiosource to play continously
     public AudioClip obstacleHit;
@@ -34,6 +35,7 @@ public class BowlingBallControl : MonoBehaviour
         //require 2 audio sources for handling each audiosource/clip
         audioSource = GetComponents<AudioSource>()[0]; //use this audiosource to play the oneshot AudioClip of pinHit
         ballRolling = GetComponents<AudioSource>()[1]; //use this audiosource to continously play the ballRolling audio
+        audioSourceFire = GetComponents<AudioSource>()[2]; //use this audiosource to play flames sfx during bar charge up
 
         
         // if (verticalProgressBar == null)
@@ -102,8 +104,20 @@ public class BowlingBallControl : MonoBehaviour
 
     public void ControlFireVFX()
     {
-        float progress = Mathf.Abs(verticalProgressBarScript.Progress-1f)/4;
-        fireVFX.transform.localScale = StaticData.fireScale = new Vector3(progress,progress,progress);
+        float barProgress = Mathf.Abs(verticalProgressBarScript.Progress-1f);
+        float scaleProgress = Mathf.Abs(verticalProgressBarScript.Progress-1f)/4;
+        fireVFX.transform.localScale = StaticData.fireScale = new Vector3(scaleProgress,scaleProgress,scaleProgress);
+
+        audioSourceFire.volume = barProgress/4;
+
+        if (!audioSourceFire.isPlaying)
+        {
+            print("play fire vfx");
+            audioSourceFire.Play();
+        }
+            
+        
+        
     }
 
     // applies the spin force onto the ball

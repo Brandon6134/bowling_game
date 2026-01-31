@@ -14,12 +14,17 @@ public class BiomeManager : MonoBehaviour
     private List<Transform> biomeList = new List<Transform>();
     public int currentBiomeIndex = 0; //global index that tracks the current active biome index
     public ParticleSystem portalSpawnVFX;
+    private AudioSource laserAudioSource;
+    public AudioClip laserSFX;
     public bool isEnterPortalSequence = false;
     void Start()
     {
         playerRb = player.GetComponent<Rigidbody>();
         portal_ControllerScript = portalParent.transform.GetChild(0).gameObject.GetComponent<Portal_Controller>();
+        
         InitializeBiomeList(ref parentBiome);
+
+        laserAudioSource = portalSpawnVFX.GetComponent<AudioSource>();
     }
 
     public void InitializeBiomeList(ref GameObject parent)
@@ -60,6 +65,7 @@ public class BiomeManager : MonoBehaviour
 
         //portalParent.transform.GetChild(2).gameObject.SetActive(true);
         portalSpawnVFX.Play();
+        laserAudioSource.PlayOneShot(laserSFX,0.2f);
 
         //wait 0.5 seconds after beam vfx to spawn portal
         yield return new WaitForSeconds(0.5f);
