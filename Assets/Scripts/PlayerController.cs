@@ -229,10 +229,12 @@ public class PlayerController : MonoBehaviour
         lastPos = newPos;
 
         //print("Velocity.X = " +velocity.x + "  Velocity.Z = " + velocity.z);
+        
 
         //if player isnt moving, set idle animation boolean
-        if (speed <=0.2f)
+        if (speed <=0.00001f)
         {
+            //print("speed is less than 0.2f at : "+speed);
             if (Mathf.Abs(velocity.x) <= 0.2f)
             {
                 playerAnim.SetBool("isWalkForward",false);
@@ -242,7 +244,7 @@ public class PlayerController : MonoBehaviour
             if (footstepAudioSource.isPlaying && playFootstepSFX)
             {
                 footstepAudioSource.Stop();
-                print("stopping footsteps!");
+                //print("stopping footsteps!");
             }
                 
         }
@@ -257,7 +259,7 @@ public class PlayerController : MonoBehaviour
             if (!footstepAudioSource.isPlaying && playFootstepSFX)
             {
                 footstepAudioSource.Play();
-                print("playing footsteps!");
+                //print("playing footsteps!");
             }
                 
         }
@@ -329,7 +331,9 @@ public class PlayerController : MonoBehaviour
     public void StepForwardAnim()
     {
         isStepForwardAnim = true;
-        fireAudioSource.PlayOneShot(fireballSFX,0.5f);
+
+        //scale fireball sfx with progress bar (multiplied by some amplifier and add min sound value)
+        fireAudioSource.PlayOneShot(fireballSFX,Math.Abs(verticalProgressBarScript.Progress-1f)*1.3f+0.2f);
     }
 
     //once throw animation is complete, trigger this func and set throwAnimActive to false

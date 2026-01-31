@@ -111,7 +111,7 @@ public class BowlingBallControl : MonoBehaviour
         fireVFX.transform.localScale = StaticData.fireScale = new Vector3(scaleProgress,scaleProgress,scaleProgress);
 
         //set fire sfx volume to increase/decrease with progress
-        audioSourceFire.volume = barProgress/4;
+        audioSourceFire.volume = barProgress/2;
 
         //only continuosly play fire sfx if wasn't playing previously
         //fire sfx stops playing after reset because the ball is deleted (and thus sfx stops)
