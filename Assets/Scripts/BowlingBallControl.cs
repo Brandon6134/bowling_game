@@ -52,9 +52,9 @@ public class BowlingBallControl : MonoBehaviour
     {
         ApplySpinForce(hookStrength);
 
-        //if is ball in hand, rise and lower scale of fire vfx
+        //if is ball in hand, scale fire vfx and sfx for ball according to progress bar
         if (verticalProgressBar != null)
-            ControlFireVFX();
+            ControlFire();
         //else is the thrown ball, set the fire scale to be same as ball in h and
         else
             fireVFX.transform.localScale = StaticData.fireScale;
@@ -102,17 +102,21 @@ public class BowlingBallControl : MonoBehaviour
         }
     }
 
-    public void ControlFireVFX()
+    public void ControlFire()
     {
         float barProgress = Mathf.Abs(verticalProgressBarScript.Progress-1f);
         float scaleProgress = Mathf.Abs(verticalProgressBarScript.Progress-1f)/4;
+
+        //set fire vfx scale size
         fireVFX.transform.localScale = StaticData.fireScale = new Vector3(scaleProgress,scaleProgress,scaleProgress);
 
+        //set fire sfx volume to increase/decrease with progress
         audioSourceFire.volume = barProgress/4;
 
+        //only continuosly play fire sfx if wasn't playing previously
+        //fire sfx stops playing after reset because the ball is deleted (and thus sfx stops)
         if (!audioSourceFire.isPlaying)
         {
-            print("play fire vfx");
             audioSourceFire.Play();
         }
             

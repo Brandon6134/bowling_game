@@ -39,8 +39,10 @@ public class PlayerController : MonoBehaviour
     
     public GameObject BiomeManager;
     private BiomeManager biomeManagerScript;
-    private AudioSource audioSource;
+    private AudioSource fireAudioSource;
     public AudioClip fireballSFX;
+    private AudioSource footstepAudioSource;
+    private Vector3 lastPos;
 
     void Start()
     {
@@ -64,12 +66,15 @@ public class PlayerController : MonoBehaviour
         playerAnim = animators[0];
 
         playerRb = GetComponent<Rigidbody>();
-        audioSource = GetComponent<AudioSource>();
+        fireAudioSource = GetComponents<AudioSource>()[0];
+        footstepAudioSource = GetComponents<AudioSource>()[1];
 
         //make bowling ball spawn at an offset so that camera transition between player and ball is smooth
         camOffset = cameraControlScript.playerOffset - cameraControlScript.ballOffset;
 
         ChangeBallColor(bowlingBallInHand);
+
+        lastPos = playerRb.transform.position;
         
     }
 
@@ -128,19 +133,20 @@ public class PlayerController : MonoBehaviour
                 //begin throw ball animation
                 playerAnim.SetBool("isThrow",true);
                 throwAnimActive = true;
+                footstepAudioSource.Stop();
             }
             
             //move the player forward if walking forward or during throw animation
             // || (spacePressed && throwAnimActive && playerAnim.GetBool("isThrow"))
             if ((spacePressed && playerAnim.GetBool("isWalkForward")) )
             {
-                MoveForwardSequence(2f);
+                MoveForwardSequence(2f,true);
             }
 
             //if the animation shows a step forward, move the player even more
             if (isStepForwardAnim)
             {
-                MoveForwardSequence(4f);
+                MoveForwardSequence(4f,false);
             }
 
             AutoThrowBall();
@@ -165,20 +171,18 @@ public class PlayerController : MonoBehaviour
         
         //translate w/ respect to world, so can move left and right globally (not accounting for rotation)
         //transform.Translate(Vector3.back * speed * horizontalInput *  Time.deltaTime,Space.World);
-        playerRb.MovePosition(transform.position + Vector3.back * speed * horizontalInput *  Time.deltaTime);
+        Vector3 newPos = transform.position + Vector3.back * speed * horizontalInput *  Time.deltaTime;
+        playerRb.MovePosition(newPos);
+
+        CalculatePlayerVelocity(newPos,ref lastPos, true);
 
         //set animation parameter walkSpeed to current input direction
         playerAnim.SetFloat("walkSpeed",horizontalInput);
 
-        //if player isn't moving horizontally, set idle boolean to true for animation
-        if (horizontalInput == 0f)
-        {
+        if (horizontalInput==0)
             playerAnim.SetBool("isIdle",true);
-        }
-        else 
-        {
+        else
             playerAnim.SetBool("isIdle",false);
-        }
     }
 
     void rotationalMovement()
@@ -217,9 +221,54 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void MoveForwardSequence(float speed)
+    public void CalculatePlayerVelocity(Vector3 newPos, ref Vector3 lastPos, bool playFootstepSFX)
     {
-        playerRb.MovePosition(playerRb.position + Vector3.right * speed *  Time.deltaTime);
+        Vector3 velocity = (newPos - lastPos) / Time.fixedDeltaTime;
+        float speed = velocity.magnitude;
+
+        lastPos = newPos;
+
+        //print("Velocity.X = " +velocity.x + "  Velocity.Z = " + velocity.z);
+
+        //if player isnt moving, set idle animation boolean
+        if (speed <=0.2f)
+        {
+            if (Mathf.Abs(velocity.x) <= 0.2f)
+            {
+                playerAnim.SetBool("isWalkForward",false);
+                playerAnim.SetBool("isIdle",true);
+            }   
+
+            if (footstepAudioSource.isPlaying && playFootstepSFX)
+            {
+                footstepAudioSource.Stop();
+                print("stopping footsteps!");
+            }
+                
+        }
+        else 
+        {
+            if (Mathf.Abs(velocity.x) >= 0.2f)
+            {
+                playerAnim.SetBool("isWalkForward",true);
+                playerAnim.SetBool("isIdle",false);
+            }
+
+            if (!footstepAudioSource.isPlaying && playFootstepSFX)
+            {
+                footstepAudioSource.Play();
+                print("playing footsteps!");
+            }
+                
+        }
+    }
+
+    private void MoveForwardSequence(float speed, bool playFootstepSFX)
+    {
+        Vector3 newPos = playerRb.position + Vector3.right * speed *  Time.deltaTime;
+        playerRb.MovePosition(newPos);
+    
+        CalculatePlayerVelocity(newPos,ref lastPos, playFootstepSFX);
         
         //playerAnim.speed=0.4f;
         //print("moving forward with speed of "+speed);
@@ -280,7 +329,7 @@ public class PlayerController : MonoBehaviour
     public void StepForwardAnim()
     {
         isStepForwardAnim = true;
-        audioSource.PlayOneShot(fireballSFX,0.5f);
+        fireAudioSource.PlayOneShot(fireballSFX,0.5f);
     }
 
     //once throw animation is complete, trigger this func and set throwAnimActive to false
@@ -333,8 +382,8 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W))
         {
-            playerAnim.SetBool("isWalkForward",true);
-            MoveForwardSequence(4f);
+            //playerAnim.SetBool("isWalkForward",true);
+            MoveForwardSequence(4f,true);
             playerRb.freezeRotation = true;
         }
         
