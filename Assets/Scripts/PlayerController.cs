@@ -86,13 +86,15 @@ public class PlayerController : MonoBehaviour
         {
             
             //if camera isn't on the scoreboard, allow player movement (when player exits scoreboard, can immediately move so feels nice and not restrictve)
-            //also if isnt in the moveforward sequence or throwing animation
-            if (!cameraControlScript.camOnScores && !spacePressed && !throwInProgress)
+            //also if isnt in the moveforward sequence or throwing animation, and isnt enter portal sequence
+            if (!cameraControlScript.camOnScores && !spacePressed && !throwInProgress && !biomeManagerScript.isEnterPortalSequence)
             {
                 horizontalMovement();
                 rotationalMovement();
-                EnterPortalSequence();
+                //EnterPortalSequence();
             }
+            else if(biomeManagerScript.isEnterPortalSequence)
+                StartCoroutine(EnterPortalSequence());
 
             //camBackOnPlayer indicates if the camera is approximately behind the player, aka cam is at the end of the transition (not midway transition) and on player
             //used Distance() to approximate equallness cause there was a delay between the two vector3's values making them equal after some time, not always.
@@ -100,7 +102,8 @@ public class PlayerController : MonoBehaviour
 
             // start move forward sequence if no balls exist currently (only can throw one ball at a time), if cam is on the player (not mid transition),
             // and space hasn't been pressed down or released this round yet (or else can keep manipulating velocity bar several times in one round)
-            if (Input.GetKeyDown(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && !spacePressed && !spaceReleased)
+            if (Input.GetKeyDown(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && 
+            !spacePressed && !spaceReleased && !biomeManagerScript.isEnterPortalSequence)
             {
                 spacePressed=true;
                 throwInProgress=true;
@@ -108,7 +111,8 @@ public class PlayerController : MonoBehaviour
                 UIManagerScript.verticalProgressBar.SetActive(true);
             }
             //if entered moveforwardsequence, start bowling veloctiy bar UI + minigame
-            else if(Input.GetKeyUp(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && spacePressed && !throwAnimActive)
+            else if(Input.GetKeyUp(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && 
+            spacePressed && !throwAnimActive && !biomeManagerScript.isEnterPortalSequence)
             {
                 //script.progress returns 0.1 if 90% of bar is filled, so invert progress value to get 0.9
                 barPercent = Mathf.Abs(verticalProgressBarScript.Progress - 1f);
@@ -138,7 +142,7 @@ public class PlayerController : MonoBehaviour
             
             //move the player forward if walking forward or during throw animation
             // || (spacePressed && throwAnimActive && playerAnim.GetBool("isThrow"))
-            if ((spacePressed && playerAnim.GetBool("isWalkForward")) )
+            if (spacePressed && playerAnim.GetBool("isWalkForward") )
             {
                 MoveForwardSequence(2f,true);
             }
@@ -382,15 +386,18 @@ public class PlayerController : MonoBehaviour
         characterObject.gameObject.SetActive(true);
     }
 
-    public void EnterPortalSequence()
+    public IEnumerator EnterPortalSequence()
     {
-        if (Input.GetKey(KeyCode.W))
+        //wait 3 seconds for portal, then start walking player forward
+        yield return new WaitForSeconds(3f);
+
+        //if portal sequence is over (hit exit portal trigger, stop func and stop moving player)
+        if (!biomeManagerScript.isEnterPortalSequence)
         {
-            //playerAnim.SetBool("isWalkForward",true);
-            MoveForwardSequence(4f,true);
-            playerRb.freezeRotation = true;
+            yield break;
         }
-        
+        MoveForwardSequence(2f,true);
+        playerRb.freezeRotation = true;
     }
 
     void OnTriggerEnter(Collider other)
@@ -399,6 +406,11 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Entered Portal") && biomeManagerScript.isEnterPortalSequence)
         {   
             StartCoroutine(biomeManagerScript.ChangeBiome(1));
+        }
+        //if player has exited the portal, then allow disabling of portals and portal booleans
+        else if (other.CompareTag("Exited Portal") && biomeManagerScript.isEnterPortalSequence && biomeManagerScript.exitedPortal)
+        {
+            biomeManagerScript.PortalDisable();
         }
     }
 }

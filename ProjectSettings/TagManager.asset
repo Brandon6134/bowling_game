@@ -17,6 +17,7 @@ TagManager:
   - Initial Button
   - Obstacle
   - Entered Portal
+  - Exited Portal
   layers:
   - Default
   - TransparentFX

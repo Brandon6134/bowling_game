@@ -17,6 +17,7 @@ public class BiomeManager : MonoBehaviour
     private AudioSource laserAudioSource;
     public AudioClip laserSFX;
     public bool isEnterPortalSequence = false;
+    public bool exitedPortal = false;
     void Start()
     {
         playerRb = player.GetComponent<Rigidbody>();
@@ -53,9 +54,13 @@ public class BiomeManager : MonoBehaviour
 
     public void MovePortalAndPlayer()
     {
+        //move player and portal backwards after entering portal
         playerRb.position += new Vector3(-15f,0f,0f);
         portalParent.transform.position += new Vector3(-15f,0f,0f);
         Physics.SyncTransforms();
+
+        //set bool stating that player has exited portal (so can delete portal after)
+        exitedPortal = true;
     }
 
     public IEnumerator PortalSpawn()
@@ -77,6 +82,7 @@ public class BiomeManager : MonoBehaviour
     public void PortalDisable()
     {
         isEnterPortalSequence = false;
+        exitedPortal = false;
         portalParent.SetActive(false);
         print("disabling portal!");
     }
