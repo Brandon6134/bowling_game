@@ -10400,8 +10400,10 @@ MonoBehaviour:
   currentBiomeIndex: 0
   portalSpawnVFX: {fileID: 1922129426}
   laserSFX: {fileID: 8300000, guid: bdb677a2e388e9249b37b8abcb5e825a, type: 3}
+  portalWarpSFX: {fileID: 8300000, guid: 41eb3e73714221e439406218c8248175, type: 3}
   isEnterPortalSequence: 0
   exitedPortal: 0
+  enteredPortal: 0
 --- !u!4 &1697971828
 Transform:
   m_ObjectHideFlags: 0
@@ -10886,7 +10888,7 @@ Transform:
   m_GameObject: {fileID: 1835772322}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -3.62, y: 0, z: 2.5056698}
+  m_LocalPosition: {x: -5, y: 0, z: 2.5056698}
   m_LocalScale: {x: 1, y: 1, z: 5.347796}
   m_ConstrainProportionsScale: 0
   m_Children: []

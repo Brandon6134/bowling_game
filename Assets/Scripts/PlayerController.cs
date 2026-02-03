@@ -232,9 +232,6 @@ public class PlayerController : MonoBehaviour
 
         lastPos = newPos;
 
-        //print("Velocity.X = " +velocity.x + "  Velocity.Z = " + velocity.z);
-        
-
         //if player isnt moving, set idle animation boolean
         if (speed <=0.00001f)
         {
@@ -391,9 +388,13 @@ public class PlayerController : MonoBehaviour
         //wait 3 seconds for portal, then start walking player forward
         yield return new WaitForSeconds(3f);
 
-        //if portal sequence is over (hit exit portal trigger, stop func and stop moving player)
-        if (!biomeManagerScript.isEnterPortalSequence)
+        //if portal sequence is over (aka hit exit portal line trigger) or player has entered portal, exit this func so player doesnt moveforward
+        if (!biomeManagerScript.isEnterPortalSequence || biomeManagerScript.enteredPortal)
         {
+            //only if player has entered portal, stop footstep sounds
+            if(biomeManagerScript.enteredPortal)
+                footstepAudioSource.Stop();
+            
             yield break;
         }
         MoveForwardSequence(2f,true);

@@ -34,7 +34,6 @@ public class CameraControl : MonoBehaviour
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
     }
 
-    // Update is called once per frame
     void LateUpdate()
     {
         //if game is active, allow all the camera controls
@@ -48,18 +47,13 @@ public class CameraControl : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Tab) && !bowlingBall && camFinishedBallToPlayer && camFinishedTransition
             && !playerControllerScript.spacePressed && !playerControllerScript.throwAnimActive)
             {
-                //if false, set true. if true, set false.
-                //allows users to switch between the player cam and score cam
+                //if false, set true. if true, set false. allows users to switch between the player cam and score cam
                 camOnScores = !camOnScores;
 
                 //game no longer just initialized
                 newFrameInitialized = false;
 
-                //reset t value to zero so next cam transition starts from t=0
-                t=0;
-
-                //start transition
-                doTransition=true;
+                SetStartTransitionVars();
             }
 
             //if t>1 then cam transition is complete. thus stop doing any transitions.
@@ -68,77 +62,18 @@ public class CameraControl : MonoBehaviour
                 doTransition=false;
             }
 
+            //handle transitioning camera from ball back to the player
             if (spawnManagerScript.transitionCam_BallToPlayer)
-            {
-                camOnScores=false;
-
-                //reset t value if was over 1, so animation can start from t=0
-                if (t>=1)
-                {
-                    t=0;
-                }
-
-                //transition cam from lastCam position (ball + pins view) back to player
-                camFinishedBallToPlayer = SwitchCamera(lastCamPos,player.transform.position + playerOffset);
-
-                //once camFinshedBallToPlayer is true (done transition), set the transitionCam bool in spawn manager to false
-                spawnManagerScript.transitionCam_BallToPlayer = !camFinishedBallToPlayer;
-
-                //once finished transition to from balls+pin to player, set new frame was initalized to true (so scoreboard to player transition doesnt happen immediately)
-                if (camFinishedBallToPlayer)
-                {
-                    newFrameInitialized=true;
-                }
-            }
+                CamBallToPlayer();
 
             //if camera is not on the scoreboard
             if (!camOnScores)
-            {
-                //always true unless a new frame was initialized, then dont allow cam to transition immediately.
-                if (!newFrameInitialized && camFinishedBallToPlayer && doTransition)
-                {
-                    //switch cam back from the scoreboard to the current player's pos
-                    camFinishedTransition = SwitchCamera(camScorePos,player.transform.position + playerOffset);
-                }
-
-                //if camera isn't mid transition (aka is finished transitioning), then allow camera to follow player / bowling ball
-                if (camFinishedTransition && camFinishedBallToPlayer)
-                {
-                    //if the bowling ball reaches the camBoundary, grab a snapshot of that camera position
-                    if (bowlingBall && Mathf.Round(bowlingBall.transform.position.x) == camBoundary)
-                    {
-                        lastCamPos = bowlingBall.transform.position + ballOffset;
-                    }
-                    
-                    //if bowling ball exists and hasn't reached the camBoundary, camera follows bowling ball until the camera boundary
-                    if (bowlingBall && bowlingBall.transform.position.x < camBoundary)
-                    {
-                        transform.position = bowlingBall.transform.position + ballOffset;
-                    }
-                    //if bowling ball is past the camBoundary, switch to static lastCamPos snapshot for final view
-                    else if (bowlingBall)
-                    {
-                        //if already set to lastCamPos, exit so that it's only set once and allows for camera shaking when hitting pins
-                        if (onLastCamPos)
-                            return;
-                            
-                        transform.position = lastCamPos;
-                        onLastCamPos=true;
-                    }
-                    //if bowling ball doesn't exist, camera follows player.
-                    else
-                    {
-                        transform.position = player.transform.position + playerOffset;
-                        //reset on lastCamPos bool
-                        onLastCamPos = false;
-                    }
-                }
-            }
+                CamSwitcherForPlayerAndBall();
+            
             //if camera supposed to be on scoreboard
             else if (doTransition)
-            {
                 camFinishedTransition = SwitchCamera(player.transform.position + playerOffset,camScorePos);
-            }
+    
         }
         //if game is done, switch camera from ball to scoreboard
         else
@@ -146,8 +81,7 @@ public class CameraControl : MonoBehaviour
             //reset t=0 only once, before the final transition starts
             if (!doTransition)
             {
-                t=0;
-                doTransition=true;
+                SetStartTransitionVars();
             }
             SwitchCamera(lastCamPos,camScorePos);
         }
@@ -176,11 +110,6 @@ public class CameraControl : MonoBehaviour
         }
     }
 
-    // public IEnumerator ShakeCamera()
-    // {
-    //     yield return StartCoroutine(ShakeObject(gameObject,duration,curve,lastCamPos,playerControllerScript.usedPercent));
-    // }
-
     public IEnumerator ShakeCamera()
     {
         float elapsedTime = 0f;
@@ -194,5 +123,80 @@ public class CameraControl : MonoBehaviour
         }
 
         transform.position = lastCamPos;
+    }
+
+    public void CamSwitcherForPlayerAndBall()
+    {
+        //always true unless a new frame was initialized, then dont allow cam to transition immediately.
+        if (!newFrameInitialized && camFinishedBallToPlayer && doTransition)
+        {
+            //switch cam back from the scoreboard to the current player's pos
+            camFinishedTransition = SwitchCamera(camScorePos,player.transform.position + playerOffset);
+        }
+
+        //if camera isn't mid transition (aka is finished transitioning), then allow camera to follow player / bowling ball
+        if (camFinishedTransition && camFinishedBallToPlayer)
+        {
+            //if the bowling ball reaches the camBoundary, grab a snapshot of that camera position
+            if (bowlingBall && Mathf.Round(bowlingBall.transform.position.x) == camBoundary)
+            {
+                lastCamPos = bowlingBall.transform.position + ballOffset;
+            }
+            
+            //if bowling ball exists and hasn't reached the camBoundary, camera follows bowling ball until the camera boundary
+            if (bowlingBall && bowlingBall.transform.position.x < camBoundary)
+            {
+                transform.position = bowlingBall.transform.position + ballOffset;
+            }
+            //if bowling ball is past the camBoundary, switch to static lastCamPos snapshot for final view
+            else if (bowlingBall)
+            {
+                //if already set to lastCamPos, exit so that it's only set once and allows for camera shaking when hitting pins
+                if (onLastCamPos)
+                    return;
+                    
+                transform.position = lastCamPos;
+                onLastCamPos=true;
+            }
+            //if bowling ball doesn't exist, camera follows player.
+            else
+            {
+                transform.position = player.transform.position + playerOffset;
+                //reset on lastCamPos bool
+                onLastCamPos = false;
+            }
+        }
+    }
+
+    public void CamBallToPlayer()
+    {
+        camOnScores=false;
+
+        //reset t value if was over 1, so animation can start from t=0
+        if (t>=1)
+        {
+            t=0;
+        }
+
+        //transition cam from lastCam position (ball + pins view) back to player
+        camFinishedBallToPlayer = SwitchCamera(lastCamPos,player.transform.position + playerOffset);
+
+        //once camFinshedBallToPlayer is true (done transition), set the transitionCam bool in spawn manager to false
+        spawnManagerScript.transitionCam_BallToPlayer = !camFinishedBallToPlayer;
+
+        //once finished transition to from balls+pin to player, set new frame was initalized to true (so scoreboard to player transition doesnt happen immediately)
+        if (camFinishedBallToPlayer)
+        {
+            newFrameInitialized=true;
+        }
+    }
+
+    public void SetStartTransitionVars()
+    {
+        //reset t value to zero so next cam transition starts from t=0
+        t=0;
+
+        //start transition
+        doTransition=true;
     }
 }

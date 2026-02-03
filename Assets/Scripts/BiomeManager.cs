@@ -16,8 +16,10 @@ public class BiomeManager : MonoBehaviour
     public ParticleSystem portalSpawnVFX;
     private AudioSource laserAudioSource;
     public AudioClip laserSFX;
+    public AudioClip portalWarpSFX;
     public bool isEnterPortalSequence = false;
     public bool exitedPortal = false;
+    public bool enteredPortal = false;
     void Start()
     {
         playerRb = player.GetComponent<Rigidbody>();
@@ -38,8 +40,12 @@ public class BiomeManager : MonoBehaviour
 
     public IEnumerator ChangeBiome(int newBiomeIndex)
     {
+        enteredPortal = true;
+        laserAudioSource.PlayOneShot(portalWarpSFX);
+        yield return new WaitForSeconds(2f);
+        
         //wait 1 frame before setting previous biome inactive (can't set inactive same frame as collision)
-        yield return null;
+        //yield return null;
 
         //set last biome inactive
         biomeList[currentBiomeIndex].gameObject.SetActive(false);
@@ -47,6 +53,8 @@ public class BiomeManager : MonoBehaviour
         //resassign new biome index value and make biome active
         currentBiomeIndex = newBiomeIndex;
         biomeList[currentBiomeIndex].gameObject.SetActive(true);
+
+        enteredPortal = false;
         
         MovePortalAndPlayer();
         print("Biome Changed!");
