@@ -6,6 +6,7 @@ public class CameraControl : MonoBehaviour
 {
     
     public GameObject player;
+    private Rigidbody playerRb;
     public Vector3 playerOffset = new Vector3(-4,5,0);
     public Vector3 ballOffset = new Vector3(-8,5,0);
     private GameObject bowlingBall;
@@ -32,6 +33,7 @@ public class CameraControl : MonoBehaviour
     {
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        playerRb = player.GetComponent<Rigidbody>();
     }
 
     void LateUpdate()
@@ -161,7 +163,8 @@ public class CameraControl : MonoBehaviour
             //if bowling ball doesn't exist, camera follows player.
             else
             {
-                transform.position = player.transform.position + playerOffset;
+                //transform.position = player.transform.position + playerOffset;
+                transform.position = playerRb.position + playerOffset;
                 //reset on lastCamPos bool
                 onLastCamPos = false;
             }

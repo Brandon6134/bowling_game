@@ -388,16 +388,14 @@ public class PlayerController : MonoBehaviour
         //wait 3 seconds for portal, then start walking player forward
         yield return new WaitForSeconds(3f);
 
-        //if portal sequence is over (aka hit exit portal line trigger) or player has entered portal, exit this func so player doesnt moveforward
-        if (!biomeManagerScript.isEnterPortalSequence || biomeManagerScript.enteredPortal)
+        //if portal sequence is over (aka hit exit portal line trigger) or player has exited the EnterPortal trigger, exit this func so player doesnt moveforward
+        if (!biomeManagerScript.isEnterPortalSequence || biomeManagerScript.hasExitedPortalTrigger)
         {
-            //only if player has entered portal, stop footstep sounds
-            if(biomeManagerScript.enteredPortal)
-                footstepAudioSource.Stop();
-            
             yield break;
         }
-        MoveForwardSequence(2f,true);
+        //moves players forward, doesnt play footstep sfx if has entered portal and vice versa
+        print(!biomeManagerScript.hasEnteredPortal);
+        MoveForwardSequence(2f,!biomeManagerScript.hasEnteredPortal);
         playerRb.freezeRotation = true;
     }
 
@@ -412,6 +410,14 @@ public class PlayerController : MonoBehaviour
         else if (other.CompareTag("Exited Portal") && biomeManagerScript.isEnterPortalSequence && biomeManagerScript.exitedPortal)
         {
             biomeManagerScript.PortalDisable();
+        }
+    }
+    void OnTriggerExit(Collider other)
+    {
+        //if exits portal line collider
+        if (other.CompareTag("Entered Portal") && biomeManagerScript.isEnterPortalSequence)
+        {   
+            biomeManagerScript.hasExitedPortalTrigger = true;
         }
     }
 }

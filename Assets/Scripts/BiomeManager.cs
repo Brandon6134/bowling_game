@@ -19,7 +19,8 @@ public class BiomeManager : MonoBehaviour
     public AudioClip portalWarpSFX;
     public bool isEnterPortalSequence = false;
     public bool exitedPortal = false;
-    public bool enteredPortal = false;
+    public bool hasExitedPortalTrigger = false;
+    public bool hasEnteredPortal = false;
     void Start()
     {
         playerRb = player.GetComponent<Rigidbody>();
@@ -40,12 +41,14 @@ public class BiomeManager : MonoBehaviour
 
     public IEnumerator ChangeBiome(int newBiomeIndex)
     {
-        enteredPortal = true;
+        //disables footstep sfx
+        hasEnteredPortal = true;
+
+        //play warp sfx upon entering portal
         laserAudioSource.PlayOneShot(portalWarpSFX);
+
+        //wait 2 seconds befor portal transition (impact + let warp sfx finish)
         yield return new WaitForSeconds(2f);
-        
-        //wait 1 frame before setting previous biome inactive (can't set inactive same frame as collision)
-        //yield return null;
 
         //set last biome inactive
         biomeList[currentBiomeIndex].gameObject.SetActive(false);
@@ -53,19 +56,21 @@ public class BiomeManager : MonoBehaviour
         //resassign new biome index value and make biome active
         currentBiomeIndex = newBiomeIndex;
         biomeList[currentBiomeIndex].gameObject.SetActive(true);
-
-        enteredPortal = false;
         
-        MovePortalAndPlayer();
+        StartCoroutine(MovePortalAndPlayer());
         print("Biome Changed!");
     }
 
-    public void MovePortalAndPlayer()
+    public IEnumerator MovePortalAndPlayer()
     {
         //move player and portal backwards after entering portal
         playerRb.position += new Vector3(-15f,0f,0f);
         portalParent.transform.position += new Vector3(-15f,0f,0f);
-        Physics.SyncTransforms();
+
+        //wait small amount of time before allowing player to moveforward again (prevent player stutter forward)
+        yield return new WaitForSeconds(0.1f);
+        hasExitedPortalTrigger = false;
+        hasEnteredPortal = false;
 
         //set bool stating that player has exited portal (so can delete portal after)
         exitedPortal = true;
