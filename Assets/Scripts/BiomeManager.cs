@@ -53,9 +53,10 @@ public class BiomeManager : MonoBehaviour
         //set last biome inactive
         biomeList[currentBiomeIndex].gameObject.SetActive(false);
 
-        //resassign new biome index value and make biome active
+        //resassign new biome index value and make biome active + change skybox
         currentBiomeIndex = newBiomeIndex;
         biomeList[currentBiomeIndex].gameObject.SetActive(true);
+        RenderSettings.skybox = biomeList[currentBiomeIndex].gameObject.GetComponent<MeshRenderer>().material;
         
         StartCoroutine(MovePortalAndPlayer());
         print("Biome Changed!");

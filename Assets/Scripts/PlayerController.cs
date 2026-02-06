@@ -394,7 +394,6 @@ public class PlayerController : MonoBehaviour
             yield break;
         }
         //moves players forward, doesnt play footstep sfx if has entered portal and vice versa
-        print(!biomeManagerScript.hasEnteredPortal);
         MoveForwardSequence(2f,!biomeManagerScript.hasEnteredPortal);
         playerRb.freezeRotation = true;
     }
@@ -404,7 +403,7 @@ public class PlayerController : MonoBehaviour
         //if enters portal during portal sequence
         if (other.CompareTag("Entered Portal") && biomeManagerScript.isEnterPortalSequence)
         {   
-            StartCoroutine(biomeManagerScript.ChangeBiome(1));
+            StartCoroutine(biomeManagerScript.ChangeBiome(3));
         }
         //if player has exited the portal, then allow disabling of portals and portal booleans
         else if (other.CompareTag("Exited Portal") && biomeManagerScript.isEnterPortalSequence && biomeManagerScript.exitedPortal)

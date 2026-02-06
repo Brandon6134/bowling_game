@@ -78,6 +78,15 @@ public class BowlingBallControl : MonoBehaviour
         {
             audioSource.PlayOneShot(obstacleHit);
         }
+        //else if the object has an audio source component, play their audio source when hit
+        else if (collision.gameObject.GetComponent<AudioSource>())
+        {
+            //play unique hit sfx
+            collision.gameObject.GetComponents<AudioSource>()[0].Play();
+
+            //play ball hit sfx 
+            collision.gameObject.GetComponents<AudioSource>()[1].Play();
+        }
     }
 
     void OnCollisionExit(Collision collision)
