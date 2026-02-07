@@ -6001,7 +6001,6 @@ MonoBehaviour:
   callAnnounceScores: 0
   GameOverParent: {fileID: 730206086}
   playerRb: {fileID: 0}
-  gravity: 25
   pinMovedThreshold: 0.2
   alleyMods: {fileID: 230677668}
   BiomeManager: {fileID: 1697971826}
@@ -6041,7 +6040,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &553493603
 Transform:
   m_ObjectHideFlags: 0

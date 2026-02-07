@@ -56,7 +56,7 @@ public class SpawnManager : MonoBehaviour
     private bool allPinsSleepingLastFrame = false;
     public GameObject GameOverParent;
     public Rigidbody playerRb;
-    public float gravity;
+    //public float gravity;
     public float pinMovedThreshold = 0.2f;
     private bool isRoundScoreEqualZero = false;
     private bool alreadySetScoreZero = false;
@@ -99,7 +99,7 @@ public class SpawnManager : MonoBehaviour
         if (isGameActive)
         {
             AutomaticReset(globalRound);
-            Physics.gravity = new Vector3(0,-gravity,0);
+            //Physics.gravity = new Vector3(0,-gravity,0);
         }
         
     }

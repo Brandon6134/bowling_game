@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Expressions;
+using Unity.Collections;
 using UnityEngine;
 
 public class BiomeManager : MonoBehaviour
@@ -26,12 +28,15 @@ public class BiomeManager : MonoBehaviour
     public bool exitedPortal = false;
     public bool hasExitedPortalTrigger = false;
     public bool hasEnteredPortal = false;
+    private List<(float,float)> physicMods = new List<(float,float)>();
+
     void Start()
     {
         playerRb = player.GetComponent<Rigidbody>();
         portal_ControllerScript = portalParent.transform.GetChild(0).gameObject.GetComponent<Portal_Controller>();
         
         InitializeTransformList(parentBiome,biomeList);
+        InitializeBiomePhysicsValuesArray(physicMods);
         AssignNewBiome(3); //working on antarctica biome for now
 
         laserAudioSource = portalSpawnVFX.GetComponent<AudioSource>();
@@ -97,17 +102,25 @@ public class BiomeManager : MonoBehaviour
         print("disabling portal!");
     }
 
-    //resassign new biome index value, make biome active, change skybox, grab biome's obstacles
+    //perform all the functions travelling to the new biome
     public void AssignNewBiome(int newBiomeIndex)
-    {
+    {   
+        //set new biome index value and make active
         currentBiomeIndex = newBiomeIndex;
         biomeList[currentBiomeIndex].gameObject.SetActive(true);
-        Material[] mats = biomeList[currentBiomeIndex].gameObject.GetComponent<MeshRenderer>().materials;
 
+        //set skybox, alley and player ground mats
+        Material[] mats = biomeList[currentBiomeIndex].gameObject.GetComponent<MeshRenderer>().materials;
         RenderSettings.skybox = mats[0];
         playerGround.GetComponent<MeshRenderer>().material = mats[1];
         alleyLane.GetComponent<MeshRenderer>().material = mats[2];
 
+        //set gravity and dynamic friction values
+        (float,float) biomeMods = physicMods[newBiomeIndex];
+        Physics.gravity = new Vector3(0,-biomeMods.Item1,0);
+        alleyLane.GetComponent<MeshCollider>().material.dynamicFriction = biomeMods.Item2;
+
+        //initialize obstacles list
         InitializeTransformList(biomeList[currentBiomeIndex].Find("Obstacles").gameObject,currentBiomeObstacles);
     }
 
@@ -121,7 +134,7 @@ public class BiomeManager : MonoBehaviour
         }
         
         //make new random biome obstacle active
-        int newRandomInt = Random.Range(0,currentBiomeObstacles.Count);
+        int newRandomInt = UnityEngine.Random.Range(0,currentBiomeObstacles.Count);
         currentBiomeObstacles[newRandomInt].gameObject.SetActive(true);
 
         oldRandomInt = newRandomInt; //changes oldRandomInt to the newRandomInt value
@@ -140,5 +153,14 @@ public class BiomeManager : MonoBehaviour
         {
             list.Add(child);
         }
+    }
+
+    //stores and sets gravity and dynamic friction (slipperyness) of alley lane
+    private void InitializeBiomePhysicsValuesArray(List<(float,float)> list)
+    {
+        list.Add((25f,0.3f)); //classic
+        list.Add((25f,0.5f)); //forest or jungle
+        list.Add((0f,0.3f)); //outer space
+        list.Add((25f,0.05f)); //arctic
     }
 }
