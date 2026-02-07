@@ -426,6 +426,8 @@ public class SpawnManager : MonoBehaviour
         if(frameIndex==9 && globalRound==1)
             StartCoroutine(biomeManagerScript.PortalSpawn());
         
+        if (globalRound==1)
+            biomeManagerScript.CallBiomeChooser();
         
     }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq.Expressions;
 using UnityEngine;
 
 public class BiomeManager : MonoBehaviour
@@ -10,9 +11,13 @@ public class BiomeManager : MonoBehaviour
     public GameObject player;
     private Rigidbody playerRb;
     public GameObject portalParent;
+    public GameObject alleyLane;
+    public GameObject playerGround;
     private Portal_Controller portal_ControllerScript;
     private List<Transform> biomeList = new List<Transform>();
     public int currentBiomeIndex = 0; //global index that tracks the current active biome index
+    private List<Transform> currentBiomeObstacles = new List<Transform>();
+    private int currentBiomeObstacleIndex = -1; //initialize as impossible index value
     public ParticleSystem portalSpawnVFX;
     private AudioSource laserAudioSource;
     public AudioClip laserSFX;
@@ -26,17 +31,10 @@ public class BiomeManager : MonoBehaviour
         playerRb = player.GetComponent<Rigidbody>();
         portal_ControllerScript = portalParent.transform.GetChild(0).gameObject.GetComponent<Portal_Controller>();
         
-        InitializeBiomeList(ref parentBiome);
+        InitializeTransformList(parentBiome,biomeList);
+        AssignNewBiome(3); //working on antarctica biome for now
 
         laserAudioSource = portalSpawnVFX.GetComponent<AudioSource>();
-    }
-
-    public void InitializeBiomeList(ref GameObject parent)
-    {
-        foreach(Transform child in parent.transform)
-        {
-            biomeList.Add(child);
-        }
     }
 
     public IEnumerator ChangeBiome(int newBiomeIndex)
@@ -53,10 +51,8 @@ public class BiomeManager : MonoBehaviour
         //set last biome inactive
         biomeList[currentBiomeIndex].gameObject.SetActive(false);
 
-        //resassign new biome index value and make biome active + change skybox
-        currentBiomeIndex = newBiomeIndex;
-        biomeList[currentBiomeIndex].gameObject.SetActive(true);
-        RenderSettings.skybox = biomeList[currentBiomeIndex].gameObject.GetComponent<MeshRenderer>().material;
+        //assign new biome active
+        AssignNewBiome(newBiomeIndex);
         
         StartCoroutine(MovePortalAndPlayer());
         print("Biome Changed!");
@@ -99,5 +95,50 @@ public class BiomeManager : MonoBehaviour
         exitedPortal = false;
         portalParent.SetActive(false);
         print("disabling portal!");
+    }
+
+    //resassign new biome index value, make biome active, change skybox, grab biome's obstacles
+    public void AssignNewBiome(int newBiomeIndex)
+    {
+        currentBiomeIndex = newBiomeIndex;
+        biomeList[currentBiomeIndex].gameObject.SetActive(true);
+        Material[] mats = biomeList[currentBiomeIndex].gameObject.GetComponent<MeshRenderer>().materials;
+
+        RenderSettings.skybox = mats[0];
+        playerGround.GetComponent<MeshRenderer>().material = mats[1];
+        alleyLane.GetComponent<MeshRenderer>().material = mats[2];
+
+        InitializeTransformList(biomeList[currentBiomeIndex].Find("Obstacles").gameObject,currentBiomeObstacles);
+    }
+
+    private void ChooseBiomeObstacle(ref int oldRandomInt)
+    {
+        if (oldRandomInt!=-1) //if game was just initialized, dont make last obstacle inactive
+        {
+            //remove last frame obstacle from list and set inactive
+            currentBiomeObstacles[oldRandomInt].gameObject.SetActive(false);
+            currentBiomeObstacles.Remove(currentBiomeObstacles[oldRandomInt]);
+        }
+        
+        //make new random biome obstacle active
+        int newRandomInt = Random.Range(0,currentBiomeObstacles.Count);
+        currentBiomeObstacles[newRandomInt].gameObject.SetActive(true);
+
+        oldRandomInt = newRandomInt; //changes oldRandomInt to the newRandomInt value
+    }
+
+    //public func that calls upon biome chooser, call from other funcs
+    public void CallBiomeChooser()
+    {
+        ChooseBiomeObstacle(ref currentBiomeObstacleIndex);
+    }
+
+    //reusable func to grab all children from a gameobject parent, fill a list with its children
+    public void InitializeTransformList(GameObject parent, List<Transform> list)
+    {
+        foreach(Transform child in parent.transform)
+        {
+            list.Add(child);
+        }
     }
 }
