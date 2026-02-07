@@ -37,7 +37,7 @@ public class BiomeManager : MonoBehaviour
         
         InitializeTransformList(parentBiome,biomeList);
         InitializeBiomePhysicsValuesArray(physicMods);
-        AssignNewBiome(3); //working on antarctica biome for now
+        AssignNewBiome(4); //working on ocean biome for now
 
         laserAudioSource = portalSpawnVFX.GetComponent<AudioSource>();
     }
@@ -120,6 +120,12 @@ public class BiomeManager : MonoBehaviour
         Physics.gravity = new Vector3(0,-biomeMods.Item1,0);
         alleyLane.GetComponent<MeshCollider>().material.dynamicFriction = biomeMods.Item2;
 
+        //enable fog or not
+        if (biomeList[currentBiomeIndex].name.Equals("Ocean") )
+            RenderSettings.fog = true;
+        else
+            RenderSettings.fog = false;
+
         //initialize obstacles list
         InitializeTransformList(biomeList[currentBiomeIndex].Find("Obstacles").gameObject,currentBiomeObstacles);
     }
@@ -162,5 +168,7 @@ public class BiomeManager : MonoBehaviour
         list.Add((25f,0.5f)); //forest or jungle
         list.Add((0f,0.3f)); //outer space
         list.Add((25f,0.05f)); //arctic
+        list.Add((15f,0.3f)); //ocean
+        list.Add((25f,0.3f)); //prehistoric
     }
 }
