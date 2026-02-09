@@ -19,7 +19,7 @@ public class PenguinBehaviour : AnimalBehaviour
         //while not hit, continue walking.
         if (!penguinAnim.GetBool(isHitBoolName))
         {
-            PenguinBehaviour(penguinRb,walkSpeed);
+            MoveForwardRB(penguinRb,walkSpeed);
         }
         
     }

@@ -5,11 +5,11 @@ using UnityEngine.InputSystem;
 
 public class AnimalBehaviour : MonoBehaviour
 {
-    public void PenguinBehaviour(Rigidbody penguinRb, float speed)
+    public void MoveForwardRB(Rigidbody animalRb, float speed)
     {
-        //penguin walk forwards (relative to their local forward direction)
-        Vector3 newPos =  penguinRb.position + penguinRb.transform.forward * speed *  Time.deltaTime;
-        penguinRb.MovePosition(newPos);
+        //animal walks forwards (relative to their local forward direction)
+        Vector3 newPos =  animalRb.position + animalRb.transform.forward * speed *  Time.deltaTime;
+        animalRb.MovePosition(newPos);
     }
 
     // public void AnimalHit(Animator anim, string isHitAnimBoolName)
@@ -22,5 +22,10 @@ public class AnimalBehaviour : MonoBehaviour
     {
         //stop the "is hit" animation
         anim.SetBool(isHitAnimBoolName,false);
+    }
+
+    public void MoveForwardTransform(Transform tr, float speed)
+    {
+        tr.position += tr.forward * speed * Time.deltaTime;
     }
 }
