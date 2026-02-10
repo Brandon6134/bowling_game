@@ -28,4 +28,14 @@ public class AnimalBehaviour : MonoBehaviour
     {
         tr.position += tr.forward * speed * Time.deltaTime;
     }
+
+    protected virtual void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Delete Wall"))
+        {
+            Destroy(gameObject);
+            print("deleted fishy");
+        }
+            
+    }
 }

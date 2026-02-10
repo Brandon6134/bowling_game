@@ -16,7 +16,7 @@ public class BiomeManager : MonoBehaviour
     public GameObject alleyLane;
     public GameObject playerGround;
     private Portal_Controller portal_ControllerScript;
-    private List<Transform> biomeList = new List<Transform>();
+    private List<Transform> biomeList = new List<Transform>(); //holds transforms of all biomes
     public int currentBiomeIndex = 0; //global index that tracks the current active biome index
     private List<Transform> currentBiomeObstacles = new List<Transform>();
     private int currentBiomeObstacleIndex = -1; //initialize as impossible index value

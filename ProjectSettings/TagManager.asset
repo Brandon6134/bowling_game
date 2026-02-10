@@ -18,6 +18,7 @@ TagManager:
   - Obstacle
   - Entered Portal
   - Exited Portal
+  - Delete Wall
   layers:
   - Default
   - TransparentFX
