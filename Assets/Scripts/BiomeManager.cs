@@ -143,6 +143,8 @@ public class BiomeManager : MonoBehaviour
         int newRandomInt = UnityEngine.Random.Range(0,currentBiomeObstacles.Count);
         currentBiomeObstacles[newRandomInt].gameObject.SetActive(true);
 
+        print(currentBiomeObstacles[newRandomInt].name);
+
         oldRandomInt = newRandomInt; //changes oldRandomInt to the newRandomInt value
     }
 

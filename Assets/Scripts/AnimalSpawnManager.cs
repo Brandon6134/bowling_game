@@ -41,7 +41,7 @@ public class AnimalSpawnManager : MonoBehaviour
         
         float randomX = Random.Range(-15f,30f);
         float randomY = Random.Range(0f,47f);
-        float randomZ = Random.value < 0.5f ? -50f : 50f;
+        float randomZ = Random.value < 0.5f ? -60f : 60f;
 
         Vector3 randomSpawnPos = new Vector3(randomX,randomY,randomZ);
 

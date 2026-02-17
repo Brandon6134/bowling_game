@@ -9,8 +9,8 @@ public class PenguinBehaviour : AnimalBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        penguinRb = GetComponent<Rigidbody>();
-        penguinAnim = GetComponent<Animator>();
+        penguinRb = GetRigidbody();
+        penguinAnim = GetAnimator();
     }
 
     // Update is called once per frame

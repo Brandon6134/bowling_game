@@ -5,6 +5,16 @@ using UnityEngine.InputSystem;
 
 public class AnimalBehaviour : MonoBehaviour
 {
+    public Animator GetAnimator()
+    {
+        return GetComponent<Animator>();
+    }
+
+    public Rigidbody GetRigidbody()
+    {
+        return GetComponent<Rigidbody>();
+    }
+    
     public void MoveForwardRB(Rigidbody animalRb, float speed)
     {
         //animal walks forwards (relative to their local forward direction)
@@ -34,8 +44,14 @@ public class AnimalBehaviour : MonoBehaviour
         if (other.CompareTag("Delete Wall"))
         {
             Destroy(gameObject);
-            print("deleted fishy");
-        }
-            
+            //print("deleted fishy");
+        }   
     }
+
+    // protected virtual void OnCollisionEnter(Collision other) 
+    // {
+    //     if (other.CompareTag("Delete Wall"))
+    //     Destroy(gameObject);
+    //     print("deleted fishy333");
+    // }
 }
