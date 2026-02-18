@@ -37,7 +37,7 @@ public class BiomeManager : MonoBehaviour
         
         InitializeTransformList(parentBiome,biomeList);
         InitializeBiomePhysicsValuesArray(physicMods);
-        AssignNewBiome(4); //working on ocean biome for now
+        AssignNewBiome(1); //working on forest biome for now
 
         laserAudioSource = portalSpawnVFX.GetComponent<AudioSource>();
     }
