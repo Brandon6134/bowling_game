@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     public AudioClip fireballSFX;
     private AudioSource footstepAudioSource;
     private Vector3 lastPos;
+    private int newBiomeIndex = 0;
 
     void Start()
     {
@@ -403,7 +404,8 @@ public class PlayerController : MonoBehaviour
         //if enters portal during portal sequence
         if (other.CompareTag("Entered Portal") && biomeManagerScript.isEnterPortalSequence)
         {   
-            StartCoroutine(biomeManagerScript.ChangeBiome(3));
+            newBiomeIndex+=1;
+            StartCoroutine(biomeManagerScript.ChangeBiome(newBiomeIndex));
         }
         //if player has exited the portal, then allow disabling of portals and portal booleans
         else if (other.CompareTag("Exited Portal") && biomeManagerScript.isEnterPortalSequence && biomeManagerScript.exitedPortal)

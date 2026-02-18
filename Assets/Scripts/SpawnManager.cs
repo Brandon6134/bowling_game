@@ -423,10 +423,10 @@ public class SpawnManager : MonoBehaviour
             biomeManagerScript.PortalDisable();
         
         //if x frameIndex and is first round, start portal spawn
-        if(frameIndex==9 && globalRound==1)
+        if((frameIndex==1 || frameIndex==4 || frameIndex==7) && globalRound==1)
             StartCoroutine(biomeManagerScript.PortalSpawn());
         
-        if (globalRound==1)
+        else if (globalRound==1 && (frameIndex!=9 || !isThreeRoundLastFrame))
             biomeManagerScript.CallBiomeChooser();
         
     }

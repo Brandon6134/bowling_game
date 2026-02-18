@@ -37,7 +37,7 @@ public class BiomeManager : MonoBehaviour
         
         InitializeTransformList(parentBiome,biomeList);
         InitializeBiomePhysicsValuesArray(physicMods);
-        AssignNewBiome(1); //working on forest biome for now
+        AssignNewBiome(0); //working on ___ biome for now
 
         laserAudioSource = portalSpawnVFX.GetComponent<AudioSource>();
     }
@@ -58,6 +58,9 @@ public class BiomeManager : MonoBehaviour
 
         //assign new biome active
         AssignNewBiome(newBiomeIndex);
+
+        //choose initial obstacle
+        CallBiomeChooser();
         
         StartCoroutine(MovePortalAndPlayer());
         print("Biome Changed!");
@@ -99,6 +102,9 @@ public class BiomeManager : MonoBehaviour
         isEnterPortalSequence = false;
         exitedPortal = false;
         portalParent.SetActive(false);
+
+        //move portal back to initial position
+        portalParent.transform.position += new Vector3(15f,0f,0f);
         print("disabling portal!");
     }
 
@@ -168,9 +174,9 @@ public class BiomeManager : MonoBehaviour
     {
         list.Add((25f,0.3f)); //classic
         list.Add((25f,0.5f)); //forest or jungle
-        list.Add((0f,0.3f)); //outer space
         list.Add((25f,0.05f)); //arctic
         list.Add((15f,0.3f)); //ocean
+        list.Add((0f,0.3f)); //outer space
         list.Add((25f,0.3f)); //prehistoric
     }
 }
