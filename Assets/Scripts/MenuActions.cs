@@ -9,6 +9,7 @@ public class MenuActions : MonoBehaviour
 {
     public GameObject mainMenuPanel;
     public GameObject howToPlayPanel;
+    public GameObject howToPlayPanel2;
     public GameObject customizePanel;
     public GameObject characterSelectPanel;
     public GameObject pauseButton;
@@ -62,6 +63,12 @@ public class MenuActions : MonoBehaviour
     {
         mainMenuPanel.SetActive(false);
         howToPlayPanel.SetActive(true);
+    }
+
+    public void NextPageButton()
+    {
+        howToPlayPanel.SetActive(false);
+        howToPlayPanel2.SetActive(true);
     }
 
     public void ReturnButton(GameObject currentPanel)
@@ -143,33 +150,6 @@ public class MenuActions : MonoBehaviour
             //outline the current ball color
             ToggleOutline(colorSelectedOutline);
     }
-
-    // public void HoverCharacter(GameObject character)
-    // {
-    //     //set last character object inactive
-    //     Transform obj = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
-    //     obj.gameObject.SetActive(false);
-
-    //     //set temp new character name variable and set active
-    //     tempCharName = characterNameText.text = character.name;
-    //     obj = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
-    //     obj.gameObject.SetActive(true);
-    // }
-
-    // public void ClickCharacter(GameObject character)
-    // {
-    //     //set last character object inactive
-    //     Transform obj = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
-    //     obj.gameObject.SetActive(false);
-
-    //     //set new character name variable and set active
-    //     StaticData.characterSelectedName = tempCharName = characterNameText.text = character.name;
-    //     obj = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
-    //     obj.gameObject.SetActive(true);
-
-    //     Animator charAnim = character.GetComponent<Animator>();
-    //     charAnim.SetInteger("anim_index",0);
-    // }
     
     public void SelectCharacter(GameObject character)
     {
