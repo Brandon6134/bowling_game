@@ -60,7 +60,7 @@ public class BiomeManager : MonoBehaviour
         AssignNewBiome(newBiomeIndex);
 
         //choose initial obstacle
-        CallBiomeChooser();
+        CallBiomeObstacleChooser();
         
         StartCoroutine(MovePortalAndPlayer());
         print("Biome Changed!");
@@ -155,7 +155,7 @@ public class BiomeManager : MonoBehaviour
     }
 
     //public func that calls upon biome chooser, call from other funcs
-    public void CallBiomeChooser()
+    public void CallBiomeObstacleChooser()
     {
         ChooseBiomeObstacle(ref currentBiomeObstacleIndex);
     }

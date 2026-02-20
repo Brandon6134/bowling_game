@@ -97,11 +97,7 @@ public class SpawnManager : MonoBehaviour
     void LateUpdate()
     {
         if (isGameActive)
-        {
             AutomaticReset(globalRound);
-            //Physics.gravity = new Vector3(0,-gravity,0);
-        }
-        
     }
 
     //hard resets all bowling pins, ball, and player position + rotation
@@ -426,8 +422,9 @@ public class SpawnManager : MonoBehaviour
         if((frameIndex==1 || frameIndex==4 || frameIndex==7) && globalRound==1)
             StartCoroutine(biomeManagerScript.PortalSpawn());
         
-        else if (globalRound==1 && (frameIndex!=9 || !isThreeRoundLastFrame))
-            biomeManagerScript.CallBiomeChooser();
+        //spawn random biome obstacle on new frame (unless game is over or three round last frame)
+        else if (globalRound==1 && frameIndex!=10 && !isThreeRoundLastFrame)
+            biomeManagerScript.CallBiomeObstacleChooser();
         
     }
 

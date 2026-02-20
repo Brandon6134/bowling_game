@@ -36,15 +36,6 @@ public class BowlingBallControl : MonoBehaviour
         audioSource = GetComponents<AudioSource>()[0]; //use this audiosource to play the oneshot AudioClip of pinHit
         ballRolling = GetComponents<AudioSource>()[1]; //use this audiosource to continously play the ballRolling audio
         audioSourceFire = GetComponents<AudioSource>()[2]; //use this audiosource to play flames sfx during bar charge up
-
-        
-        // if (verticalProgressBar == null)
-        // {   
-        //     decalP = gameObject.AddComponent<DecalProjector>();
-        //     decalP.transform.position = new Vector3(-20f,0.5f,0.35f);
-        //     decalP.transform.rotation = new Quaternion (90f,0f,0f,0f);
-        //     decalP.material = material;
-        // }
     }
         
 

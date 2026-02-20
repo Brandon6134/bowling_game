@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     public bool throwInProgress = false;
     private float spinStrength = 0f;
     public float spinStrengthModifier;
-    [SerializeField] private GameObject bowlingBallInHand;
+    private GameObject bowlingBallInHand;
     
     public GameObject BiomeManager;
     private BiomeManager biomeManagerScript;
@@ -53,12 +53,15 @@ public class PlayerController : MonoBehaviour
         verticalProgressBarScript = verticalProgressBar.GetComponent<VerticalProgressBar>();
         biomeManagerScript = BiomeManager.GetComponent<BiomeManager>();
 
+        if (StaticData.characterSelectedName != null)
+            ChangeCharacterModel();
+        
+        //find ball on current character model
+        bowlingBallInHand = FindDeepChild(gameObject.transform,"Bowling Ball");
+
         Collider playerColl = GetComponent<Collider>();
         Collider ballColl = bowlingBallInHand.GetComponent<Collider>();
         Physics.IgnoreCollision(playerColl,ballColl);
-
-        if (StaticData.characterSelectedName != null)
-            ChangeCharacterModel();
 
         //grab all animators from children objects
         Animator[] animators = gameObject.GetComponentsInChildren<Animator>();
@@ -76,7 +79,6 @@ public class PlayerController : MonoBehaviour
         ChangeBallColor(bowlingBallInHand);
 
         lastPos = playerRb.transform.position;
-        
     }
 
     // Update is called once per frame
@@ -92,7 +94,6 @@ public class PlayerController : MonoBehaviour
             {
                 horizontalMovement();
                 rotationalMovement();
-                //EnterPortalSequence();
             }
             else if(biomeManagerScript.isEnterPortalSequence)
                 StartCoroutine(EnterPortalSequence());
@@ -420,5 +421,23 @@ public class PlayerController : MonoBehaviour
         {   
             biomeManagerScript.hasExitedPortalTrigger = true;
         }
+    }
+
+    GameObject FindDeepChild(Transform parent, string name)
+    {
+        foreach (Transform child in parent)
+        {
+            // Skip inactive objects
+            if (!child.gameObject.activeInHierarchy)
+                continue;
+            
+            if (child.name == name)
+                return child.gameObject;
+
+            GameObject result = FindDeepChild(child, name);
+            if (result != null)
+                return result;
+        }
+        return null;
     }
 }
