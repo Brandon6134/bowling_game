@@ -302,9 +302,16 @@ public class PlayerController : MonoBehaviour
         float speedText = Mathf.Round(barPercent*100f);
         UIManagerScript.ballSpeedText.text = speedText + " SPEED";
         
-        //round and multiply by 50 to get nice "accurate" RPM numbers
-        float torqueSpeedRounded = Mathf.Abs(Mathf.Round(torqueForce[1]*75));
-        UIManagerScript.torqueSpeedText.text = torqueSpeedRounded + " SPIN";
+        //round and multiply to get nice spin numbers (~0-100)
+        float torqueSpeedRounded = Mathf.Abs(Mathf.Round(torqueForce[1]*12.5f));
+
+        string spinDirection =
+            spinStrength > 0f ? "right" :
+            spinStrength < 0f ? "left" :
+            "";
+
+
+        UIManagerScript.torqueSpeedText.text = torqueSpeedRounded + " SPIN " + spinDirection;
     }
     
     //handle auto throw ball when progress bar reaches zero
