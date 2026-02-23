@@ -264,7 +264,6 @@ public class PlayerController : MonoBehaviour
                 footstepAudioSource.Play();
                 //print("playing footsteps!");
             }
-                
         }
     }
 
@@ -300,11 +299,12 @@ public class PlayerController : MonoBehaviour
 
         //set ball speed text
         speedRounded = Mathf.Round(force[0])/10;
-        UIManagerScript.ballSpeedText.text = speedRounded + " km/h";
+        float speedText = Mathf.Round(barPercent*100f);
+        UIManagerScript.ballSpeedText.text = speedText + " SPEED";
         
         //round and multiply by 50 to get nice "accurate" RPM numbers
         float torqueSpeedRounded = Mathf.Abs(Mathf.Round(torqueForce[1]*75));
-        UIManagerScript.torqueSpeedText.text = torqueSpeedRounded + " RPM";
+        UIManagerScript.torqueSpeedText.text = torqueSpeedRounded + " SPIN";
     }
     
     //handle auto throw ball when progress bar reaches zero

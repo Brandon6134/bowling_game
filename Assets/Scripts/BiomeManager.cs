@@ -12,6 +12,7 @@ public class BiomeManager : MonoBehaviour
     public GameObject parentBiome;
     public GameObject player;
     private Rigidbody playerRb;
+    private Vector3 initialPlayerPos;
     public GameObject portalParent;
     public GameObject alleyLane;
     public GameObject playerGround;
@@ -33,6 +34,7 @@ public class BiomeManager : MonoBehaviour
     void Start()
     {
         playerRb = player.GetComponent<Rigidbody>();
+        initialPlayerPos = playerRb.position;
         portal_ControllerScript = portalParent.transform.GetChild(0).gameObject.GetComponent<Portal_Controller>();
         
         InitializeTransformList(parentBiome,biomeList);
@@ -68,8 +70,14 @@ public class BiomeManager : MonoBehaviour
 
     public IEnumerator MovePortalAndPlayer()
     {
+        yield return new WaitForFixedUpdate(); // wait for phyiscs to finish current step before manipulating player physics, or else change gets reverted sometimes
+        
         //move player and portal backwards after entering portal
-        playerRb.position += new Vector3(-15f,0f,0f);
+        playerRb.isKinematic = true;
+        playerRb.transform.position = initialPlayerPos;
+        playerRb.isKinematic = false;
+
+        print("playerPos now: " + playerRb.position);
         portalParent.transform.position += new Vector3(-15f,0f,0f);
 
         //wait small amount of time before allowing player to moveforward again (prevent player stutter forward)
