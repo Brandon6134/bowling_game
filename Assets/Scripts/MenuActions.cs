@@ -25,10 +25,14 @@ public class MenuActions : MonoBehaviour
     public ScrollRect[] scrollRectCustomizeRows;
     public Transform charGameObject;
     public Vector3 originalPosition;
+    private AudioSource audioSource;
+    public AudioClip buttonPressSound;
+    public AudioClip customizePressSound;
+    public AudioClip confirmPressSound;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
         howToPlayPanel.SetActive(false);
         Scene currentScene = SceneManager.GetActiveScene();
 
@@ -189,6 +193,23 @@ public class MenuActions : MonoBehaviour
         Animator charAnim = charGameObject.gameObject.GetComponent<Animator>();
         charAnim.SetInteger("anim_index",0);
     }
+
+    public void PlayClickButtonSound()
+    {
+        audioSource.PlayOneShot(buttonPressSound);
+    }
+
+    public void PlayClickCustomizerOptionSound()
+    {
+        audioSource.PlayOneShot(customizePressSound);
+    }
+
+    public void PlayConfirmButtonSound()
+    {
+        audioSource.PlayOneShot(confirmPressSound,0.3f);
+    }
+
+
 
     //simplified velocity bar func from UIManager, but it just goes up and down forever with no player input
     public (float,float,float) VelocityBarChange(RectTransform rect, float tBar, float minY, float maxY)
