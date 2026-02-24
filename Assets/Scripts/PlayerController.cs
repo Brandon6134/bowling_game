@@ -310,7 +310,6 @@ public class PlayerController : MonoBehaviour
             spinStrength < 0f ? "left" :
             "";
 
-
         UIManagerScript.torqueSpeedText.text = torqueSpeedRounded + " SPIN " + spinDirection;
     }
     
