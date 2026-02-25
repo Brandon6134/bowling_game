@@ -10092,13 +10092,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 527848712}
     m_Modifications:
+    - target: {fileID: 258716308488357328, guid: 32460ebf29f53e84fb85e0c48cec8ad0, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 621
+      objectReference: {fileID: 0}
+    - target: {fileID: 431719368126381258, guid: 32460ebf29f53e84fb85e0c48cec8ad0, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 769
+      objectReference: {fileID: 0}
     - target: {fileID: 771144298620972184, guid: 32460ebf29f53e84fb85e0c48cec8ad0, type: 3}
       propertyPath: m_Color.a
       value: 0.87058824
       objectReference: {fileID: 0}
+    - target: {fileID: 4175641535726012051, guid: 32460ebf29f53e84fb85e0c48cec8ad0, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -242
+      objectReference: {fileID: 0}
     - target: {fileID: 6717569558811872008, guid: 32460ebf29f53e84fb85e0c48cec8ad0, type: 3}
       propertyPath: m_Name
       value: How to Play Panel 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6717569558811872008, guid: 32460ebf29f53e84fb85e0c48cec8ad0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7148619802628865226, guid: 32460ebf29f53e84fb85e0c48cec8ad0, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size

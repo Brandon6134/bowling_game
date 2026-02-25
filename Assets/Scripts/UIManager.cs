@@ -36,7 +36,6 @@ public class UIManager : MonoBehaviour
     public float barSpeed = 0.5f;
     public float barSpeedFixed = 0.5f;
     float[] moddedBarSpeeds;
-    //{1.2f,1.5f,2f,2.5f};
     public float[] barSpeedMultipliers = {1.5f,2f,3f,4.5f};
     public float barMultipler = 0f;
     private float minSpinX = 100f+960f;

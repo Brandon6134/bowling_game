@@ -19,12 +19,15 @@ public class BowlingPinControl : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        Sleep();
         ConditionalDamping();
         if (playerControllerScript.spaceReleased)
+        {
+            Sleep();
             FrictionScaler();
+        }
+            
     }
 
     void OnTriggerEnter(Collider other)
@@ -39,17 +42,11 @@ public class BowlingPinControl : MonoBehaviour
     //stop bowling pins from infinetly rotating and moving by sleeping (stop calculating physics and setting velocities to zero) them when their velocities get low
     void Sleep()
     {
-        if (pinRb.linearVelocity.magnitude < 0.5f || pinRb.angularVelocity.magnitude < 0.5f)
+        if (pinRb.linearVelocity.magnitude < 0.4f && pinRb.angularVelocity.magnitude < 0.4f)
         {
-            //pinRb.Sleep();
             pinRb.linearVelocity = Vector3.zero;
             pinRb.angularVelocity = Vector3.zero;
-            //print("Sleeping!");
         }
-        // else
-        // {
-        //     pinRb.WakeUp();
-        // }
     }
 
     //set high damping if tilt is less than breakAngle (~8 degrees), aka standing upright

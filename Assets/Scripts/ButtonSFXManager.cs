@@ -27,7 +27,7 @@ public class ButtonSFXManager : MonoBehaviour
     // play button sound, wait till it's done playing, then delete object from the dontdestroyonload scene
     private IEnumerator PlayStartGameSound()
     {
-        audioSource.PlayOneShot(startGameSound);
+        audioSource.PlayOneShot(startGameSound,2f);
         yield return new WaitForSeconds(startGameSound.length);
         Destroy(gameObject);
     }
