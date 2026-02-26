@@ -190,8 +190,14 @@ public class MenuActions : MonoBehaviour
     public void ConfirmCharacter()
     {
         originalPosition = charGameObject.position;
+
+        //play character animation
         Animator charAnim = charGameObject.gameObject.GetComponent<Animator>();
         charAnim.SetInteger("anim_index",0);
+
+        //play character voiceline
+        AudioSource voiceline = charGameObject.gameObject.GetComponent<AudioSource>();
+        voiceline.PlayOneShot(voiceline.clip);
     }
 
     public void PlayClickButtonSound()

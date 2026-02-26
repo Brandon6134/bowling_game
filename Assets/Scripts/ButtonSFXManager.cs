@@ -43,4 +43,9 @@ public class ButtonSFXManager : MonoBehaviour
         yield return new WaitForSeconds(quitGameSound.length);
         Destroy(gameObject);
     }
+
+    public void PlayCharacterAnnouncerSound(AudioClip audioClip)
+    {
+        audioSource.PlayOneShot(audioClip);
+    }
 }
