@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Ionic.Zip;
 using MagicPigGames;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -44,6 +45,10 @@ public class PlayerController : MonoBehaviour
     private AudioSource footstepAudioSource;
     private Vector3 lastPos;
     private int newBiomeIndex = 0;
+    [SerializeField] private GameObject dashedLine;
+    public AudioClip tickSFX;
+    private AudioSource tickAudioSource;
+    private float tickTimer;
 
     void Start()
     {
@@ -72,6 +77,7 @@ public class PlayerController : MonoBehaviour
         playerRb = GetComponent<Rigidbody>();
         fireAudioSource = GetComponents<AudioSource>()[0];
         footstepAudioSource = GetComponents<AudioSource>()[1];
+        tickAudioSource = GetComponents<AudioSource>()[2];
 
         //make bowling ball spawn at an offset so that camera transition between player and ball is smooth
         camOffset = cameraControlScript.playerOffset - cameraControlScript.ballOffset;
@@ -140,6 +146,9 @@ public class PlayerController : MonoBehaviour
                 playerAnim.SetBool("isThrow",true);
                 throwAnimActive = true;
                 footstepAudioSource.Stop();
+
+                //make dashed line dissappear
+                SetDashedLineActive(false);
             }
             
             //move the player forward if walking forward or during throw animation
@@ -203,27 +212,31 @@ public class PlayerController : MonoBehaviour
         //use clamp to return value if within min and max range, otherwise return min or max (if value exceeds them)
         float clampedY = Mathf.Clamp(yAngle,-rotateYRange,rotateYRange);
 
-        //if player angle reaches +/- 45 degrees, prevent them from rotating any further
+        float resetAngle = rotateYRange - 0.1f;
+
+        //if player angle reaches +/- maxAngle degrees, prevent them from rotating any further
         if (Mathf.Approximately(clampedY,rotateYRange))
         {
             playerRb.angularVelocity = Vector3.zero;
-            playerRb.MoveRotation(Quaternion.Euler(0,44.5f,0));
+            playerRb.MoveRotation(Quaternion.Euler(0,resetAngle,0));
         }
 
         else if (Mathf.Approximately(clampedY,-rotateYRange))
         {
             playerRb.angularVelocity = Vector3.zero;
-            playerRb.MoveRotation(Quaternion.Euler(0,-44.5f,0));
+            playerRb.MoveRotation(Quaternion.Euler(0,-resetAngle,0));
         }
     
         //allow player to rotate with Q and E buttons
         if (Input.GetKey(KeyCode.Q))
         {
-            playerRb.AddTorque(0,-rotateSpeed,0,ForceMode.Impulse);
+            playerRb.angularVelocity = new Vector3(0,rotateSpeed,0);
+            PlayTickSFX();
         }
         if (Input.GetKey(KeyCode.E))
         {
-            playerRb.AddTorque(0,rotateSpeed,0,ForceMode.Impulse);
+            playerRb.angularVelocity = new Vector3(0,-rotateSpeed,0);
+            PlayTickSFX();
         }
     }
 
@@ -233,9 +246,12 @@ public class PlayerController : MonoBehaviour
         float speed = velocity.magnitude;
 
         lastPos = newPos;
+        
+        //old value -> 0.00001f
+        float speedThreshold = 0.1f;
 
         //if player isnt moving, set idle animation boolean
-        if (speed <=0.00001f)
+        if (speed <= speedThreshold)
         {
             //print("speed is less than 0.2f at : "+speed);
             if (Mathf.Abs(velocity.x) <= 0.2f)
@@ -323,6 +339,7 @@ public class PlayerController : MonoBehaviour
             usedPercent=0.5f;
             spacePressed = false;
             throwAnimActive = true;
+            SetDashedLineActive(false);
             
             Debug.Log("velocity bar reached 0, auto-throwing ball!");
             playerAnim.SetBool("isThrow",true);
@@ -372,6 +389,9 @@ public class PlayerController : MonoBehaviour
 
         //set this false as backup at end of round, sometimes bug occurs where it's not set false
         throwAnimActive=false;
+
+        //make dashed line visible again
+        SetDashedLineActive(true);
     }
 
     public void ChangeBallColor(GameObject ball)
@@ -393,6 +413,8 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator EnterPortalSequence()
     {
+        SetDashedLineActive(false);
+        
         //wait 3 seconds for portal, then start walking player forward
         yield return new WaitForSeconds(3f);
 
@@ -403,7 +425,7 @@ public class PlayerController : MonoBehaviour
         }
         //moves players forward, doesnt play footstep sfx if has entered portal and vice versa
         MoveForwardSequence(2f,!biomeManagerScript.hasEnteredPortal);
-        playerRb.freezeRotation = true;
+        //playerRb.freezeRotation = true;
     }
 
     void OnTriggerEnter(Collider other)
@@ -445,5 +467,21 @@ public class PlayerController : MonoBehaviour
                 return result;
         }
         return null;
+    }
+
+    public void SetDashedLineActive(bool boolean)
+    {
+        dashedLine.SetActive(boolean);
+    }
+
+    private void PlayTickSFX()
+    {
+        tickTimer+=Time.deltaTime;
+
+        while(tickTimer >= 0.2f)
+        {
+            tickAudioSource.PlayOneShot(tickSFX);
+            tickTimer = 0f;
+        }
     }
 }

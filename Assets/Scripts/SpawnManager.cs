@@ -103,8 +103,6 @@ public class SpawnManager : MonoBehaviour
     //hard resets all bowling pins, ball, and player position + rotation
     IEnumerator HardReset()
     {
-        //if (Input.GetKeyDown(KeyCode.R))
-        //{
         currentPins = TrackPins();
         var keys = currentPins.Keys.ToList(); // make a list of keys for indexing
         int currentPinsDown=0;
@@ -145,13 +143,10 @@ public class SpawnManager : MonoBehaviour
 
         //if isn't last frame and 3rd round
         if (lastFrameRoundIndex!=2)
-        {
             ScoreCalculator(2,currentPinsDown);
-        }
         else
-        {
             text = ThreeRoundLastFrame_ScoreCalculator(currentPinsDown);
-        }
+
         UpdateScore(text);
         UIManagerScript.AnnounceScore(currentPinsDown,isSpareForAnnounce,isStrike);
 
@@ -159,9 +154,7 @@ public class SpawnManager : MonoBehaviour
 
         //after the 10th frame, game is finished
         if (frameIndex == 10)
-        {
             GameOver();
-        }
 
         resetInProgress = false;
         pinsHaveMovedThisRound=false;
@@ -177,20 +170,12 @@ public class SpawnManager : MonoBehaviour
         playerRb.position = playerPosition;
         playerRb.rotation = Quaternion.identity;
         player.transform.rotation = new Quaternion(0,0,0,0);
-
-        //Physics.SyncTransforms();
-
-        //print("post-reset player pos: " + player.transform.position);
-        //print("rigid body location: "+playerRb.position);
-        //print("startPosition: " + playerPosition);
     }    
 
 
     //soft reset: bowling pins that were knocked down are deleted, remaining pins remain in regular spots
     IEnumerator SoftReset()
     {
-        //if (Input.GetKeyDown(KeyCode.F))
-        //{
         currentPins = TrackPins();
         var keys = currentPins.Keys.ToList(); // make a list of keys for indexing
         int currentPinsDown=0;
@@ -199,6 +184,7 @@ public class SpawnManager : MonoBehaviour
         for (int i = 0; i < keys.Count; i++)
         {
             GameObject pin = keys[i];
+            Rigidbody pinRb = pin.GetComponent<Rigidbody>();
             Vector3 startPos = roundStartPins[pin];
             Vector3 currentPos = pin.transform.position;
 
@@ -212,8 +198,11 @@ public class SpawnManager : MonoBehaviour
             }
             else
             {
-                //if not counted as pin down, reset their rotation in case they were slightly tapped earlier
+                //if not counted as pin down, reset their position, rotation, and velocity
                 pin.transform.rotation = Quaternion.identity;
+                pin.transform.position = startPos;
+                pinRb.linearVelocity = Vector3.zero;
+                pinRb.angularVelocity = Vector3.zero;
             }
         }
 
@@ -549,6 +538,9 @@ public class SpawnManager : MonoBehaviour
         GameObject bowlingBall = GameObject.FindGameObjectWithTag("Bowling Ball");
         
         int sleepCount=0;
+
+        //if a pin has an angular or linear velocity lower than this threshold float, is counted as stoppeod moving (is sleeping)
+        float thresholdVelocityForSleep = 2f; //is large ish value so resets occur faster
         
         
         foreach (GameObject pin in pins)
@@ -561,8 +553,8 @@ public class SpawnManager : MonoBehaviour
             {
                 pinsHaveMovedThisRound = true;
             }
-            //if (pinRb.IsSleeping() && pinsHaveMovedThisRound)
-            if (pinRb.angularVelocity.magnitude <= 0.1f && pinRb.linearVelocity.magnitude <=0.1f && pinsHaveMovedThisRound)
+
+            if (pinRb.angularVelocity.magnitude <= thresholdVelocityForSleep && pinRb.linearVelocity.magnitude <=thresholdVelocityForSleep && pinsHaveMovedThisRound)
             {
                 sleepCount++;
             }

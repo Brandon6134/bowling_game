@@ -25,6 +25,7 @@ public class CameraControl : MonoBehaviour
     private bool doTransition = false;
     private SpawnManager spawnManagerScript;
     private PlayerController playerControllerScript;
+    private BiomeManager biomeManagerScript;
     public AnimationCurve curve;
     public float duration = 10f;
 
@@ -33,6 +34,7 @@ public class CameraControl : MonoBehaviour
     {
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        biomeManagerScript = GameObject.Find("Biome Manager").GetComponent<BiomeManager>();
         playerRb = player.GetComponent<Rigidbody>();
     }
 
@@ -44,10 +46,10 @@ public class CameraControl : MonoBehaviour
             bowlingBall = GameObject.FindGameObjectWithTag("Bowling Ball");
 
             //if bowling ball is thrown/exists, is mid cam transition, is charging up velocity bar with space,
-            // or the throw animation is active, then don't allow cam switch. otherwise allow switch upon pressing tab.
+            //the throw animation is active, or mid portal sequence, then don't allow cam switch. otherwise allow switch upon pressing tab.
             //aka if player is just moving around in initial state
             if (Input.GetKeyDown(KeyCode.Tab) && !bowlingBall && camFinishedBallToPlayer && camFinishedTransition
-            && !playerControllerScript.spacePressed && !playerControllerScript.throwAnimActive)
+            && !playerControllerScript.spacePressed && !playerControllerScript.throwAnimActive && !biomeManagerScript.GetIsEnterPortalSequence())
             {
                 //if false, set true. if true, set false. allows users to switch between the player cam and score cam
                 camOnScores = !camOnScores;

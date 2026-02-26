@@ -24,7 +24,7 @@ public class BowlingPinControl : MonoBehaviour
         ConditionalDamping();
         if (playerControllerScript.spaceReleased)
         {
-            Sleep();
+            //Sleep();
             FrictionScaler();
         }
             
@@ -42,7 +42,7 @@ public class BowlingPinControl : MonoBehaviour
     //stop bowling pins from infinetly rotating and moving by sleeping (stop calculating physics and setting velocities to zero) them when their velocities get low
     void Sleep()
     {
-        if (pinRb.linearVelocity.magnitude < 0.4f && pinRb.angularVelocity.magnitude < 0.4f)
+        if (pinRb.linearVelocity.magnitude < 0.2f && pinRb.angularVelocity.magnitude < 0.2f)
         {
             pinRb.linearVelocity = Vector3.zero;
             pinRb.angularVelocity = Vector3.zero;

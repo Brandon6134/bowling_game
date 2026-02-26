@@ -9,6 +9,7 @@ using UnityEngine;
 public class BiomeManager : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private PlayerController playerControllerScript;
     public GameObject parentBiome;
     public GameObject player;
     private Rigidbody playerRb;
@@ -33,13 +34,15 @@ public class BiomeManager : MonoBehaviour
 
     void Start()
     {
+        playerControllerScript = playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        
         playerRb = player.GetComponent<Rigidbody>();
         initialPlayerPos = playerRb.position;
         portal_ControllerScript = portalParent.transform.GetChild(0).gameObject.GetComponent<Portal_Controller>();
         
         InitializeTransformList(parentBiome,biomeList);
         InitializeBiomePhysicsValuesArray(physicMods);
-        AssignNewBiome(0); //working on ___ biome for now
+        AssignNewBiome(0); //initialize classic bowling alley
 
         laserAudioSource = portalSpawnVFX.GetComponent<AudioSource>();
     }
@@ -112,6 +115,13 @@ public class BiomeManager : MonoBehaviour
 
         //move portal back to initial position
         portalParent.transform.position += new Vector3(15f,0f,0f);
+
+        //reset player rotation
+        playerRb.rotation = Quaternion.identity;
+
+        //set dashedLine visible
+        playerControllerScript.SetDashedLineActive(true);
+
         print("disabling portal!");
     }
 
@@ -185,5 +195,10 @@ public class BiomeManager : MonoBehaviour
         list.Add((15f,0.3f)); //ocean
         list.Add((0f,0.3f)); //outer space
         list.Add((25f,0.3f)); //prehistoric
+    }
+
+    public bool GetIsEnterPortalSequence()
+    {
+        return isEnterPortalSequence;
     }
 }
