@@ -46,6 +46,6 @@ public class ButtonSFXManager : MonoBehaviour
 
     public void PlayCharacterAnnouncerSound(AudioClip audioClip)
     {
-        audioSource.PlayOneShot(audioClip);
+        audioSource.PlayOneShot(audioClip,2f);
     }
 }
