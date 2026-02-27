@@ -243,12 +243,7 @@ public class UIManager : MonoBehaviour
 
     public float ChangeBarSpeed(float barSpeed)
     {
-        //set 5 diff bar speeds for no flame + 4 types of flames vfx
-        //0 -> no flame
-        //0.3 -> red flame
-        //0.6 -> blue flame
-        //0.9 -> green flame
-        //0.95 -> purple flame
+        //set 5 diff bar speeds for higher bar values, to make harder to get higher speeds
         float[] benchmarks = {0.45f,0.6f,0.8f,0.9f};
         float progress = Mathf.Abs(verticalProgressBarScript.Progress - 1f);
         float posNegMod = 1f;
@@ -271,14 +266,6 @@ public class UIManager : MonoBehaviour
         return barSpeed;
     }
 
-    // public IEnumerator ShakeObject(GameObject obj, Vector3 originalPos, float shakeMod)
-    // {
-
-    //     obj.transform.position = originalPos + Random.insideUnitSphere * shakeMod;
-    //     yield return null;
-
-    //     obj.transform.position = originalPos;
-    // }
     public IEnumerator ShakeObject(GameObject obj, float duration,AnimationCurve curve, Vector3 originalPos, float shakeMod)
     {
         float elapsedTime = 0f;
