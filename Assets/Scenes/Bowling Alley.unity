@@ -8525,7 +8525,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 373755184}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 618115670}
+        m_TargetAssemblyTypeName: TipsManager, Assembly-CSharp
+        m_MethodName: TraverseTips
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &375988254 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3161812965674279846, guid: 76e80db164aea5944932f263943e89e5, type: 3}
@@ -21576,7 +21588,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1155060496
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21625,7 +21637,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -25836,7 +25848,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1389361496}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 618115670}
+        m_TargetAssemblyTypeName: TipsManager, Assembly-CSharp
+        m_MethodName: TraverseTips
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: -1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1389995055 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8771091787928289351, guid: 83d2ac0dea9547845b09ad6849feaf2f, type: 3}
@@ -29214,7 +29238,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1621145105
 RectTransform:
   m_ObjectHideFlags: 0
