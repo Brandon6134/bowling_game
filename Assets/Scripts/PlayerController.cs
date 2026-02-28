@@ -48,6 +48,8 @@ public class PlayerController : MonoBehaviour
     public AudioClip tickSFX;
     private AudioSource tickAudioSource;
     private float tickTimer;
+    private TipsManager tipsManagerScript;
+    private bool isMoveMode = true; //if false, is rotate mode
 
     void Start()
     {
@@ -56,6 +58,7 @@ public class PlayerController : MonoBehaviour
         UIManagerScript = GameObject.Find("UI Manager").GetComponent<UIManager>();
         verticalProgressBarScript = verticalProgressBar.GetComponent<VerticalProgressBar>();
         biomeManagerScript = BiomeManager.GetComponent<BiomeManager>();
+        tipsManagerScript = GameObject.Find("Tips").GetComponent<TipsManager>();
 
         if (StaticData.characterSelectedName != null)
             ChangeCharacterModel();
@@ -97,8 +100,20 @@ public class PlayerController : MonoBehaviour
             //also if isnt in the moveforward sequence or throwing animation, and isnt enter portal sequence
             if (!cameraControlScript.camOnScores && !spacePressed && !throwInProgress && !biomeManagerScript.isEnterPortalSequence)
             {
-                horizontalMovement();
-                rotationalMovement();
+                horizontalInput = Input.GetAxis("Horizontal");
+                
+                if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
+                {
+                    isMoveMode = !isMoveMode; //change control mode
+                    horizontalInput = 0f; //isnt working
+                    //reset horizontal input so no input carryover between moving and rotating 
+                    //(e.g. moving at 1 horizontalinput speed, press control then rotation starts at 0 horizontal speed, no jitter)
+                }
+                
+                if (isMoveMode)
+                    horizontalMovement();
+                else
+                    rotationalMovement();
             }
             else if(biomeManagerScript.isEnterPortalSequence)
                 StartCoroutine(EnterPortalSequence());
@@ -148,6 +163,9 @@ public class PlayerController : MonoBehaviour
 
                 //make dashed line dissappear
                 SetDashedLineActive(false);
+
+                //make all tip objects dissapear
+                tipsManagerScript.SetAllTipObjectsActive(false);
             }
             
             //move the player forward if walking forward or during throw animation
@@ -181,7 +199,7 @@ public class PlayerController : MonoBehaviour
             transform.position = new Vector3(transform.position.x,transform.position.y,zRange);
         }
         
-        horizontalInput = Input.GetAxis("Horizontal");
+        //horizontalInput = Input.GetAxis("Horizontal");
         
         //translate w/ respect to world, so can move left and right globally (not accounting for rotation)
         //transform.Translate(Vector3.back * speed * horizontalInput *  Time.deltaTime,Space.World);
@@ -201,6 +219,7 @@ public class PlayerController : MonoBehaviour
 
     void rotationalMovement()
     {
+
         //get current player rotation in eulerAngles (is a value from 0-360)
         float yAngle = playerRb.rotation.eulerAngles.y;
 
@@ -225,18 +244,26 @@ public class PlayerController : MonoBehaviour
             playerRb.angularVelocity = Vector3.zero;
             playerRb.MoveRotation(Quaternion.Euler(0,-resetAngle,0));
         }
+
+        //allow player to rotate with horizontal input
+        playerRb.angularVelocity = new Vector3(0,rotateSpeed*horizontalInput,0);
+
+        if (Mathf.Abs(horizontalInput) > 0f)
+            PlayTickSFX();
+        
+        CalculatePlayerVelocity(transform.position,ref lastPos, true); //call this so footsteps stop when rotating
     
-        //allow player to rotate with Q and E buttons
-        if (Input.GetKey(KeyCode.Q))
-        {
-            playerRb.angularVelocity = new Vector3(0,rotateSpeed,0);
-            PlayTickSFX();
-        }
-        if (Input.GetKey(KeyCode.E))
-        {
-            playerRb.angularVelocity = new Vector3(0,-rotateSpeed,0);
-            PlayTickSFX();
-        }
+        // //allow player to rotate with Q and E buttons
+        // if (Input.GetKey(KeyCode.Q))
+        // {
+        //     playerRb.angularVelocity = new Vector3(0,rotateSpeed,0);
+        //     PlayTickSFX();
+        // }
+        // if (Input.GetKey(KeyCode.E))
+        // {
+        //     playerRb.angularVelocity = new Vector3(0,-rotateSpeed,0);
+        //     PlayTickSFX();
+        // }
     }
 
     public void CalculatePlayerVelocity(Vector3 newPos, ref Vector3 lastPos, bool playFootstepSFX)

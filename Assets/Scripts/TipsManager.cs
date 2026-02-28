@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class TipsManager : MonoBehaviour
 {
@@ -70,6 +71,10 @@ public class TipsManager : MonoBehaviour
         inactive.SetActive(false);
     }
 
+    public void SetAllTipObjectsActive(bool isActive)
+    {
+        gameObject.SetActive(isActive);
+    }
     public void GetChildren(GameObject parent, List<GameObject> children)
     {
         foreach (Transform child in parent.transform)

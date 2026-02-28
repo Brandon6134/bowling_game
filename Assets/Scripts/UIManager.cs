@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] public GameObject verticalProgressBar;
     private Vector3 progressBarPos;
     private VerticalProgressBar verticalProgressBarScript;
+    private TipsManager tipsManagerScript;
     private AudioSource audioSource;
     public AudioClip[] announcePinsHitSFX;
     public TextMeshProUGUI ballSpeedText;
@@ -52,6 +53,7 @@ public class UIManager : MonoBehaviour
     {
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        tipsManagerScript = GameObject.Find("Tips").GetComponent<TipsManager>();
         verticalProgressBarScript = verticalProgressBar.GetComponent<VerticalProgressBar>();
         audioSource = GetComponent<AudioSource>();
 
@@ -300,5 +302,9 @@ public class UIManager : MonoBehaviour
             obj.SetActive(false);
         }
         torqueSpeedText.enabled = false;
+
+        //set all tip objects active and go to next tip
+        tipsManagerScript.SetAllTipObjectsActive(true);
+        tipsManagerScript.TraverseTips(1);
     }
 }
