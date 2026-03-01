@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using MagicPigGames;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class PlayerController : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private float horizontalInput;
+    private float horizontalAxis;
     public float speed;
     public float zRange;
     public float rotateYRange = 0.5f;
@@ -50,6 +52,7 @@ public class PlayerController : MonoBehaviour
     private float tickTimer;
     private TipsManager tipsManagerScript;
     private bool isMoveMode = true; //if false, is rotate mode
+    private bool isRampingInput = false;
 
     void Start()
     {
@@ -95,21 +98,39 @@ public class PlayerController : MonoBehaviour
         //if game is active, allow player control
         if (spawnManagerScript.isGameActive)
         {
-            
+
             //if camera isn't on the scoreboard, allow player movement (when player exits scoreboard, can immediately move so feels nice and not restrictve)
             //also if isnt in the moveforward sequence or throwing animation, and isnt enter portal sequence
             if (!cameraControlScript.camOnScores && !spacePressed && !throwInProgress && !biomeManagerScript.isEnterPortalSequence)
             {
-                horizontalInput = Input.GetAxis("Horizontal");
-                
+                horizontalAxis = Input.GetAxis("Horizontal");
+
                 if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
                 {
                     isMoveMode = !isMoveMode; //change control mode
-                    horizontalInput = 0f; //isnt working
+                    horizontalInput = 0f; //reset input value
+                    isRampingInput = true; //start input ramping process
+
                     //reset horizontal input so no input carryover between moving and rotating 
-                    //(e.g. moving at 1 horizontalinput speed, press control then rotation starts at 0 horizontal speed, no jitter)
                 }
+
+                //if switched modes and is no longer holding down left or right, set player movement back to 0
+                if (isRampingInput && Input.GetAxisRaw("Horizontal")==0f)
+                    horizontalInput = 0f;
                 
+                //if switched modes and player still holding down left/right, overtime ramp up their rotation/movement from 0 to 1/-1 or wtv value
+                else if(isRampingInput) 
+                    horizontalInput = Mathf.MoveTowards(horizontalInput,horizontalAxis,Time.deltaTime*4f);
+
+                //default of just controlling movement/rotation with input
+                else
+                    horizontalInput = horizontalAxis;
+                
+                //if ramped up input equals the internal horizontal input, stop ramping input
+                if (Mathf.Abs(horizontalAxis - horizontalInput) < 0.01f)
+                    isRampingInput = false;
+                
+                //allow users to switch between movement and rotation modes
                 if (isMoveMode)
                     horizontalMovement();
                 else
@@ -246,7 +267,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //allow player to rotate with horizontal input
-        playerRb.angularVelocity = new Vector3(0,rotateSpeed*horizontalInput,0);
+        playerRb.angularVelocity = new Vector3(0,-rotateSpeed*horizontalInput,0);
 
         if (Mathf.Abs(horizontalInput) > 0f)
             PlayTickSFX();
