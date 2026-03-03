@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using MagicPigGames;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
@@ -53,6 +55,7 @@ public class PlayerController : MonoBehaviour
     private TipsManager tipsManagerScript;
     private bool isMoveMode = true; //if false, is rotate mode
     private bool isRampingInput = false;
+    private MenuActions menuActionsScript;
 
     void Start()
     {
@@ -62,6 +65,8 @@ public class PlayerController : MonoBehaviour
         verticalProgressBarScript = verticalProgressBar.GetComponent<VerticalProgressBar>();
         biomeManagerScript = BiomeManager.GetComponent<BiomeManager>();
         tipsManagerScript = GameObject.Find("Tips").GetComponent<TipsManager>();
+        menuActionsScript = GameObject.Find("Canvas").GetComponent<MenuActions>();
+        
 
         if (StaticData.characterSelectedName != null)
             ChangeCharacterModel();
@@ -107,11 +112,7 @@ public class PlayerController : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
                 {
-                    isMoveMode = !isMoveMode; //change control mode
-                    horizontalInput = 0f; //reset input value
-                    isRampingInput = true; //start input ramping process
-
-                    //reset horizontal input so no input carryover between moving and rotating 
+                    SwitchControlMode();
                 }
 
                 //if switched modes and is no longer holding down left or right, set player movement back to 0
@@ -151,7 +152,8 @@ public class PlayerController : MonoBehaviour
                 spacePressed=true;
                 throwInProgress=true;
                 playerAnim.SetBool("isWalkForward",true);
-                UIManagerScript.verticalProgressBar.SetActive(true);
+                UIManagerScript.verticalProgressBar.SetActive(true); //make velocity bar appear
+                UIManagerScript.SetSwitchModeButtonActive(false);
             }
             //if entered moveforwardsequence, start bowling veloctiy bar UI + minigame
             else if(Input.GetKeyUp(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && 
@@ -187,6 +189,8 @@ public class PlayerController : MonoBehaviour
 
                 //make all tip objects dissapear
                 tipsManagerScript.SetAllTipObjectsActive(false);
+
+                
             }
             
             //move the player forward if walking forward or during throw animation
@@ -460,7 +464,7 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator EnterPortalSequence()
     {
-        SetDashedLineActive(false);
+        UIManagerScript.SetPlayerUIActive(false);
         
         //wait 3 seconds for portal, then start walking player forward
         yield return new WaitForSeconds(3f);
@@ -531,4 +535,24 @@ public class PlayerController : MonoBehaviour
             tickTimer = 0f;
         }
     }
+
+    public void SwitchControlMode()
+    {
+        isMoveMode = !isMoveMode; //change control mode
+        horizontalInput = 0f; //reset input value
+        isRampingInput = true; //start input ramping process
+
+        UIManagerScript.SwitchModeButtonText(isMoveMode); // switch mode text
+        menuActionsScript.PlaySwitchModeSound(); //play switch mode sfx
+
+        //reset horizontal input so no input carryover between moving and rotating 
+    }
+
+    public void ResetSwitchModeToMove()
+    {
+        isMoveMode = true;
+        UIManagerScript.SwitchModeButtonText(isMoveMode); // switch mode text
+    }
+
+    
 }

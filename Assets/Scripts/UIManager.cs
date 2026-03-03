@@ -2,9 +2,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEditor;
 using MagicPigGames;
 using System;
+using NUnit.Framework;
 
 public class UIManager : MonoBehaviour
 {
@@ -46,6 +48,8 @@ public class UIManager : MonoBehaviour
     //public float elapsedTime=0f;
     public float duration = 1f;
     public float shakeModifier;
+    public GameObject switchModeButton;
+    private List<GameObject> modeTextList = new List<GameObject>();
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -84,6 +88,9 @@ public class UIManager : MonoBehaviour
         {
             obj.SetActive(false);
         }
+
+        //add move and rotate text children to list
+        GetChildren(switchModeButton,modeTextList);
         
     }
 
@@ -283,6 +290,25 @@ public class UIManager : MonoBehaviour
         obj.transform.position = originalPos;
     }
 
+    public void SwitchModeButtonText(bool isMoveMode)
+    {
+        if (isMoveMode)
+        {
+            modeTextList[0].SetActive(true);
+            modeTextList[1].SetActive(false);
+        }
+        else
+        {
+            modeTextList[1].SetActive(true);
+            modeTextList[0].SetActive(false);
+        }
+    }
+
+    public void SetSwitchModeButtonActive(bool isActive)
+    {
+        switchModeButton.SetActive(isActive);
+    }
+
     public void ResetUI()
     {
         //reset velocity bar variables
@@ -306,5 +332,24 @@ public class UIManager : MonoBehaviour
         //set all tip objects active and go to next tip
         tipsManagerScript.SetAllTipObjectsActive(true);
         tipsManagerScript.TraverseTips(1);
+
+        //set switch button mode active and reset to move mode
+        SetSwitchModeButtonActive(true);
+        playerControllerScript.ResetSwitchModeToMove();
+    }
+
+    public void SetPlayerUIActive(bool isActive)
+    {
+        playerControllerScript.SetDashedLineActive(isActive); //set dashed line
+        tipsManagerScript.SetAllTipObjectsActive(isActive); //set tips
+        SetSwitchModeButtonActive(isActive); //set switch mode button
+    }
+
+    public void GetChildren(GameObject parent, List<GameObject> children)
+    {
+        foreach (Transform child in parent.transform)
+        {
+            children.Add(child.gameObject);
+        }
     }
 }

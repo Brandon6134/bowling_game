@@ -29,6 +29,7 @@ public class MenuActions : MonoBehaviour
     public AudioClip buttonPressSound;
     public AudioClip customizePressSound;
     public AudioClip confirmPressSound;
+    public AudioClip switchModeSound;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -213,6 +214,11 @@ public class MenuActions : MonoBehaviour
     public void PlayConfirmButtonSound()
     {
         audioSource.PlayOneShot(confirmPressSound,0.3f);
+    }
+
+    public void PlaySwitchModeSound()
+    {
+        audioSource.PlayOneShot(switchModeSound,1f);
     }
 
 

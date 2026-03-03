@@ -9,7 +9,7 @@ using UnityEngine;
 public class BiomeManager : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private PlayerController playerControllerScript;
+    private UIManager UIManagerScript;
     public GameObject parentBiome;
     public GameObject player;
     private Rigidbody playerRb;
@@ -34,7 +34,7 @@ public class BiomeManager : MonoBehaviour
 
     void Start()
     {
-        playerControllerScript = playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        UIManagerScript = GameObject.Find("UI Manager").GetComponent<UIManager>();
         
         playerRb = player.GetComponent<Rigidbody>();
         initialPlayerPos = playerRb.position;
@@ -119,8 +119,8 @@ public class BiomeManager : MonoBehaviour
         //reset player rotation
         playerRb.rotation = Quaternion.identity;
 
-        //set dashedLine visible
-        playerControllerScript.SetDashedLineActive(true);
+        //set all player UI (dashed line, tips, switch mode button) active
+        UIManagerScript.SetPlayerUIActive(true);
 
         print("disabling portal!");
     }
