@@ -101,7 +101,7 @@ public class UIManager : MonoBehaviour
         if (playerControllerScript.spacePressed && !stopMovingVelocityBar && Time.deltaTime!=0)
         {
             //(tBar, minY, maxY) = VelocityBarChange(velocityBarRectTransform, tBar, minY, maxY);
-            (tBar, minY, maxY,barSpeed) = AssetVelocityBarChange(tBar, minY, maxY, barSpeed);
+            (tBar, minY, maxY,barSpeed,stopMovingVelocityBar) = AssetVelocityBarChange(tBar, minY, maxY, barSpeed, verticalProgressBarScript,stopMovingVelocityBar);
             StartCoroutine(ShakeObject(verticalProgressBar,duration,velocityBarShakeCurve,progressBarPos,shakeModifier));
             SpinGaugeChange(spinUI,minSpinX,maxSpinX);
         }
@@ -109,7 +109,7 @@ public class UIManager : MonoBehaviour
         FadeOutAndStop();
     }
 
-    public (float,float,float,float) AssetVelocityBarChange(float t, float minY, float maxY, float barSpeed)
+    public (float,float,float,float, bool) AssetVelocityBarChange(float t, float minY, float maxY, float barSpeed, VerticalProgressBar verticalProgressBarScript, bool stopMovingVelocityBar)
     {
         //set the progress bar value and increase t value
         verticalProgressBarScript.SetProgress(Mathf.Lerp(minY,maxY,t));
@@ -129,7 +129,7 @@ public class UIManager : MonoBehaviour
 
         barSpeed = ChangeBarSpeed(barSpeed);
 
-        return (t,minY,maxY,barSpeed);
+        return (t,minY,maxY,barSpeed,stopMovingVelocityBar);
     }
 
     public float SpinGaugeChange(GameObject[] objarray, float min, float max)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using MagicPigGames;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,16 +11,16 @@ public class MenuActions : MonoBehaviour
     public GameObject mainMenuPanel;
     public GameObject howToPlayPanel;
     public GameObject howToPlayPanel2;
+    public GameObject howToPlayPanel3;
     public GameObject customizePanel;
     public GameObject characterSelectPanel;
     public GameObject pauseButton;
     public TextMeshProUGUI characterNameText;
     public TextMeshProUGUI characterBackstoryText;
-    public GameObject velocityBar;
-    public RectTransform velocityBarRectTransform;
-    private float t = 0f;
-    private float minY = 0f;
-    private float maxY = 700f;
+    //public GameObject velocityBar;
+    //public RectTransform velocityBarRectTransform;
+    public GameObject verticalProgressBar;
+    private VerticalProgressBar verticalProgressBarScript;
     public Outline colorSelectedOutline;
     public Material defaultBallMaterial;
     public ScrollRect[] scrollRectCustomizeRows;
@@ -30,12 +31,20 @@ public class MenuActions : MonoBehaviour
     public AudioClip customizePressSound;
     public AudioClip confirmPressSound;
     public AudioClip switchModeSound;
+    private float[] moddedBarSpeeds;
+    private float t = 0f;
+    private float minY = 0f;
+    private float maxY = 1f;
+    private float barSpeed = 0.5f;
+    private bool stopMovingVelocityBar = false;
+    private float[] barSpeedMultipliers = {1.5f,2f,3f,4.5f};
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
         howToPlayPanel.SetActive(false);
         Scene currentScene = SceneManager.GetActiveScene();
+        verticalProgressBarScript = verticalProgressBar.GetComponent<VerticalProgressBar>();
 
         //if on main menu UI
         if (currentScene.buildIndex == 0)
@@ -47,14 +56,23 @@ public class MenuActions : MonoBehaviour
             TrackBallColor();
             TrackCharacterSelected();
         }
+
+        moddedBarSpeeds = new float[] {barSpeed,barSpeed,barSpeed,barSpeed};
+
+        //set barSpeeds
+        for (int i=0;i<moddedBarSpeeds.Length;i++)
+        {
+            moddedBarSpeeds[i]*=barSpeedMultipliers[i];
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (howToPlayPanel.activeInHierarchy)
+        if (howToPlayPanel2.activeInHierarchy)
         {
-            (t,minY,maxY) = VelocityBarChange(velocityBarRectTransform,t,minY,maxY);
+            //(t,minY,maxY) = VelocityBarChange(velocityBarRectTransform,t,minY,maxY);
+            (t, minY, maxY,barSpeed,stopMovingVelocityBar) = AssetVelocityBarChange(t, minY, maxY, barSpeed, verticalProgressBarScript,stopMovingVelocityBar);
         }
     }
 
@@ -224,22 +242,73 @@ public class MenuActions : MonoBehaviour
 
 
     //simplified velocity bar func from UIManager, but it just goes up and down forever with no player input
-    public (float,float,float) VelocityBarChange(RectTransform rect, float tBar, float minY, float maxY)
+    // public (float,float,float) VelocityBarChange(RectTransform rect, float tBar, float minY, float maxY)
+    // {
+    //     //change rectangle height
+    //     rect.sizeDelta = new (100, Mathf.Lerp(minY,maxY,tBar));
+
+    //     //increase t overtime, multiply by unscaledDeltaTime so even game is paused (time.timeScale=0) it still scales with time (exclusive for UI)
+    //     tBar+=1.1f*Time.unscaledDeltaTime;
+
+    //     //if t=1 then bar has reached max or min size, thus switch the min and max so it starts increasing or decreasing size appropriately
+    //     if (tBar>=1)
+    //     {
+    //         (minY,maxY) = (maxY,minY);
+    //         tBar=0f;
+    //     }
+
+    //     return (tBar,minY,maxY);
+    // }
+
+
+    public (float,float,float,float, bool) AssetVelocityBarChange(float t, float minY, float maxY, float barSpeed, VerticalProgressBar verticalProgressBarScript, bool stopMovingVelocityBar)
     {
-        //change rectangle height
-        rect.sizeDelta = new (100, Mathf.Lerp(minY,maxY,tBar));
+        //set the progress bar value and increase t value
+        verticalProgressBarScript.SetProgress(Mathf.Lerp(minY,maxY,t));
+        t+=barSpeed*Time.deltaTime; 
+        print(t);
 
-        //increase t overtime, multiply by unscaledDeltaTime so even game is paused (time.timeScale=0) it still scales with time (exclusive for UI)
-        tBar+=1.1f*Time.unscaledDeltaTime;
-
-        //if t=1 then bar has reached max or min size, thus switch the min and max so it starts increasing or decreasing size appropriately
-        if (tBar>=1)
+        //if this is true, then bar has went up and down once already, so thus stop moving the velocity bar. reset t and barSpeed values;
+        if (t<=0)
         {
-            (minY,maxY) = (maxY,minY);
-            tBar=0f;
+            //stopMovingVelocityBar = true;
+            barSpeed *= -1f;
+            t=0;
+        }
+        //if t reaches 1 or more, set the bar speed to -1 so it begins decreasing
+        else if (t>=1 && barSpeed>0)
+        {   
+            barSpeed *= -1f;
         }
 
-        return (tBar,minY,maxY);
+        barSpeed = ChangeBarSpeed(barSpeed);
+
+        return (t,minY,maxY,barSpeed,stopMovingVelocityBar);
+    }
+
+    public float ChangeBarSpeed(float barSpeed)
+    {
+        //set 5 diff bar speeds for higher bar values, to make harder to get higher speeds
+        float[] benchmarks = {0.45f,0.6f,0.8f,0.9f};
+        float progress = Mathf.Abs(verticalProgressBarScript.Progress - 1f);
+        float posNegMod = 1f;
+
+        if(barSpeed<0)
+        {
+            posNegMod = -1f;
+        }
+
+        //loop through all benchmarks (start from greatest to least)
+        for (int i=benchmarks.Length-1;i>=0;i--)
+        {
+            
+            if (progress>=benchmarks[i])
+            {
+                barSpeed = moddedBarSpeeds[i] * posNegMod;
+                break;
+            }
+        }
+        return barSpeed;
     }
 
 
