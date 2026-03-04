@@ -56,9 +56,17 @@ public class PlayerController : MonoBehaviour
     private bool isMoveMode = true; //if false, is rotate mode
     private bool isRampingInput = false;
     private MenuActions menuActionsScript;
+    public bool isGameActive = false; //used to determine if start() and update() logic is ran
 
     void Start()
     {
+        if (!isGameActive)
+        {
+            UIManagerScript = GameObject.Find("UI Script Object").GetComponent<UIManager>();
+            menuActionsScript = GameObject.Find("Canvas").GetComponent<MenuActions>();
+            return;
+        }
+
         cameraControlScript = GameObject.Find("Main Camera").GetComponent<CameraControl>();
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         UIManagerScript = GameObject.Find("UI Manager").GetComponent<UIManager>();
@@ -100,6 +108,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isGameActive)
+            return;
         //if game is active, allow player control
         if (spawnManagerScript.isGameActive)
         {

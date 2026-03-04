@@ -50,11 +50,19 @@ public class UIManager : MonoBehaviour
     public float shakeModifier;
     public GameObject switchModeButton;
     private List<GameObject> modeTextList = new List<GameObject>();
+    public bool isGameActive = false; //used to determine if start() and update() logic is ran
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (!isGameActive) //e.g. if is main menu
+        {
+            GetChildren(switchModeButton,modeTextList);
+            return;
+        }
+            
+        
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
         tipsManagerScript = GameObject.Find("Tips").GetComponent<TipsManager>();
@@ -97,6 +105,8 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isGameActive)
+            return;
         //if space is pressed down, velocity bar should be moving still, and game isnt paused
         if (playerControllerScript.spacePressed && !stopMovingVelocityBar && Time.deltaTime!=0)
         {

@@ -3,6 +3,7 @@ using System.Collections;
 using MagicPigGames;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -88,10 +89,17 @@ public class MenuActions : MonoBehaviour
         howToPlayPanel.SetActive(true);
     }
 
-    public void NextPageButton()
+
+    //generic next button function, makes current gameobject inactive and the parameter nextPanelToShow active
+    public void NextPageButton(GameObject nextPanelToShow)
     {
-        howToPlayPanel.SetActive(false);
-        howToPlayPanel2.SetActive(true);
+        //howToPlayPanel.SetActive(false);
+        //howToPlayPanel2.SetActive(true);
+        GameObject clicked = EventSystem.current.currentSelectedGameObject;
+        GameObject parentPage = clicked.transform.parent.gameObject;
+
+        parentPage.SetActive(false);
+        nextPanelToShow.SetActive(true);
     }
 
     public void ReturnButton(GameObject currentPanel)
@@ -265,8 +273,9 @@ public class MenuActions : MonoBehaviour
     {
         //set the progress bar value and increase t value
         verticalProgressBarScript.SetProgress(Mathf.Lerp(minY,maxY,t));
-        t+=barSpeed*Time.deltaTime; 
-        print(t);
+
+        //multiply by unscaledDeltaTime so even game is paused (time.timeScale=0) it still scales with time (exclusive for UI)
+        t+=barSpeed*Time.unscaledDeltaTime;
 
         //if this is true, then bar has went up and down once already, so thus stop moving the velocity bar. reset t and barSpeed values;
         if (t<=0)
