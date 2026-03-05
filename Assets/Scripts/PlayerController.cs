@@ -109,7 +109,14 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (!isGameActive)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
+                {
+                    SwitchControlMode();
+                }
             return;
+        }
+            
         //if game is active, allow player control
         if (spawnManagerScript.isGameActive)
         {
