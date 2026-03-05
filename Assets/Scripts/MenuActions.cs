@@ -244,7 +244,7 @@ public class MenuActions : MonoBehaviour
 
     public void PlaySwitchModeSound()
     {
-        audioSource.PlayOneShot(switchModeSound,1f);
+        audioSource.PlayOneShot(switchModeSound,0.8f);
     }
 
 

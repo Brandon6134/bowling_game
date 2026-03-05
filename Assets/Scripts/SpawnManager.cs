@@ -618,6 +618,7 @@ public class SpawnManager : MonoBehaviour
         isGameActive = false;
         GameOverParent.SetActive(true);
         pauseMenu.SetActive(false);
+        UIManagerScript.SetPlayerUIActive(false); //hide tips, dashed line, and mode button
     }
 
     //waits seconds before setting the round score zero and thus resetting the round

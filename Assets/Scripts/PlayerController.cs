@@ -57,6 +57,8 @@ public class PlayerController : MonoBehaviour
     private bool isRampingInput = false;
     private MenuActions menuActionsScript;
     public bool isGameActive = false; //used to determine if start() and update() logic is ran
+    private AudioSource barReleaseAudioSource;
+    public AudioClip barReleaseSFX;
 
     void Start()
     {
@@ -96,6 +98,7 @@ public class PlayerController : MonoBehaviour
         fireAudioSource = GetComponents<AudioSource>()[0];
         footstepAudioSource = GetComponents<AudioSource>()[1];
         tickAudioSource = GetComponents<AudioSource>()[2];
+        barReleaseAudioSource = GetComponents<AudioSource>()[3];
 
         //make bowling ball spawn at an offset so that camera transition between player and ball is smooth
         camOffset = cameraControlScript.playerOffset - cameraControlScript.ballOffset;
@@ -207,6 +210,9 @@ public class PlayerController : MonoBehaviour
                 //make all tip objects dissapear
                 tipsManagerScript.SetAllTipObjectsActive(false);
 
+                //play snap sfx
+                barReleaseAudioSource.pitch = 0.9f + barPercent/5;
+                barReleaseAudioSource.PlayOneShot(barReleaseSFX,0.5f + barPercent/2);
                 
             }
             
@@ -240,8 +246,6 @@ public class PlayerController : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x,transform.position.y,zRange);
         }
-        
-        //horizontalInput = Input.GetAxis("Horizontal");
         
         //translate w/ respect to world, so can move left and right globally (not accounting for rotation)
         //transform.Translate(Vector3.back * speed * horizontalInput *  Time.deltaTime,Space.World);
@@ -294,18 +298,6 @@ public class PlayerController : MonoBehaviour
             PlayTickSFX();
         
         CalculatePlayerVelocity(transform.position,ref lastPos, true); //call this so footsteps stop when rotating
-    
-        // //allow player to rotate with Q and E buttons
-        // if (Input.GetKey(KeyCode.Q))
-        // {
-        //     playerRb.angularVelocity = new Vector3(0,rotateSpeed,0);
-        //     PlayTickSFX();
-        // }
-        // if (Input.GetKey(KeyCode.E))
-        // {
-        //     playerRb.angularVelocity = new Vector3(0,-rotateSpeed,0);
-        //     PlayTickSFX();
-        // }
     }
 
     public void CalculatePlayerVelocity(Vector3 newPos, ref Vector3 lastPos, bool playFootstepSFX)
