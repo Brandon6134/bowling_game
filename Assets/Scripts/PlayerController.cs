@@ -388,6 +388,7 @@ public class PlayerController : MonoBehaviour
         
         //round and multiply to get nice spin numbers (~0-100)
         float torqueSpeedRounded = Mathf.Abs(Mathf.Round(torqueForce[1]*12.5f));
+        torqueSpeedRounded = Mathf.Clamp(torqueSpeedRounded,0f,100f); //limit to 0 to 100 values (sometimes gets to 101-104 values)
 
         string spinDirection =
             spinStrength > 0f ? "right" :
