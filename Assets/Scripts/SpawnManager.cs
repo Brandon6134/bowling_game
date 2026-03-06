@@ -150,12 +150,6 @@ public class SpawnManager : MonoBehaviour
         UpdateScore(text);
         UIManagerScript.AnnounceScore(currentPinsDown,isSpareForAnnounce,isStrike);
 
-        
-
-        //after the 10th frame, game is finished
-        if (frameIndex == 10)
-            GameOver();
-
         resetInProgress = false;
         pinsHaveMovedThisRound=false;
 
@@ -170,6 +164,10 @@ public class SpawnManager : MonoBehaviour
         playerRb.position = playerPosition;
         playerRb.rotation = Quaternion.identity;
         player.transform.rotation = new Quaternion(0,0,0,0);
+
+        //after the 10th frame, game is finished
+        if (frameIndex == 10)
+            GameOver();
     }    
 
 

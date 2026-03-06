@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2615627314036828650}
   - component: {fileID: -3924279002609185861}
   - component: {fileID: -4492250062981333013}
+  - component: {fileID: 5961982936914664866}
   m_Layer: 0
   m_Name: Bowling Pin
   m_TagString: Bowling Pin
@@ -124,7 +125,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3291234752721490273}
   serializedVersion: 5
-  m_Mass: 2.5
+  m_Mass: 1.4
   m_LinearDamping: 1
   m_AngularDamping: 1
   m_CenterOfMass: {x: 0, y: -0.3, z: 0}
@@ -159,3 +160,24 @@ MonoBehaviour:
   lowDamping: 0.5
   breakAngle: 8
   hasMoved: 0
+--- !u!65 &5961982936914664866
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3291234752721490273}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5, y: 7.05, z: 5}
+  m_Center: {x: 0, y: -15.54, z: 0}

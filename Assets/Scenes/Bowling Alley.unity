@@ -2934,7 +2934,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -32, y: 331}
+  m_AnchoredPosition: {x: -207, y: 331}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &138487516
@@ -2959,8 +2959,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Game Finished!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 570821af6fea44af1be9861c4a496950, type: 2}
-  m_sharedMaterial: {fileID: 21855137469139786, guid: 570821af6fea44af1be9861c4a496950, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4326,7 +4326,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5924120ac04352f4bb324605bb795906, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 5924120ac04352f4bb324605bb795906, type: 3}
       propertyPath: m_Controller
@@ -6181,8 +6181,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f0bfb73449e8943d0a0d1efb2290352e, type: 2}
-  m_sharedMaterial: {fileID: 21976234817437650, guid: f0bfb73449e8943d0a0d1efb2290352e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -21570,8 +21570,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Hold the spacebar down and release it to throw the ball.
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f0bfb73449e8943d0a0d1efb2290352e, type: 2}
-  m_sharedMaterial: {fileID: 21976234817437650, guid: f0bfb73449e8943d0a0d1efb2290352e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -35001,8 +35001,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Hide Tips
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f0bfb73449e8943d0a0d1efb2290352e, type: 2}
-  m_sharedMaterial: {fileID: 21976234817437650, guid: f0bfb73449e8943d0a0d1efb2290352e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -39739,42 +39739,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 524500759}
     m_Modifications:
-    - target: {fileID: 687888354938548096, guid: 180d503d2cd4ea64aa1e619106faaf44, type: 3}
-      propertyPath: m_Color.b
-      value: 0.09803915
-      objectReference: {fileID: 0}
-    - target: {fileID: 687888354938548096, guid: 180d503d2cd4ea64aa1e619106faaf44, type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 687888354938548096, guid: 180d503d2cd4ea64aa1e619106faaf44, type: 3}
-      propertyPath: m_Color.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 687888354938548096, guid: 180d503d2cd4ea64aa1e619106faaf44, type: 3}
-      propertyPath: m_Texture
-      value: 
-      objectReference: {fileID: 2800000, guid: 7ebb53885013a674c8408c74695338ad, type: 3}
-    - target: {fileID: 687888354938548096, guid: 180d503d2cd4ea64aa1e619106faaf44, type: 3}
-      propertyPath: m_UVRect.width
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3249218108400764447, guid: 180d503d2cd4ea64aa1e619106faaf44, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 3249218108400764447, guid: 180d503d2cd4ea64aa1e619106faaf44, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 3249218108400764447, guid: 180d503d2cd4ea64aa1e619106faaf44, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 513.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3825844763917088464, guid: 180d503d2cd4ea64aa1e619106faaf44, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4758567293968351526, guid: 180d503d2cd4ea64aa1e619106faaf44, type: 3}
       propertyPath: m_Name
       value: Left Arrow Icon
