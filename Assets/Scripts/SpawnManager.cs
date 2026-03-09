@@ -547,7 +547,7 @@ public class SpawnManager : MonoBehaviour
 
             //if a pin has started moving or rotating, start tracking if they're asleep so reset can be called if they're all done moving (asleep)
             //increased min velocity to 0.5f, so that when round resets and pins drop to ground their speed is below 0.5f, and isnt detected as moving.
-            if (pinRb.linearVelocity.magnitude>0.5f || pinRb.angularVelocity.magnitude>0.5f)
+            if (pinRb.linearVelocity.magnitude>1f || pinRb.angularVelocity.magnitude>1f)
             {
                 pinsHaveMovedThisRound = true;
             }
@@ -607,8 +607,6 @@ public class SpawnManager : MonoBehaviour
             isRoundScoreEqualZero = false;
             alreadySetScoreZero = false;
         }
-
-        
     }
 
     public void GameOver()

@@ -150,8 +150,13 @@ public class BowlingBallControl : MonoBehaviour
         Vector3 hookForce = sideDir * sideSpin * hookStrength;
 
         // Clamp to avoid explosions
-        hookForce = Vector3.ClampMagnitude(hookForce, 20f);
+        hookForce = Vector3.ClampMagnitude(hookForce, 50f);
+        hookForce.x = 0f;
         ballRb.AddForce(hookForce, ForceMode.Force);
+
+        print(hookForce);
+
+        //print("linear velocity: " + ballRb.linearVelocity + "   angular velocity: " + ballRb.angularVelocity);
     }
 
     // void OnCollisionStay(Collision collision)
