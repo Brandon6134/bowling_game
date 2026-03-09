@@ -234,6 +234,10 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    void FixedUpdate()
+    {
+        
+    }
     void horizontalMovement()
     {
         //don't allow player to move outside bowling lane

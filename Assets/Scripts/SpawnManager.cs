@@ -150,7 +150,8 @@ public class SpawnManager : MonoBehaviour
         UpdateScore(text);
         UIManagerScript.AnnounceScore(currentPinsDown,isSpareForAnnounce,isStrike);
 
-        resetInProgress = false;
+        //resetInProgress = false;
+        StartCoroutine(ResetCooldown(3f)); //set resetInProgress to false after 3 second cooldown
         pinsHaveMovedThisRound=false;
 
         //reset player controller script variables
@@ -241,7 +242,8 @@ public class SpawnManager : MonoBehaviour
         UpdateScore(text);
         (isSpareForAnnounce, isStrike) = UIManagerScript.AnnounceScore(currentPinsDown,isSpareForAnnounce,isStrike);
         callAnnounceScores=true;
-        resetInProgress = false;
+        //resetInProgress = false;
+        StartCoroutine(ResetCooldown(3f)); //set resetInProgress to false after 3 second cooldown
         pinsHaveMovedThisRound=false;
 
         //reset UI velocity bar stuff
@@ -622,6 +624,12 @@ public class SpawnManager : MonoBehaviour
     {
         yield return new WaitForSeconds(seconds);
         isRoundScoreEqualZero = true;
+    }
+
+    IEnumerator ResetCooldown(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        resetInProgress = false;
     }
 
     //initializes 2d list with all children group modifiers

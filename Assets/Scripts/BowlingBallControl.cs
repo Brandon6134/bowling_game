@@ -154,8 +154,6 @@ public class BowlingBallControl : MonoBehaviour
         hookForce.x = 0f;
         ballRb.AddForce(hookForce, ForceMode.Force);
 
-        print(hookForce);
-
         //print("linear velocity: " + ballRb.linearVelocity + "   angular velocity: " + ballRb.angularVelocity);
     }
 

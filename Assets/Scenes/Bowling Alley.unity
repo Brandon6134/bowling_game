@@ -41117,7 +41117,7 @@ MonoBehaviour:
   barPercent: 0
   usedPercent: 0
   throwInProgress: 0
-  spinStrengthModifier: 5
+  spinStrengthModifier: 10
   BiomeManager: {fileID: 1697971826}
   fireballSFX: {fileID: 8300000, guid: 8ac4c6b41d672ee418d9df286e8222c4, type: 3}
   dashedLine: {fileID: 863750374}
