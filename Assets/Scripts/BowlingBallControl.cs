@@ -45,10 +45,20 @@ public class BowlingBallControl : MonoBehaviour
 
         //if is ball in hand, scale fire vfx and sfx for ball according to progress bar
         if (verticalProgressBar != null)
+        {
             ControlFire();
+            fireVFX.transform.GetChild(1).gameObject.SetActive(false); //set smoke inactive when building up veloctiy bar
+        }
+            
         //else is the thrown ball, set the fire scale to be same as ball in h and
         else
+        {
             fireVFX.transform.localScale = StaticData.fireScale;
+            fireVFX.transform.GetChild(1).gameObject.SetActive(true); //set smoke active when ball is thrown
+            
+        }
+        fireVFX.transform.rotation = Quaternion.Euler(0f,0f,120f); //rotate smoke and other sfx to emit from backside of ball
+            
     }
 
     void OnCollisionEnter(Collision collision)
