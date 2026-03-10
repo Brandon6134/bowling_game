@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using MagicPigGames;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
@@ -59,6 +60,10 @@ public class PlayerController : MonoBehaviour
     public bool isGameActive = false; //used to determine if start() and update() logic is ran
     private AudioSource barReleaseAudioSource;
     public AudioClip barReleaseSFX;
+    private bool playerCanMove = false;
+    private bool isWalkForward = false;
+    private bool isSpaceConditionalDown = false;
+    private bool isSpaceConditionalUp = false;
 
     void Start()
     {
@@ -108,32 +113,29 @@ public class PlayerController : MonoBehaviour
         lastPos = playerRb.transform.position;
     }
 
-    // Update is called once per frame
+    //handle all player input, UI, and state changes in update
     void Update()
     {
-        if (!isGameActive)
-        {
-            if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
-                {
-                    SwitchControlMode();
-                }
+        HandleMenu();
+        if (!isGameActive) //if is menu, quit func
             return;
-        }
             
         //if game is active, allow player control
         if (spawnManagerScript.isGameActive)
         {
-
             //if camera isn't on the scoreboard, allow player movement (when player exits scoreboard, can immediately move so feels nice and not restrictve)
-            //also if isnt in the moveforward sequence or throwing animation, and isnt enter portal sequence
+            //also if isnt in the moveforward sequence or throwing animation, and isnt enter portal sequence, then allow player to move / rotate
             if (!cameraControlScript.camOnScores && !spacePressed && !throwInProgress && !biomeManagerScript.isEnterPortalSequence)
+                playerCanMove = true;
+            else
+                playerCanMove = false;
+                
+            if (playerCanMove)
             {
                 horizontalAxis = Input.GetAxis("Horizontal");
 
                 if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
-                {
                     SwitchControlMode();
-                }
 
                 //if switched modes and is no longer holding down left or right, set player movement back to 0
                 if (isRampingInput && Input.GetAxisRaw("Horizontal")==0f)
@@ -150,34 +152,37 @@ public class PlayerController : MonoBehaviour
                 //if ramped up input equals the internal horizontal input, stop ramping input
                 if (Mathf.Abs(horizontalAxis - horizontalInput) < 0.01f)
                     isRampingInput = false;
-                
-                //allow users to switch between movement and rotation modes
-                if (isMoveMode)
-                    horizontalMovement();
-                else
-                    rotationalMovement();
             }
-            else if(biomeManagerScript.isEnterPortalSequence)
-                StartCoroutine(EnterPortalSequence());
-
+            
             //camBackOnPlayer indicates if the camera is approximately behind the player, aka cam is at the end of the transition (not midway transition) and on player
             //used Distance() to approximate equallness cause there was a delay between the two vector3's values making them equal after some time, not always.
-            bool camBackOnPlayer = Vector3.Distance(cameraControlScript.transform.position,transform.position + cameraControlScript.playerOffset) < 0.1f;
+            bool camBackOnPlayer = Vector3.Distance(cameraControlScript.transform.position,transform.position + cameraControlScript.playerOffset) < 1f;
 
             // start move forward sequence if no balls exist currently (only can throw one ball at a time), if cam is on the player (not mid transition),
             // and space hasn't been pressed down or released this round yet (or else can keep manipulating velocity bar several times in one round)
             if (Input.GetKeyDown(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && 
             !spacePressed && !spaceReleased && !biomeManagerScript.isEnterPortalSequence)
+                isSpaceConditionalDown = true;
+            else if(Input.GetKeyUp(KeyCode.Space) && isSpaceConditionalDown)
+            {
+                isSpaceConditionalUp = true;
+                isSpaceConditionalDown = false;
+            }
+
+            if (isSpaceConditionalDown)
             {
                 spacePressed=true;
                 throwInProgress=true;
-                playerAnim.SetBool("isWalkForward",true);
+                //playerAnim.SetBool("isWalkForward",true);
+                isWalkForward = true;
                 UIManagerScript.verticalProgressBar.SetActive(true); //make velocity bar appear
                 UIManagerScript.SetSwitchModeButtonActive(false);
+
+                
             }
+
             //if entered moveforwardsequence, start bowling veloctiy bar UI + minigame
-            else if(Input.GetKeyUp(KeyCode.Space) && !GameObject.FindGameObjectWithTag("Bowling Ball") && camBackOnPlayer && 
-            spacePressed && !throwAnimActive && !biomeManagerScript.isEnterPortalSequence)
+            else if(isSpaceConditionalUp)
             {
                 //script.progress returns 0.1 if 90% of bar is filled, so invert progress value to get 0.9
                 barPercent = Mathf.Abs(verticalProgressBarScript.Progress - 1f);
@@ -200,7 +205,7 @@ public class PlayerController : MonoBehaviour
                 playerAnim.speed= animSpeed;
 
                 //begin throw ball animation
-                playerAnim.SetBool("isThrow",true);
+                //playerAnim.SetBool("isThrow",true);
                 throwAnimActive = true;
                 footstepAudioSource.Stop();
 
@@ -210,33 +215,56 @@ public class PlayerController : MonoBehaviour
                 //make all tip objects dissapear
                 tipsManagerScript.SetAllTipObjectsActive(false);
 
-                //play snap sfx
-                barReleaseAudioSource.pitch = 0.9f + barPercent/5;
-                barReleaseAudioSource.PlayOneShot(barReleaseSFX,0.5f + barPercent/2);
                 
-            }
-            
-            //move the player forward if walking forward or during throw animation
-            // || (spacePressed && throwAnimActive && playerAnim.GetBool("isThrow"))
-            if (spacePressed && playerAnim.GetBool("isWalkForward") )
-            {
-                MoveForwardSequence(2f,true);
-            }
-
-            //if the animation shows a step forward, move the player even more
-            if (isStepForwardAnim)
-            {
-                MoveForwardSequence(4f,false);
             }
 
             AutoThrowBall();
+            
         }
         
     }
 
+    //handle all player movement and rotation in fixedUpdate
     void FixedUpdate()
     {
+        if (!isGameActive || !spawnManagerScript.isGameActive)
+            return;
         
+        //allow users to switch between movement and rotation modes
+        if (playerCanMove)
+        {
+            if (isMoveMode)
+                horizontalMovement();
+            else
+                rotationalMovement();
+        }
+        else if(biomeManagerScript.isEnterPortalSequence)
+                StartCoroutine(EnterPortalSequence());
+
+        if (isSpaceConditionalDown)
+        {
+            playerAnim.SetBool("isWalkForward",true);
+        }
+            
+        else if (isSpaceConditionalUp)
+        {
+            playerAnim.SetBool("isThrow",true);
+
+            //play snap sfx
+            barReleaseAudioSource.pitch = 0.9f + barPercent/5;
+            barReleaseAudioSource.PlayOneShot(barReleaseSFX,0.5f + barPercent/2);
+
+            isSpaceConditionalUp = false;
+        }
+
+        
+         //move the player forward if walking forward or during throw animation
+        if (spacePressed && isWalkForward)
+            StartCoroutine(CallMoveForwardSequence(5f,true));
+
+        //if the animation shows a step forward, move the player even more
+        if (isStepForwardAnim)
+            StartCoroutine(CallMoveForwardSequence(10f,false));
     }
     void horizontalMovement()
     {
@@ -312,16 +340,17 @@ public class PlayerController : MonoBehaviour
         lastPos = newPos;
         
         //old value -> 0.00001f
-        float speedThreshold = 0.1f;
+        float speedThreshold = 0.2f;
 
         //if player isnt moving, set idle animation boolean
         if (speed <= speedThreshold)
         {
             //print("speed is less than 0.2f at : "+speed);
-            if (Mathf.Abs(velocity.x) <= 0.2f)
+            if (Mathf.Abs(velocity.x) <= speedThreshold)
             {
                 playerAnim.SetBool("isWalkForward",false);
                 playerAnim.SetBool("isIdle",true);
+                //print("setting walkisofward to false!");
             }   
 
             if (footstepAudioSource.isPlaying && playFootstepSFX)
@@ -333,7 +362,7 @@ public class PlayerController : MonoBehaviour
         }
         else 
         {
-            if (Mathf.Abs(velocity.x) >= 0.2f)
+            if (Mathf.Abs(velocity.x) >= speedThreshold)
             {
                 playerAnim.SetBool("isWalkForward",true);
                 playerAnim.SetBool("isIdle",false);
@@ -349,14 +378,21 @@ public class PlayerController : MonoBehaviour
 
     private void MoveForwardSequence(float speed, bool playFootstepSFX)
     {
-        Vector3 newPos = playerRb.position + Vector3.right * speed *  Time.deltaTime;
+        Vector3 newPos = transform.position + Vector3.right * speed *  Time.deltaTime;
         playerRb.MovePosition(newPos);
+        //print(newPos);
     
         CalculatePlayerVelocity(newPos,ref lastPos, playFootstepSFX);
         
         //playerAnim.speed=0.4f;
         //print("moving forward with speed of "+speed);
         UIManagerScript.helpText.enabled=false;
+    }
+
+    private IEnumerator CallMoveForwardSequence(float speed, bool playFootstepSFX)
+    {
+        yield return new WaitForEndOfFrame();
+        MoveForwardSequence(speed,playFootstepSFX);
     }
 
     public void CreateAndMoveBall(float percentModifier, float spinStrength)
@@ -387,8 +423,8 @@ public class PlayerController : MonoBehaviour
         torqueSpeedRounded = Mathf.Clamp(torqueSpeedRounded,0f,100f); //limit to 0 to 100 values (sometimes gets to 101-104 values)
 
         string spinDirection =
-            spinStrength > 0f ? "right" :
-            spinStrength < 0f ? "left" :
+            torqueSpeedRounded > 0f ? "right" :
+            torqueSpeedRounded < 0f ? "left" :
             "";
 
         UIManagerScript.torqueSpeedText.text = torqueSpeedRounded + " SPIN " + spinDirection;
@@ -433,6 +469,7 @@ public class PlayerController : MonoBehaviour
         throwAnimActive=false;
         isStepForwardAnim=false;
         playerAnim.SetBool("isWalkForward",false);
+        isWalkForward = false;
 
         CreateAndMoveBall(usedPercent,spinStrength);
 
@@ -457,6 +494,8 @@ public class PlayerController : MonoBehaviour
 
         //make dashed line visible again
         SetDashedLineActive(true);
+
+        isSpaceConditionalUp = false;
     }
 
     public void ChangeBallColor(GameObject ball)
@@ -489,7 +528,7 @@ public class PlayerController : MonoBehaviour
             yield break;
         }
         //moves players forward, doesnt play footstep sfx if has entered portal and vice versa
-        MoveForwardSequence(2f,!biomeManagerScript.hasEnteredPortal);
+        MoveForwardSequence(7f,!biomeManagerScript.hasEnteredPortal);
         //playerRb.freezeRotation = true;
     }
 
@@ -566,6 +605,17 @@ public class PlayerController : MonoBehaviour
     {
         isMoveMode = true;
         UIManagerScript.SwitchModeButtonText(isMoveMode); // switch mode text
+    }
+
+    private void HandleMenu()
+    {
+        if (!isGameActive) //if is menu or non-player but want to use functions in this script
+        {
+            if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
+                {
+                    SwitchControlMode();
+                }
+        }
     }
 
     
