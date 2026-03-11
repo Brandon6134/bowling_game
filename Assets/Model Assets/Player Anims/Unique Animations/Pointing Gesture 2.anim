@@ -83937,7 +83937,7 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 1.9666667
+  - time: 1.8
     functionName: FinishedSelectAnimation
     data: 
     objectReferenceParameter: {fileID: 0}
