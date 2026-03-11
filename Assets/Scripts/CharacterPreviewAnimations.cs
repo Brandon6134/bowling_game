@@ -25,5 +25,6 @@ public class CharacterPreviewAnimations : MonoBehaviour
         //reset character model's position and rotation
         menuActionsScript.charGameObject.position = menuActionsScript.originalPosition;
         menuActionsScript.charGameObject.rotation = Quaternion.identity;
+        menuActionsScript.needToResetCharPreviewPos = false; //no need to reset character position when character select is exited
     }
 }

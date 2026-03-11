@@ -3577,6 +3577,7 @@ MonoBehaviour:
   customizePressSound: {fileID: 8300000, guid: 77a869758bd4fa04a8ddf0e9d1d7920a, type: 3}
   confirmPressSound: {fileID: 8300000, guid: b4686f21e5bb25c4a904ad7c5690bc87, type: 3}
   switchModeSound: {fileID: 8300000, guid: 2f315e62cedf20e4ab7d9a6d64f1ca39, type: 3}
+  needToResetCharPreviewPos: 0
 --- !u!82 &527848714
 AudioSource:
   m_ObjectHideFlags: 0
@@ -8492,11 +8493,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1716506032}
   m_CullTransparentMesh: 1
---- !u!1 &1745849992 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8851054630206185751, guid: cc04bd45f708caa41bd6bdc2974bc569, type: 3}
-  m_PrefabInstance: {fileID: 1921406707}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1782119137 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8292703320187909222, guid: 7fd409c58bc070c4eb90ee9f082afc91, type: 3}
@@ -9526,6 +9522,10 @@ PrefabInstance:
       value: 0.426
       objectReference: {fileID: 0}
     - target: {fileID: 8730434700589129537, guid: cc04bd45f708caa41bd6bdc2974bc569, type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8730434700589129537, guid: cc04bd45f708caa41bd6bdc2974bc569, type: 3}
       propertyPath: m_Colors.m_HighlightedColor.b
       value: 0.8039216
       objectReference: {fileID: 0}
@@ -9616,10 +9616,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7154439589220959769, guid: cc04bd45f708caa41bd6bdc2974bc569, type: 3}
       insertIndex: 0
       addedObject: {fileID: 1703105725}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8851054630206185751, guid: cc04bd45f708caa41bd6bdc2974bc569, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1921406716}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc04bd45f708caa41bd6bdc2974bc569, type: 3}
 --- !u!224 &1921406708 stripped
 RectTransform:
@@ -9631,35 +9628,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7154439589220959769, guid: cc04bd45f708caa41bd6bdc2974bc569, type: 3}
   m_PrefabInstance: {fileID: 1921406707}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1921406716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1745849992}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 527848708}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: 
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: 
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!1001 &1947561490
 PrefabInstance:
   m_ObjectHideFlags: 0

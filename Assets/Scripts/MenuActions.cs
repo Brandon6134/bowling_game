@@ -39,6 +39,7 @@ public class MenuActions : MonoBehaviour
     private float barSpeed = 0.5f;
     private bool stopMovingVelocityBar = false;
     private float[] barSpeedMultipliers = {1.5f,2f,3f,4.5f};
+    public bool needToResetCharPreviewPos = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -93,8 +94,6 @@ public class MenuActions : MonoBehaviour
     //generic next button function, makes current gameobject inactive and the parameter nextPanelToShow active
     public void NextPageButton(GameObject nextPanelToShow)
     {
-        //howToPlayPanel.SetActive(false);
-        //howToPlayPanel2.SetActive(true);
         GameObject clicked = EventSystem.current.currentSelectedGameObject;
         GameObject parentPage = clicked.transform.parent.gameObject;
 
@@ -190,9 +189,14 @@ public class MenuActions : MonoBehaviour
         if (character.name == charGameObject.gameObject.name)
             return;
         
-        //set last character object inactive
-        charGameObject.gameObject.SetActive(false);
-
+        charGameObject.gameObject.SetActive(false); //set last character object inactive
+        if (needToResetCharPreviewPos) // reset their position + rotation if confirm was pressed just previously
+        {
+            charGameObject.transform.position = originalPosition;
+            charGameObject.rotation = Quaternion.identity;
+            needToResetCharPreviewPos = false; // done reseting confirmed last character pos, dont reset chars
+        }
+        
         //set new character name variable and set active
         StaticData.characterSelectedName = characterNameText.text = character.name;
         charGameObject = transform.Find("Character Select Panel/Selected Character Preview/"+StaticData.characterSelectedName);
@@ -217,6 +221,7 @@ public class MenuActions : MonoBehaviour
     public void ConfirmCharacter()
     {
         originalPosition = charGameObject.position;
+        needToResetCharPreviewPos = true; //if player selects other characters, need to reset selected character pos + rotation after animation
 
         //play character animation
         Animator charAnim = charGameObject.gameObject.GetComponent<Animator>();
