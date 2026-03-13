@@ -528,7 +528,7 @@ public class PlayerController : MonoBehaviour
             yield break;
         }
         //moves players forward, doesnt play footstep sfx if has entered portal and vice versa
-        MoveForwardSequence(7f,!biomeManagerScript.hasEnteredPortal);
+        MoveForwardSequence(9f,!biomeManagerScript.hasEnteredPortal);
         //playerRb.freezeRotation = true;
     }
 

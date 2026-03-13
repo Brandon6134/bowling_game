@@ -608,6 +608,7 @@ public class SpawnManager : MonoBehaviour
             transitionCam_BallToPlayer = true;
             isRoundScoreEqualZero = false;
             alreadySetScoreZero = false;
+            playerControllerScript.playerAnim.SetBool("isIdle",true);
         }
     }
 
