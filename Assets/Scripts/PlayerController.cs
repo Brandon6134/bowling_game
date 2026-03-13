@@ -1,15 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using MagicPigGames;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -191,7 +183,7 @@ public class PlayerController : MonoBehaviour
                 usedPercent = 0.5f + barPercent/2;
 
                 //width of one arrow in the x-axis
-                float num = 515f;
+                float num = UIManagerScript.spinIndicatorPixelDistance;
 
                 //subtract the original x position (middle) from the green indicator position.x, divide by width of an arrow to get a 
                 //a percentage from -1 to 1, negative being spin left and positive being spin right. multiply by 10 or wtv for extra spin power

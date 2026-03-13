@@ -92,7 +92,6 @@ public class BowlingBallControl : MonoBehaviour
                 collision.gameObject.GetComponents<AudioSource>()[1].Play();
             }
             collision.gameObject.GetComponent<Animator>().SetBool("isHit",true);
-
         }
     }
 
@@ -135,9 +134,6 @@ public class BowlingBallControl : MonoBehaviour
         {
             audioSourceFire.Play();
         }
-            
-        
-        
     }
 
     // applies the spin force onto the ball
@@ -167,11 +163,5 @@ public class BowlingBallControl : MonoBehaviour
         //print("linear velocity: " + ballRb.linearVelocity + "   angular velocity: " + ballRb.angularVelocity);
     }
 
-    // void OnCollisionStay(Collision collision)
-    // {
-    //     if (!collision.gameObject.CompareTag("Ground")) return;
 
-    //     ContactPoint contact = collision.contacts[0];
-    //     decalP.size = contact.point - new Vector3(-20f,0.5f,0.35f);
-    // }
 }

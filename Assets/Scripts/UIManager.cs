@@ -41,8 +41,9 @@ public class UIManager : MonoBehaviour
     float[] moddedBarSpeeds;
     public float[] barSpeedMultipliers = {1.5f,2f,3f,4.5f};
     public float barMultipler = 0f;
-    private float minSpinX = 100f+960f;
-    private float maxSpinX = 930f+960f;
+    private float minSpinX;//100f+960f
+    private float maxSpinX;//930f+960
+    public float spinIndicatorPixelDistance;
     public float speedOfSpinIndicator;
     public Vector3 spinIndicatorBasePosition;
     //public float elapsedTime=0f;
@@ -51,7 +52,10 @@ public class UIManager : MonoBehaviour
     public GameObject switchModeButton;
     private List<GameObject> modeTextList = new List<GameObject>();
     public bool isGameActive = false; //used to determine if start() and update() logic is ran
-
+    public Canvas canvas;
+    private CanvasScaler canvasScaler;
+    private int lastCanvasWidth;
+    private int lastCanvasHeight;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -61,13 +65,13 @@ public class UIManager : MonoBehaviour
             GetChildren(switchModeButton,modeTextList);
             return;
         }
-            
         
         spawnManagerScript = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
         tipsManagerScript = GameObject.Find("Tips").GetComponent<TipsManager>();
         verticalProgressBarScript = verticalProgressBar.GetComponent<VerticalProgressBar>();
         audioSource = GetComponent<AudioSource>();
+        canvasScaler = canvas.GetComponent<CanvasScaler>();
 
         moddedBarSpeeds = new float[] {barSpeed,barSpeed,barSpeed,barSpeed};
 
@@ -89,7 +93,7 @@ public class UIManager : MonoBehaviour
         verticalProgressBarScript.SetProgress(0f);
         verticalProgressBar.SetActive(false);
 
-        spinIndicatorBasePosition = spinUI[0].transform.position;
+        SetSpinIndicatorXLimits(); //set left and right most x coords for green spin indicator
 
         //set all spinUI objects inactive
         foreach (GameObject obj in spinUI)
@@ -117,6 +121,7 @@ public class UIManager : MonoBehaviour
         }
         
         FadeOutAndStop();
+        CanavsScaleChangeDetector();
     }
 
     public (float,float,float,float, bool) AssetVelocityBarChange(float t, float minY, float maxY, float barSpeed, VerticalProgressBar verticalProgressBarScript, bool stopMovingVelocityBar)
@@ -149,7 +154,7 @@ public class UIManager : MonoBehaviour
             obj.SetActive(true);
         }
 
-        //don't allow player to move outside bowling lane
+        //don't allow player to move outside arrows
         if (objarray[0].transform.position.x < min)
         {
             objarray[0].transform.position = new Vector3(min,objarray[0].transform.position.y,objarray[0].transform.position.z);
@@ -162,8 +167,8 @@ public class UIManager : MonoBehaviour
         
         float horizontalInput = Input.GetAxis("Horizontal");
         
-        //translate green indicator left and right based on user horizontal input
-        objarray[0].transform.Translate(Vector3.left * speedOfSpinIndicator * horizontalInput *  Time.deltaTime);
+        //translate green indicator left and right based on user horizontal input, scale with canvas size so speed is regulated
+        objarray[0].transform.Translate(Vector3.left * speedOfSpinIndicator * horizontalInput * canvas.scaleFactor * Time.deltaTime);
 
 
         return max;
@@ -353,6 +358,43 @@ public class UIManager : MonoBehaviour
         playerControllerScript.SetDashedLineActive(isActive); //set dashed line
         tipsManagerScript.SetAllTipObjectsActive(isActive); //set tips
         SetSwitchModeButtonActive(isActive); //set switch mode button
+    }
+
+    private void SetSpinIndicatorXLimits()
+    {
+        spinIndicatorBasePosition = spinUI[0].transform.position; //set initial position of green indicator
+        RectTransform rectTransform = spinUI[1].GetComponent<RectTransform>(); //get left arrow rectTransform
+        Vector3[] corners = new Vector3[4];
+        rectTransform.GetWorldCorners(corners); //get the bottom left, top left, bottom right, and top right coordinates of left arrow
+        float leftArrowPosX  = RectTransformUtility.WorldToScreenPoint(null, corners[0]).x; //convert world coords to screen coords
+        float rightArrowPosX = RectTransformUtility.WorldToScreenPoint(null, corners[2]).x;
+
+        spinIndicatorPixelDistance = leftArrowPosX-rightArrowPosX; //left pos - right pos gives the width of the arrow img object, use as green indicator max distance
+
+        minSpinX = spinIndicatorBasePosition.x - spinIndicatorPixelDistance; //set left most X coords for green indicator
+        maxSpinX = spinIndicatorBasePosition.x + spinIndicatorPixelDistance; // set right most X coords for green indicator
+    }
+
+    private void CanavsScaleChangeDetector()
+    {
+        if (Screen.width != lastCanvasWidth || Screen.height != lastCanvasHeight)
+        {
+            lastCanvasWidth = Screen.width;
+            lastCanvasHeight = Screen.height;
+
+            //force canvas scaler to reset and recalc
+            canvasScaler.enabled = false;
+            canvasScaler.enabled = true;
+            Canvas.ForceUpdateCanvases();
+
+            CanavsScaleUpdateValues();
+        }
+    }
+
+    private void CanavsScaleUpdateValues()
+    {
+        SetSpinIndicatorXLimits(); //reset green indicator limits and original pos
+        progressBarPos = verticalProgressBar.transform.position; //reset original pos for velocity bar
     }
 
     public void GetChildren(GameObject parent, List<GameObject> children)

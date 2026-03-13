@@ -32768,12 +32768,14 @@ MonoBehaviour:
   - 5
   - 7
   barMultipler: 2
+  spinIndicatorPixelDistance: 150
   speedOfSpinIndicator: 700
   spinIndicatorBasePosition: {x: 0, y: 0, z: 0}
   duration: 5
   shakeModifier: 20
   switchModeButton: {fileID: 585472546}
   isGameActive: 1
+  canvas: {fileID: 524500758}
 --- !u!4 &1461589729
 Transform:
   m_ObjectHideFlags: 0
@@ -38763,12 +38765,14 @@ MonoBehaviour:
   - 3
   - 4.5
   barMultipler: 0
+  spinIndicatorPixelDistance: 0
   speedOfSpinIndicator: 0
   spinIndicatorBasePosition: {x: 0, y: 0, z: 0}
   duration: 1
   shakeModifier: 0
   switchModeButton: {fileID: 1014966122}
   isGameActive: 0
+  canvas: {fileID: 0}
 --- !u!1 &1812119386
 GameObject:
   m_ObjectHideFlags: 0
@@ -47312,6 +47316,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 524500759}
     m_Modifications:
+    - target: {fileID: 3249218108400764447, guid: 180d503d2cd4ea64aa1e619106faaf44, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 513.6
+      objectReference: {fileID: 0}
     - target: {fileID: 4758567293968351526, guid: 180d503d2cd4ea64aa1e619106faaf44, type: 3}
       propertyPath: m_Name
       value: Left Arrow Icon
