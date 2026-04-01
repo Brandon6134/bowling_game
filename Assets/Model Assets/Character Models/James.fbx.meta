@@ -8,42 +8,42 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Ch06_1001_Diffuse
-    second: {fileID: 2800000, guid: bde70ed207311844f97bcdd9a9749d26, type: 3}
+    second: {fileID: 2800000, guid: 97aaae5f99dd7274495345262368034d, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Ch06_1001_Glossiness
-    second: {fileID: 2800000, guid: d50b9e4284040e34e8f88252dd188619, type: 3}
+    second: {fileID: 2800000, guid: f8a7d4eb2c3b87e469f4b8d8651f6871, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Ch06_1001_Normal
-    second: {fileID: 2800000, guid: 16472573e4fbddf41af9a7c2baa08f51, type: 3}
+    second: {fileID: 2800000, guid: e8f90b7e3a267c94b8b0f82592bc2066, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Ch06_1001_Specular
-    second: {fileID: 2800000, guid: 086cf5289783e1148b9204b98f1732db, type: 3}
+    second: {fileID: 2800000, guid: 2ff273ff7923f1e46bb2187aec3a68c2, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Ch06_1002_Diffuse
-    second: {fileID: 2800000, guid: 828612b6e8c82734abd2e8205a74a273, type: 3}
+    second: {fileID: 2800000, guid: a5a251ed4240adc4d9bed3fda142c2b6, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Ch06_1002_Glossiness
-    second: {fileID: 2800000, guid: e3ab856ff229a124c9c8a323d61d7246, type: 3}
+    second: {fileID: 2800000, guid: 62d17d069c4924042916fae1816c6e41, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Ch06_1002_Normal
-    second: {fileID: 2800000, guid: cf9f8b4405b3c7f49990566c3c50031e, type: 3}
+    second: {fileID: 2800000, guid: e574832dacda39e408e06aeae4a8d00e, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Ch06_1002_Specular
-    second: {fileID: 2800000, guid: 77808dcd127e35847bb571546b462399, type: 3}
+    second: {fileID: 2800000, guid: 5892a136fdcd46441a8a5ef6ae091564, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

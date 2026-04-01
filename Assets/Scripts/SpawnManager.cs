@@ -547,21 +547,17 @@ public class SpawnManager : MonoBehaviour
         {
             Rigidbody pinRb = pin.GetComponent<Rigidbody>();
 
-            //if a pin has started moving or rotating, start tracking if they're asleep so reset can be called if they're all done moving (asleep)
-            //increased min velocity to 0.5f, so that when round resets and pins drop to ground their speed is below 0.5f, and isnt detected as moving.
+            //if any pin has moved, track this
             if (pinRb.linearVelocity.magnitude>1f || pinRb.angularVelocity.magnitude>1f)
-            {
                 pinsHaveMovedThisRound = true;
-            }
 
+            //if pin has stopped moving after first pin moved, count that pin as asleep
             if (pinRb.angularVelocity.magnitude <= thresholdVelocityForSleep && pinRb.linearVelocity.magnitude <=thresholdVelocityForSleep && pinsHaveMovedThisRound)
-            {
                 sleepCount++;
-            }
         }
 
-        bool allPinsSleepingThisFrame = sleepCount == pins.Length;
-        bool pinsJustStopped = allPinsSleepingThisFrame && !allPinsSleepingLastFrame;
+        bool allPinsSleepingThisFrame = sleepCount == pins.Length; //checks if every pin has stopped moved in this round
+        bool pinsJustStopped = allPinsSleepingThisFrame && !allPinsSleepingLastFrame; //if all pins are asleep this frame and last frame
 
         allPinsSleepingLastFrame = allPinsSleepingThisFrame;
 
@@ -575,22 +571,22 @@ public class SpawnManager : MonoBehaviour
             if ((bowlingBallRb.linearVelocity.magnitude<0.1f || bowlingBallRb.angularVelocity.magnitude<0.1f) && bowlingBallControlScript.isBallPastPins)
                 isRoundScoreEqualZero = true;
 
-            //if bowling ball is moving backwards (aka hit obstacle or smthn), set isroundscoreequalzero bool to reset round
-            if (bowlingBallRb.linearVelocity.x < 0f && !alreadySetScoreZero)
+            //if bowling ball is moving backwards (aka hit obstacle or smthn) and pins haven't been moved / stopped, set isroundscoreequalzero bool to reset round
+            if (bowlingBallRb.linearVelocity.x < 0f && !alreadySetScoreZero && !pinsJustStopped)
             {
                 //set bool to true so waitforseconds func is only called once
                 alreadySetScoreZero = true;
-
-                //wait 2 secs before setting isRoundScoreEqualZero to true
-                StartCoroutine(WaitSecondsForReset(2f));
+                isRoundScoreEqualZero = true;
             }
                 
         }
 
         //if all pins have stopped moving or zero scored was achieved that round (no pins hit)
-
         if ((pinsJustStopped || isRoundScoreEqualZero) && !resetInProgress)
         {
+            // print("pinjuststopped: " + pinsJustStopped);
+            // print("isRoundscorequal zero: " + isRoundScoreEqualZero);
+            // print("!reset in progress: " + !resetInProgress);
             resetInProgress = true;
             if (round==1 && lastFrameRoundIndex!=2)
             {
@@ -618,13 +614,6 @@ public class SpawnManager : MonoBehaviour
         GameOverParent.SetActive(true);
         pauseMenu.SetActive(false);
         UIManagerScript.SetPlayerUIActive(false); //hide tips, dashed line, and mode button
-    }
-
-    //waits seconds before setting the round score zero and thus resetting the round
-    IEnumerator WaitSecondsForReset(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-        isRoundScoreEqualZero = true;
     }
 
     IEnumerator ResetCooldown(float seconds)
